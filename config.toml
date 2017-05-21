@@ -36,10 +36,10 @@ canonifyurls = true
   job = "想做程序猿"
   location = "China Xi'an"
   # Your Gravatar email. Overwrite `author.picture` everywhere in the blog
-  gravatarEmail = "diwang90@gmail.com"
+  #gravatarEmail = "diwang90@gmail.com"
   # Your profile picture
   # Overwritten by your gravatar image if `author.gravatarEmail` is filled
-  picture = ""
+  picture = "/images/header.jpg"
   # Your Twitter username without the @. E.g : thibaudlepretre
   twitter = "linuxhenhao"
   # Your google plus profile id. E.g : +ThibaudLepretre or 114625208755123718311
@@ -83,6 +83,13 @@ canonifyurls = true
   name = "GitHub"
   pre = "<i class=\"sidebar-button-icon fa fa-lg fa-github\"></i>"
   url = "https://github.com/linuxhenhao"
+
+[[menu.links]]
+  weight = 0
+  identifier = "email"
+  name = "diwang90#gmail"
+  pre = "<i class=\"sidebar-button-icon fa fa-lg fa-envelope-o\"></i>"
+  url = "/#mail"
 #[[menu.links]]
 #  weight = 1
 #  identifier = "stackoverflow"
