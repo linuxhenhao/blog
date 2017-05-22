@@ -38,6 +38,10 @@
               {{ if .Site.DisqusShortname }}
                 {{ partial "post/disqus.html" . }}
               {{ end }}
+
+              {{ if .Site.Params.neteaseProductKey }}
+                {{ partial "post/neteaseCloudTie.html" . }}
+              {{ end }}
             {{ end }}
           </div>
         </article>

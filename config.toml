@@ -17,7 +17,7 @@ languageCode = "zh-cn"
 defaultContentLanguage = "zh-cn"
 title = "多学多思考"
 theme = "Tranquilpeak"
-disqusShortname = "hugo-tranquilpeak-theme"
+# disqusShortname = "hugo-tranquilpeak-theme"
 # googleAnalytics = "UA-123-45"
 paginate = 7
 canonifyurls = true
@@ -105,6 +105,9 @@ canonifyurls = true
   url = "/index.xml"
 
 [params]
+  # add netease cloud tie params
+    neteaseProductKey = "f5a83ef494e24dacb1a373563adf93af"
+    neteaseLoader = "aHR0cHM6Ly9hcGkuZ2VudGllLjE2My5jb20vcGMvbGl2ZXNjcmlwdC5odG1s"
   # Customize date format use to render blog post date, categories and other
   # You must use date format used by Go Time package https://golang.org/pkg/time/
   # Months (not work with short month like "jan", "feb", etc) are translated if translation exists on i18n folders
