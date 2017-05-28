@@ -31,7 +31,7 @@ canonifyurls = true
   archive = "archives"
 
 [author]
-  name = "Sam Huang"
+  name = "Yu Huang"
   bio = "学而不思则罔，思而不学则殆"
   job = "想做程序猿"
   location = "China Xi'an"
