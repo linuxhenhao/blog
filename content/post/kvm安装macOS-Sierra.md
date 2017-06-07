@@ -87,3 +87,34 @@ chmod 755 fakeSMC.kext #设置好权限
 chown root:wheel fakeSMC.kext #设置好owner， 权限和owner必须设置，不然无法加载
 rm -R /System/Library/Caches/com.apple.kext.caches # 必须删除生成的kext的缓存，才能使系统启动时使用添加的fakeSMC.kext
 ```
+结果发现放入后系统出现`can't perform kext scan .....`，直接放fakeSMC这个思路行不通
+
+## 总结
+使用[github repo](https://github.com/kholia/OSX-KVM)，使用10.12.1制作的iso文件可以在kvm中成功安装和使用，由于qemu的appleSMC相关代码
+的问题，10.12.4及之后的系统无法使用，因此安装完成后不要更新，等qemu修复相关问题后再更新。
+
+### 使用中遇到的问题
+使用apple store 安装软件时，登陆出错，提示`your device or computer could not be verified `，经搜索，[apple论坛](https://discussions.apple.com/thread/3175514?start=0)
+上有解决方法
+```
+Solution
+
+1) Delete the file Macintosh HD/Library/Preferences/SystemConfiguration/NetworkInterfaces.plist
+
+2) Restart OSX
+
+3) Try logging into Mac App Store again.
+```
+但是该方法只对由于默认联网网卡的名称不是en0导致的问题有效，并非我遇到的问题的解决方案。
+
+该安装方案利用的时变色龙bootloader在bios模式下启动的系统，因此之前的摸索方向错误，无须使用uefi+clover的方式，直接使用enoch就可以。
+而且相应的git repo中已经有了配置好的plist文件。在`/Extra`中放入该文件即可，变色龙也可以加载嵌入kext，解决steal macos的问题。
+
+当然首先是解决apple store无法登陆的问题，使用变色龙作为bootloader，因此使用osx-kvm repo中的配置文件就直接解决了这个问题。
+其中起作用的部分应该是`ethernetBuiltIn`，再次创建快照，测试添加fakeSMC之后更新到最新10.12.5的问题。
+
+添加额外的kext文件，在sierra中由于SIP的存在，会有一致性验证，直接万/S/L/E中添加会导致系统无法启动，需要让bootloader把它的SIP关掉，
+配置文件中的CSRactiveConfig 103就是这个目的。
+kernelBooter_kexts设置成yes，使系统在启动时会从`/Extra/Extensions`文件夹中加载kext文件，因此将下载来的最新的fakeSMC.kext放到
+该文件夹内（没有的话创建一个）。结果发现即使成功使用了fakeSMC.kext，仍然在更新之后出现Don't  steal mac os 的提示，确实是qemu本身就
+存在问题。
