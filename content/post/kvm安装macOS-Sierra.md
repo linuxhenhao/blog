@@ -108,13 +108,39 @@ Solution
 但是该方法只对由于默认联网网卡的名称不是en0导致的问题有效，并非我遇到的问题的解决方案。
 
 该安装方案利用的时变色龙bootloader在bios模式下启动的系统，因此之前的摸索方向错误，无须使用uefi+clover的方式，直接使用enoch就可以。
-而且相应的git repo中已经有了配置好的plist文件。在`/Extra`中放入该文件即可，变色龙也可以加载嵌入kext，解决steal macos的问题。
 
 当然首先是解决apple store无法登陆的问题，使用变色龙作为bootloader，因此使用osx-kvm repo中的配置文件就直接解决了这个问题。
 其中起作用的部分应该是`ethernetBuiltIn`，再次创建快照，测试添加fakeSMC之后更新到最新10.12.5的问题。
 
-添加额外的kext文件，在sierra中由于SIP的存在，会有一致性验证，直接万/S/L/E中添加会导致系统无法启动，需要让bootloader把它的SIP关掉，
+osx-kvm相应的git repo中已经有了配置好的plist文件。在`/Extra`中放入该文件即可，变色龙也可以加载嵌入kext，解决steal macos的问题。
+具体来说，在系统的`/Extra/`文件夹中放入一个org.chameleon.Boot.plist，里面有ethernetBuiltIn选项，设置为Yes，
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+<key>Timeout</key>
+<string>10</string>
+<key>EthernetBuiltIn</key>
+<string>Yes</string>
+<key>PCIRootUID</key>
+<string>1</string>
+<key>KernelBooter_kexts</key>
+<string>Yes</string>
+<key>CsrActiveConfig</key>
+<string>103</string>
+</dict>
+</plist>
+```
+
+添加额外的kext文件，在sierra中由于SIP的存在，会有一致性验证，直接往/S/L/E中添加kext会导致系统无法启动，需要让bootloader把它的SIP关掉，
 配置文件中的CSRactiveConfig 103就是这个目的。
 kernelBooter_kexts设置成yes，使系统在启动时会从`/Extra/Extensions`文件夹中加载kext文件，因此将下载来的最新的fakeSMC.kext放到
-该文件夹内（没有的话创建一个）。结果发现即使成功使用了fakeSMC.kext，仍然在更新之后出现Don't  steal mac os 的提示，确实是qemu本身就
-存在问题。
+该文件夹内（没有的话创建一个）。
+
+结果发现即使成功使用了fakeSMC.kext，仍然在更新之后出现Don't  steal mac os 的提示，确实是qemu本身就存在问题。根据从[qemu官网](http://www.qemu.org)
+下载的源码，即使到了qemu 2.9.0这个问题仍然没有被修复。问题源于qemu的appleSMC.c中相关实现的问题。对于macOS sierra 10.12.4以及之后的系统，都需要使用
+patch后的qemu才能够正常的安装使用。相关详情见[mail-archive](https://www.mail-archive.com/qemu-devel@nongnu.org/msg441562.html)。
+
+这是我整理的[patch](/static/uploads/qemu-sierra10.12.4upper.patch)，由于appleSMC.c很多个版本没变过了，所以可以直接patch到2.8-2.9版本的qemu
+源码然后编译，这样就可以更新到最新的10.12.5也不会出现问题。
