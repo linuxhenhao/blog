@@ -1,9 +1,9 @@
 +++
 categories = ["category","subcategory"]
 date = "2017-06-12T21:35:39+08:00"
-draft = [true]
+draft = true
 keywords = ["tech"]
-tags = ["tag1","tag2"]
+tags = ["黑苹果","实机安装"]
 title = "实机安装黑苹果Sierra"
 
 +++

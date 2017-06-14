@@ -7,8 +7,7 @@ tags:
 - tag2
 keywords:
 - tech
-draft:
-- true
+draft:   true
 #thumbnailImage: //example.com/image.jpg
 ---
 
