@@ -24,7 +24,8 @@ cpu:       i5 4590
 现在一般都是采用Clover + UEFI + GPT的方式安装了，我这次的安装同样是这个方案，clover实在是做了太多的工作，极大
 的简化了黑苹果的安装和使用。
 
-## 1. 在虚拟机的macOS的app Store中下载安装app，下载之后会在/Applications文件夹中，我这里下载的是Sierra的安装包，路径为
+## 1. 在虚拟机的macOS的app Store中下载安装app
+下载之后会在/Applications文件夹中，我这里下载的是Sierra的安装包，路径为
 `/Applications/Install macOS Sierra.app`然后
 ```
 /Applications/Install macOS Sierra.app/contents/Resources/createinstallmedia --volume /Volumes/{usb} \
@@ -45,9 +46,7 @@ cpu:       i5 4590
 `Boot`文件夹在`EFI`文件夹下，然后把CLOVER文件夹下的CLOVERX64.EFI复制过来，文件名改为`Bootx64.efi`，这个是选择以EFI
 方式启动后的默认加载文件的文件名，不用写入机器固件中。
 或者从CLOVER的[SourceForge](https://sourceforge.net/projects/cloverefiboot/files/Bootable_ISO/)页面下载
-最新的bootableISO，把里面的文件复制出来，如图所示[!clover efi](/images/bootableEFIClover.png)
-
-复制iso里的boot和clover文件夹到新建的EFI文件夹下就OK。
+iso文件，复制iso里的boot和clover文件夹到新建的EFI文件夹下就OK。![clover efi](/images/bootableEFIClover.png)
 
 ### 2.2 clover的配置
 #### 2.2.1 efi驱动文件
