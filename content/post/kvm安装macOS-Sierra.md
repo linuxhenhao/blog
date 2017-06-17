@@ -6,6 +6,7 @@ tags = ["kvm", "linux", "macOS Sierra"]
 +++
 
 通过修改进行一些修改可以使用virtualbox安装macOS，但是virtualbox跟进内核更新往往存在一定的落后，而kvm不存在这个问题，可以使用最新的内核，而且virt-manager的管理使用起来也很方便。因此采用kvm来安装macOS Sierra。
+<!--more-->
 
 使用这个[github repo](https://github.com/kholia/OSX-KVM) ，这个repo当中已经将kvm安装macOS的相关配置以及可能遇到的问题都搞定了，直接使用就可以，十分方便
 

@@ -1,5 +1,5 @@
 +++
-categories = ["category","subcategory"]
+categories = ["hacintosh","macOS"]
 date = "2017-06-15T23:36:03+08:00"
 draft = false
 keywords = ["黑苹果", "实机安装"]
@@ -11,12 +11,13 @@ title = "实机安装黑苹果Sierra"
 虚拟机里面不论是kvm还是virtualbox都安装过Sierra了，即使是在SSD上使用，其流畅性和舒适度还是无法和实机安装相比的，
 因此最终还是安装了黑苹果，用起来很舒服。
 
-## 首先是主机参数：
+### 首先是主机参数：
 cpu:       i5 4590  
 主板:      B85M-d2v  
 显卡:      hd4600集显，AMD R9 285  
 声卡:      RealTek ACL 887  
 网卡:      rtl8111  
+<!--more-->
 
 由于macOS换到x86平台已经很长时间了，而且都是intel的cpu，所以黑苹果安装比较容易，主要解决了hd4600的完整驱动，
 以及声卡网卡的驱动，一切就搞定了。
@@ -122,4 +123,3 @@ AppleALC的github repo的[Resources](https://github.com/vit9696/AppleALC/tree/ma
 其实有了CLover，找到合适的配置文件之后，安装过程是比较简单的，驱动只要有了网卡驱动声卡驱动，显卡驱动，那么最基本的问题也都解决了，安装之后可以
 正常更新、安装软件，体验很好。
 
-<!--more-->

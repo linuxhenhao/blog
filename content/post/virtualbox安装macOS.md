@@ -10,6 +10,8 @@ title = "virtualbox安装macOS"
 
 在kvm中安装完Sierra之后，使用起来明显不如在virtualbox中安装的OSX系统顺滑，而且不能识别共享过去的U盘，iphone之类
 的，原因可能是qemu的usb controller实现在mac os系统中没有相应的驱动，所以实际上还是virtualbox里用得舒服。
+<!--more-->
+
 找出原来写的一个virtualbox安装mac的过程，懒得翻译了，内容都来源于[这个github repo](https://github.com/geerlingguy/macos-virtualbox-vm)
 实践整理了一下过程，生成可安装的iso和第四步设置virtualbox的一些参数是关键，安装之后可以共享U盘，iphone，鼠标可以直接在host和虚拟机
 的mac os桌面间移动，不得不说比qemu使用起来还是方便得多。

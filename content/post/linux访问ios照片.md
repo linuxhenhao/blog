@@ -11,6 +11,7 @@ title = "linux访问ios照片"
 之前买了个iphoneSE作为日常用机，由于常用系统是linux，在需要
 导入照片时发现虽然nautilus可以发现有一个iphone，但是打不开，
 看不到任何文件。这样如果需要导入照片还要重启到win，十分不便。
+<!--more-->
 
 经过搜索，发现有一个[libimobiledevice](http://www.libimobiledevice.org/)
 的跨平台库，这个库的初衷就是开发出一个可以在linux上独立与ios
