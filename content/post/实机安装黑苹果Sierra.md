@@ -12,11 +12,11 @@ title = "实机安装黑苹果Sierra"
 因此最终还是安装了黑苹果，用起来很舒服。
 
 ## 首先是主机参数：
-cpu:       i5 4590
-主板:      B85M-d2v
-显卡:      hd4600集显，AMD R9 285
-声卡:      RealTek ACL 887
-网卡:      rtl8111
+cpu:       i5 4590  
+主板:      B85M-d2v  
+显卡:      hd4600集显，AMD R9 285  
+声卡:      RealTek ACL 887  
+网卡:      rtl8111  
 
 由于macOS换到x86平台已经很长时间了，而且都是intel的cpu，所以黑苹果安装比较容易，主要解决了hd4600的完整驱动，
 以及声卡网卡的驱动，一切就搞定了。
@@ -109,10 +109,14 @@ hdmi和dp接口也都是可以工作的。
 <key>Audio</key>
 		<dict>
 			<key>Inject</key>
-			<string>1</string>
+			<string>11</string>
 		</dict>
 ```
-由于Lilu和AppleALC的存在，只要对audio inject就行了，具体情况的话由于接口的不同，这个值不同，对于B85M-d2v主板自带的ALC887, 设置为1就可以了。
+由于Lilu和AppleALC的存在，只要对audio inject就行了，具体情况的话由于接口的不同，这个值不同，对于B85M-d2v主板自带的ALC887, 设置为11就可以了。
+这个id和上面的显卡id一样，即使成功调用了mac的系统驱动，但是也需要找到对应的layout id，才能够使前面版、后面版的声音都能够正常控制。开始直接
+inject 1，后面版的输出没有问题，但是前面板没有声音，改成11就解决了。只能通过一个一个的试，找到合适的id值。具体型号的驱动有哪些layout id，可以在
+AppleALC的github repo的[Resources](https://github.com/vit9696/AppleALC/tree/master/Resources)文件夹里找到对应的显卡型号文件夹，里面包含
+了所有目前被支持的ID值。
 
 ## 总结
 其实有了CLover，找到合适的配置文件之后，安装过程是比较简单的，驱动只要有了网卡驱动声卡驱动，显卡驱动，那么最基本的问题也都解决了，安装之后可以
