@@ -1,15 +1,8 @@
----
-title: "New Post"
-date: 2015-05-28
-categories:
-- category
-- subcategory
-tags:
-- tag1
-- tag2
-keywords:
-- tech
-#thumbnailImage: //example.com/image.jpg
----
-
-<!--more-->
++++
+date = `date`
+draft = false
+title = "kvm安装macOS Sierra"
+tags = ["kvm", "linux", "macOS Sierra"]
+categories = ['cat1', 'cat2']
+keywords = ['key1','key2']
++++
