@@ -1,19 +1,13 @@
 ---
 title: About me
-subtitle: Why you'd want to hang out with me
+subtitle: Welcome!
 comments: false
 ---
 
-My name is The Dude. I have the following qualities:
+My name is The thinkeryu. Yeah, want to think more, learn more.
 
-- I rock a great beard
-- I'm extremely loyal to my friends
-- I like bowling
+- I love computer science
+- I'm very happy to learn new things
+- I love linux
 
 That rug really tied the room together.
-
-### my history
-
-To be honest, I'm having some trouble remembering right now, so why don't you
-just watch [my movie](https://en.wikipedia.org/wiki/The_Big_Lebowski) and it
-will answer **all** your questions.
