@@ -1,8 +1,6 @@
 +++
-date = `date`
 draft = false
-title = "kvm安装macOS Sierra"
-tags = ["kvm", "linux", "macOS Sierra"]
+tags = ["kvm", "linux"]
 categories = ['cat1', 'cat2']
 keywords = ['key1','key2']
 +++
