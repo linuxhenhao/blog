@@ -6,4 +6,4 @@ categories = ['cat1', 'cat2']
 keywords = ['key1','key2']
 +++
 
-<!-- more -->
+<!--more-->

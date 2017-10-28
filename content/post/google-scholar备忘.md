@@ -2,7 +2,7 @@
 title = "google scholar 备忘"
 date = 2017-10-27T21:50:33+08:00
 tags = ["scholar", "ipv4", "ipv6", "blocked"]
-categories = ['备忘']
+categories = ['备忘', 'network']
 keywords = ['scholar','blocked']
 +++
 1\. 由于各大数据库提供商本身提供的搜索功能只能搜索他们自己的数据库.
