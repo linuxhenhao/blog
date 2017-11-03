@@ -79,7 +79,8 @@ sock信息还是那个从软件发出的信息，没有改变。加密通过send
     static inline bool skb_encrypt(struct sk_buff *skb,
                          struct noise_keypair *keypair, bool have_simd)
 查看该函数源码，使用了加密函数加密，变更了skb里面的数据内容，更新checksum，但是，skb->
-sock仍然没有更改，在此之后，包含skb的list就被放入发送队列进行发送了。                         
+sock仍然没有更改，在此之后，包含skb的list就被放入发送队列进行发送了。    
+
     queue_enqueue_per_peer(&PACKET_PEER(first)->tx_queue, first, state);
 send.c中有tx_queue的work具体实现，通过使用
     static void packet_create_data_done(struct sk_buff *first, struct wireguard_peer *peer)
@@ -90,6 +91,7 @@ send.c中有tx_queue的work具体实现，通过使用
     }
 进行数据包的发送，使用的时socket_send_skb_to_peer，该函数用`send4`和`send6`，在`sendx`
 函数中，对skb的dev、mark进行了设置，但是同样skb->sock没有更改，然后调用
+
     udp_tunnel_xmit_skb(rt, sock, skb, fl.saddr, fl.daddr, ds,
       ip4_dst_hoplimit(&rt->dst), 0, fl.fl4_sport, fl.fl4_dport, false, false);
     {
@@ -98,7 +100,7 @@ send.c中有tx_queue的work具体实现，通过使用
         skb->sk = sk;
       ...
     }
-*这就是关键，这个判断，skb->sk由于出自本机，是带有sk的，这里作判断，如果有就不做更改，没有，
-将该skb的sk设置成wireguard用来发送的sock*，这个机制应该是不合理的，虚拟连接软件应当做到
+__这就是关键，这个判断，skb->sk由于出自本机，是带有sk的，这里作判断，如果有就不做更改，没有，
+将该skb的sk设置成wireguard用来发送的sock__，这个机制应该是不合理的，虚拟连接软件应当做到
 尽可能的与实际网卡相同的行为，从而在配置诸如iptables、ip-rule方面简单方便。网络包到网卡之后
 其发送的sk信息应当被抛弃，所以这个判断应该删除。
