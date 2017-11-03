@@ -57,12 +57,34 @@ server， 虚拟连接IP为`10.0.0.1`，网口名`vlan1`并且规定，从client
 2.2 通过`iptables`对`UserA`发出的包添加`mark`，使用`ip-rule`根据mark指定路由表，在路由
 表中（也就是上面的`table 3`），所有的包默认通过`vlan3`发出。
 
+    iptables -t mangle -A OUTPUT -m mark --mark wireguard's-mark -j RETURN
+    # 这一条必须，让`vlan3`发出来的包不会被定向到table3,否则就死循环了。
     iptables -t mangle -A OUTPUT -m owner --uid-owner UserA -j MARK --set-mark 1
     # 可以直接使用用户名匹配，给所有该用户发出的包打上`1`标签
     ip rule add fwmark 1 table 3
     # 让所有的`1`标签的包通过路由表3路由
 
-PS：其实正常来说，上面几步做完应该就OK了，但是实际中发现怎么都无法连接，切换到`UserA`下
+RETURN那一条并非所有的虚拟连接软件都需要，取决于具体的实现。比如openvpn就不需要类似的设置，
+其实一般来说在实际网卡发包，经过网卡之后，owner信息还有mark的都被去掉了，因为已经出了内核
+空间。至于后面数据到虚拟网卡后，从另外一个连接把数据重新打包发出，那就是虚拟连接工具运行用
+户的事情了。但是wireguard可能读取了发包的owner信息，并且将重新打包的包继承了该owner信息。
+所以如果在OUTPUT的mangle上不加以区分wireguard的包，就会造成无限循环。当然还有另外一种解决
+方式。
+
+    iptables -t mangle -A OUTPUT -m owner --uid-owner UserA -j MARK --set-mark 1
+    # 可以直接使用用户名匹配，给所有该用户发出的包打上`1`标签
+    ip rule add fwmark 1 table 3
+    # 让所有的`1`标签的包通过路由表3路由
+    ip route add table 3 server_wan_ip via 192.168.1.3 dev eth3
+
+这样，在经过路由之后，虽然wireguard再次发包会被`mark 1`，但是wireguard发包都是发往server
+的ip地址，在`OUTPUT`之后的`route decision`后，他会被`eth3 src=192.168.1.3 dst=server_ip`，
+而普通的包会变成`vlan3 src=192.168.1.3 dst=xxxx`，在`POSTROUTING`上作`SNAT`
+
+    iptables -t nat -A POSTROUTING -o vlan3 -j MASQUERADE
+这样也实现了包的正常流通。
+
+PS：之前未作SNAT，上面几步做完发现怎么都无法连接，切换到`UserA`下
 进行网络连接都连不上，所以需要进一步的debug。用到了`iptables`中的`LOG`目标。
 
     iptables -t mangle -A OUTPUT -m owner --uid-owner UserA -j LOG --log-prefix "owner-matched: "
@@ -77,7 +99,8 @@ PS：其实正常来说，上面几步做完应该就OK了，但是实际中发�
 出口网卡，但是并不会对源地址进行更改，所以我们需要人为的处理一下。
 
     iptables -t nat -A POSTROUTING -m mark --mark 1 -j SNAT --to-source 10.0.0.3
-再次以用户`UserA`进行网络请求，发现可以正常运作了。
+再次以用户`UserA`进行网络请求，发现可以正常运作了。当然，这是对所有wireguard发出的包未
+进行`mark`下的规则，否则就要用`-o vlan3`作限定，并且给`table 3`添加专门到server的规则。
 
 ## server端
 server端相比就简单许多，由于他的路由表的默认路由就是我们的公网IP，首先为了让`10.0.0.1/24`
