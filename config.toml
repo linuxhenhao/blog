@@ -12,7 +12,7 @@
 # For developpers, if you modify this theme, put your images in `source/images` folder and
 # use grunt task `build` to synchronize assets
 
-baseurl = "https://blog.thinkeryu.com"
+baseurl = "https://blog.huangyu.me"
 languageCode = "zh-cn"
 defaultContentLanguage = "zh-cn"
 title = "多学多思考"
@@ -106,8 +106,11 @@ canonifyurls = true
 
 [params]
   # add netease cloud tie params
-    neteaseProductKey = "f5a83ef494e24dacb1a373563adf93af"
-    neteaseLoader = "aHR0cHM6Ly9hcGkuZ2VudGllLjE2My5jb20vcGMvbGl2ZXNjcmlwdC5odG1s"
+  # neteaseProductKey = "f5a83ef494e24dacb1a373563adf93af"
+  # neteaseLoader = "aHR0cHM6Ly9hcGkuZ2VudGllLjE2My5jb20vcGMvbGl2ZXNjcmlwdC5odG1s"
+  # 
+  # add uyan comments js
+  uyanID = 2148137
   # Customize date format use to render blog post date, categories and other
   # You must use date format used by Go Time package https://golang.org/pkg/time/
   # Months (not work with short month like "jan", "feb", etc) are translated if translation exists on i18n folders
