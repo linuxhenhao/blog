@@ -68,9 +68,11 @@ $(document).ready(function() {
     {{ if .Site.Params.uyanID }}
     <!-- UY BEGIN -->
     <div id="uyan_frame"></div>
+    <script>
     var uyan_config = {
          'su':'{{ md5 (print .PublishDate  .Title) }}'
     };
+    </script>
     <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid='{{ .Site.Params.uyanID }}'"></script>
     <!-- UY END -->
     {{ end }}
