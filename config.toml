@@ -34,12 +34,12 @@ canonifyurls = false
   name = "Yu Huang"
   bio = "学而不思则罔，思而不学则殆"
   job = "想做程序猿"
-  location = "China Xi'an"
+  location = "Dream road"
   # Your Gravatar email. Overwrite `author.picture` everywhere in the blog
   #gravatarEmail = "diwang90@gmail.com"
   # Your profile picture
   # Overwritten by your gravatar image if `author.gravatarEmail` is filled
-  picture = "/images/header.jpg"
+  picture = "/images/header.png"
   # Your Twitter username without the @. E.g : thibaudlepretre
   twitter = "linuxhenhao"
   # Your google plus profile id. E.g : +ThibaudLepretre or 114625208755123718311
