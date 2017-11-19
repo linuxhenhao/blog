@@ -1,6 +1,6 @@
 <nav id="sidebar" data-behavior="{{ .Scratch.Get "sidebarBehavior" }}">
   <div class="sidebar-container">
-    {{ with ($.Scratch.Get "authorPicture") }}
+    {{ with .Site.Author.pictures) }}
       <div class="sidebar-profile">
         <a href="{{ if $.Site.Params.sidebar.profile.url }}{{ $.Site.Params.sidebar.profile.url }}{{ else }}{{ "/#about" }}{{ end }}">
           <img class="sidebar-profile-picture" src="{{ . }}{{ if in . "//www.gravatar.com/avatar/" }}?s=110{{ end }}" alt="{{ i18n "global.author_picture" }}" />

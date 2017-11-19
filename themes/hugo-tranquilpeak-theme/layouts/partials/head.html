@@ -19,7 +19,7 @@
 {{ if .Scratch.Get "gravatarEmail" }}
   {{ .Scratch.Set "authorPicture" (printf "//www.gravatar.com/avatar/%s" (urlize (md5 (.Scratch.Get "gravatarEmail")))) }}
 {{ else if .Site.Author.picture }}
-  {{ .Scratch.Set "authorPicture" (absURL .Site.Author.picture) }}
+  {{ .Scratch.Set "authorPicture" (relURL .Site.Author.picture) }}
 {{ end }}
 <!DOCTYPE html>
 <html lang="{{ .Site.LanguageCode }}">
@@ -64,18 +64,18 @@
     {{ if .Scratch.Get "gravatarEmail" }}
       <meta property="og:image" content="//www.gravatar.com/avatar/{{ (md5 (.Scratch.Get "gravatarEmail")) | urlize }}?s=640">
     {{ else if .Site.Author.picture }}
-      <meta property="og:image" content="{{ .Site.Author.picture | absURL }}">
+      <meta property="og:image" content="{{ .Site.Author.picture | relURL }}">
     {{ end }}
 
     {{ with .Params.thumbnailImage }}
-      <meta property="og:image" content="{{ . | absURL }}">
+      <meta property="og:image" content="{{ . | relURL }}">
     {{ end }}
     {{ with .Params.coverImage }}
-      <meta property="og:image" content="{{ . | absURL }}">
+      <meta property="og:image" content="{{ . | relURL }}">
     {{ end }}
     {{ with .Params.gallery }}
       {{ range . }}
-        <meta property="og:image" content="{{ range first 1 (split . " ") }}{{ . | absURL }}{{ end }}">
+        <meta property="og:image" content="{{ range first 1 (split . " ") }}{{ . | relURL }}{{ end }}">
       {{ end }}
     {{ end }}
 
@@ -93,9 +93,9 @@
     <!--STYLES END-->
     {{ range .Site.Params.customCSS }}
       {{ if isset . "href" }}
-        <link {{ if not (isset . "rel") }}rel="stylesheet" {{ end }}{{ range $key, $value := . }} {{ if eq $key "href" }}{{ (printf "%s=\"%s\"" $key ($value | absURL)) | safeHTMLAttr }}{{ else }}{{ (printf "%s=\"%s\"" $key (string $value)) | safeHTMLAttr }}{{ end }}{{ end }}>
+        <link {{ if not (isset . "rel") }}rel="stylesheet" {{ end }}{{ range $key, $value := . }} {{ if eq $key "href" }}{{ (printf "%s=\"%s\"" $key ($value | relURL)) | safeHTMLAttr }}{{ else }}{{ (printf "%s=\"%s\"" $key (string $value)) | safeHTMLAttr }}{{ end }}{{ end }}>
       {{ else }}
-        <link rel="stylesheet" href="{{ . | absURL }}">
+        <link rel="stylesheet" href="{{ . | relURL }}">
       {{ end }}
     {{ end }}
 

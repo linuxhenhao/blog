@@ -3,7 +3,7 @@
     <div id="about-btn-close">
       <i class="fa fa-remove"></i>
     </div>
-    {{ with ($.Scratch.Get "authorPicture") }}
+    {{ with .Site.Author.picture }}
       <img id="about-card-picture" src="{{ . }}{{ if in . "//www.gravatar.com/avatar/" }}?s=110{{ end }}" alt="{{ i18n "global.author_picture" }}" />
     {{ end }}
     <h4 id="about-card-name">{{ .Site.Author.name }}</h4>
