@@ -111,8 +111,29 @@ grub的安装。
 由于只有一个U盘，windows系统的安装对于多分区的U盘，上述方法则要求windows安装iso的内容
 必须解压到第一个分区，grub也安装到第一个分区，才能够成功启动安装。但是这样导致普通文件
 和系统文件混淆在一起，很不清晰。一个通用的安装方法是使用PE，而且是同时支持uefi和mbr方式
-启动的PE。这就可以将PE的文件放在后面的分区当中，启动之后加载iso文件进行安装，可以将需要的
-iso文件都放在后面的分区当中。
+启动的PE。这就可以将PE的文件放在后面的分区当中，启动之后加载iso进行安装。
+
+6.1 PE文件放置以及配置
+
+PE型的iso文件与windows安装盘的iso不同，一般都可以直接解压到非第一个分区，使用grub加载
+后能够正常启动。首先挂载PE的iso文件并复制：
+
+    mount xxPE.iso /home/user/cdrom[随意找个挂载位置即可]
+    cp -R /home/user/cdrom/* /mnt  # mnt 为grub所在分区
+然后配置相应的`menuentry`，对于BIOS模式的grub:
+
+    menuentry "winpe" {
+      ntldr /bootmgr  
+    }
+对于EFI模式的grub:
+
+    menuentry "winpe"  {
+      chainloader /efi/microsoft/boot/bootx64.efi
+    }
+
+6.2 直接加载iso文件启动
+某些PE不能用解压放置的方式启动，可以使用`memdisk`加载整个iso文件启动，但是性能以及通用性
+不如文件解压的方法，在某些计算机上可能会失败。
 
 使用`syslinux`项目中的`memdisk`加载iso，对于debian系的系统，才用此命令安装`memdisk`
 
@@ -234,14 +255,18 @@ bios模式启动的grub，需要加载的模块不同，因此需要用到启动
         initrd /isolinux/gentoo.igz
     }
 
-    menuentry "winpe" {
-        insmod ntfs
-        insmod part_gpt
-        linux /memdisk iso raw
-        initrd /TYx64Win8PE.iso
-    }
+    if [ x${grub_platform} == xefi ]; then  
+      menuentry "winpe" {
+        chainloader /efi/microsoft/boot/bootx64.efi
+      }
+    else
+      # for bios
+      menuentry "winpe" {
+        ntldr /bootmgr
+      }
+    fi
 
-    if [ x${grub_platform} == xefi ]; then
+    if [ x${grub_platform} == xefi ]; then  
         menuentry "clover" {
             insmod part_gpt
             insmod ntfs
