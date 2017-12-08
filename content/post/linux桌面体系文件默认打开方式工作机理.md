@@ -3,7 +3,7 @@ title = "Linux桌面体系文件默认打开方式工作机理"
 date = 2017-12-08T19:12:46+08:00
 tags = ["文件打开方式", "linux"]
 categories = ['linux', '瞎折腾']
-keywords = ['文件打开方式','xdg-open', 'mime']
+keywords = ['文件打开方式', 'xdg-open', 'mime']
 +++
 ## 缘由
 在安装了atom之后, 火狐下载完文件之后点击打开文件位置, 竟然是用atom打开!! 应该用文件管理器才
@@ -50,3 +50,10 @@ mime信息到系统当中, 软件安装时将其能够打开的mime类型也告�
     $ xdg-mime default pcmanfm-qt.desktop inode/directory
 xxx.desktop只要在freedesktop规定的默认位置当中就行, 只需给出文件名, 不需要绝对地址。
 常见位置如`/usr/share/applications/`、`~/.local/share/applications/`。
+
+## PS
+linux桌面环境的菜单也是由`xdg-utils`当中的`xdg-desktop-menu`管理的， 不需要将`.desktop`
+放在特定的位置， 而`.desktop`文件当中的`MimeType=xxx`指定了软件能够打开的文件类型。在
+使用系统的包管理工具时，会自动的调用`xdg-desktop-menu`进行相应的处理，添加相应的信息到
+freedesktop.org规定的文件当中。 这样其他遵循规定的桌面环境就可以获取到包含新安装的程序
+的菜单了。
