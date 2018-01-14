@@ -44,3 +44,7 @@ privoxy会根据配置文件选择相应的动作，为了实现自动选择性�
     actionsfile gfwlist.action
 
 重启privoxy，大功告成！效率很高，感觉不到规则匹配的耗时。
+
+修改：
+  添加gfwlist2privoxy的repo地址
+[1](https://github.com/snachx/gfwlist2privoxy)
