@@ -15,7 +15,7 @@ python版本已经到了3.4.7，都是一些安全性的更新。但是官方如
 ### Visual Studio 2010 pro
 可以在XP上运行的最高版本的vs，并且支持使用PCbuild中的方式，也就是新的python编译安装脚
 本运行，因此首先需要下载安装此编译环境。安装的过程中，安装VC++即可，其他的诸如F#、C#、
-office、SQL的相关东西可以自定义安装的时候取消勾选。从MSDN [itellyou](2)下载会比官网快。
+office、SQL的相关东西可以自定义安装的时候取消勾选。从[MSDN itellyou][2]下载会比官网快。
 安装完成后需要将vs stuido安装文件夹中的`VC\bin`添加到环境变量当中。使我们可以直接在cmd
 中运行nmake之类的命令。
 
@@ -58,6 +58,9 @@ openssl等库，完成之后在PCbuild文件夹下得到一个可以运行的pyt
 方式打包的，所以需要做一些修复工作，主要是python源码包里已经没有.hg文件夹了，需要用另外的方式生成制作
 打包文件所需的文件dict。总而言之，并不复杂，主要是一个逐渐发现问题、解决问题、发现新问题、再解决的过程。
 所幸，最终得到了所需的安装包。
+
+更新记录：
+    2018.1.22 修复了msdn itell you的链接
 
 [1]:https://www.tortoisesvn.net/downloads.html
 [2]:https://msdn.itellyou.cn
