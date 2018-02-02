@@ -21,7 +21,12 @@ import的python文件里的import，从而将运行`xxx.py`所需的依赖打包
 ### 1.1 打包模式
 pyinstaller打包有单文件模式和文件夹模式，其中单文件模式运行时会将所有的文件
 解压到一个临时文件夹运行。文件夹模式会将所有打包文件放置在一个文件夹中，还会
-包含一个exe文件用于启动软件。
+包含一个exe文件用于启动软件。项目或者说package中的py文件都会被编译成python
+byetcode，然后和bootloader嵌在一起，组成单个exe文件，而其他的库二进制文件
+会被放在同这个exe文件同一文件夹下（单文件模式时会在解压的临时文件夹下）。
+由于变成单个文件，原来在package类具备的文件夹结构都消失了，代码中的import
+都被PyInstaller用PEP302的import hooks处理过，使其能够正常载入模块。如果
+原文件中使用了`__file__`来判断路径，也会由于这个处理出问题，需要注意。
 
 ### 1.2 隐藏启动cmd窗口
 打包时可以用`--windowed`参数，指定打包为窗口模式，运行软件时不显示黑色的cmd
@@ -70,6 +75,46 @@ spec文件可以用上述的打包命令添加`--specpath`指定spec文件保存
 外文件的打包信息，需要添加额外打包的文件，只需要在该list中添加新的`(src,dst)`即可。修改
 `exe=`后面的`console=False`的值来更改打包后的exe运行时是否显示console窗口。
 
+### 1.6 非`import`载入的包(importlib.import)
+在使用非标准的`import`或者`import from`载入模块时，PyInstaller无法自动找到这些需要的模块
+文件。PyInstaller通过入口py文件，递归的检查所有的上述两种导入的包，并打包相关的非系统
+路径（如linux下的/lib，/usr/lib）下的二进制依赖。如果通过`__import__`或者`importlib.import`
+方式导入文件，则需要手动添加。有两种方式，一种是上述的修改spec文件的datas参数，在其中添加
+需要的tuple。另一种是通过`--hidden-import`命令参数方式添加。其中第一种需要注意，由于py文件
+被嵌入到一个exe文件当中，所有源文件中的import都被hook过，import的查找顺序为1. exe文件中
+2\. 当前文件夹 3\. 运行文件夹；比如，需要import abc，首先看exe文件中是否包含该文件，如无，
+则看exe一块的同一文件夹下的abc.py或者是`abc/__init__.py`，最后是运行该exe命令所在文件夹
+下的abc.py或者abc包。
+
+--hidden-import=参数在只有一两个模块的时候还可以，如果模块多的话用起来不方便，使用hooks
+会舒服。PyInstaller的hook文件就是一个python文件，它的hook分两种，一种修改运行时的行为，
+一种修改分析打包所需文件的行为。这里用到的当然是修改打包行为的hook。
+
+PyInstaller在分析所需文件时会在所有的import或者from import分析进行时，在指定的hooks文件
+夹里查找是否有对应的hook文件，如果有，载入执行。文件的对应方式为`hook-<name>.py`，如在
+`import abc.d`或者`from abc import d`时，查找hooks文件夹，发现了`hook-abc.d.py`，那么就
+会执行这个hook。为了添加额外的模块，需要使用`hiddenimports = []`，只需要在这个list中添加
+所需要额外载入的模块即可。如`hiddenimports = ['socket']`会被PyInstaller当成python文件中
+包含`import socket`指令来打包所需的文件。hooks文件夹的位置一个是PyInstaller自带的位置，
+一般额外的针对项目的hooks通过`--additional-hooks-dir=`来指定。
+
+__官方文档错误__，这里由一个官方文档错误，文档中用了`['dns.rdtypes.*']`这种方式，但是
+python3的语法已经不支持`import dns.rdtypes.*`这种方式了，所以不能用这种通配符指定了。
+
+具体例子：现在有一个包`A`，通过一个`run.py`运行。
+run.py中通过`from A import main`来导入main函数运行。
+如果A中的`B`文件夹有一系列的`py`文件，未被显式import，这时，添加一个hook-A.main.py文件，内
+容为`hiddenimports = ['A.B.*']`，那么PyInstaller会当作分析的包对象中有`import A.B.*`这么
+一句的方式来打包依赖。
+
+PS: 然而，实际在使用hook-<name>.py模式添加hiddenimports的时候，提示`WARNING: Hidden import
+ not found!`，特地去看了github上PyInstaller的源码，发现对于python3，载入方式就是绝对路径
+ 载入，而由于需要载入的模块的包在当前运行命令文件夹下，如上述的`A`，`A.B.*`的例子，添加
+ `A.B.xxx.py`系列到hiddenimports的list内应该可以正确导入才对，可实际上就是出错。__最终通过
+ 修改spec文件中的hiddenimports内容正常找到了需要的包__，这应该是个bug吧，绝对路径导入，
+ 给的绝对路径，就是找不着。
+
+
 ## 2. InstallForge
 在打包成文件夹后，如果只使用压缩文件分发，会显得很low，这时[InstallForge][2]就派上用场了，
 这是一个简单易用的将文件文件夹打包成一个exe安装文件，在运行时可以指定安装位置，添加快捷方式，
@@ -80,6 +125,9 @@ spec文件可以用上述的打包命令添加`--specpath`指定spec文件保存
 
 在用PyInstaller和InstallForge打包完成后，一个python项目对应的像模像样的exe的安装包就生成
 了：）。
+
+修改记录：
+    2018.02.02：添加非import载入包的处理和PyInstaller打包软件import查找的顺序
 
 [1]:http://www.pyinstaller.org
 [2]:http://www.installforge.net
