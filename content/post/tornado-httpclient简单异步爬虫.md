@@ -65,3 +65,123 @@ tornado中包含有一个AsyncHTTPClient实现，可以使用它非常方面的�
 该公众号的`img`标签和`a`标签的`src`或者`href`都是藏在其他属性当中，通过页面加载过程中的`js`
 代码将其设置的，因此代码中需要作相应的处理。这是非常简单的`获取 + 设置`属性的过程，直接用beautifulsoup4
 载入html内容并修改就是，无需使用浏览器加载或`js`代码运行器。
+
+具体代码：
+```python
+    import re
+    from hashlib import md5
+
+
+    pattern = re.compile('\w+')
+    md5generator = md5()
+
+
+    def validFileName(string):
+        pattern = re.compile('[\w]', flags=re.UNICODE)
+
+        def validator(s):
+            if(pattern.match(s) is not None):
+                return True
+            return False
+        result = ""
+        newfilter = filter(validator, string)
+        for i in newfilter:
+            result += i
+        return result
+
+
+    async def getUrls():
+        client = httpclient.HTTPClient()
+        response = client.fetch(
+                "https://mp.weixin.qq.com/s?__biz=MzIyNjM1MzQ1OA==&mid=100001567&"
+                "idx=1&sn=eb1c1bf42e819e3bd0cfa8ff820e868b&pass_ticket="
+                "7IZjYPWAyGSWFIcxM"
+                "c3oTa1zQ56eGL%2F0hiuQkQUZncSHpTZxfQV5tAg0%2Bk8NERI0")
+        soup = BeautifulSoup(response.body, "html5lib")
+        sections = soup.find_all('section', attrs={'data-tools': '135编辑器'})
+        page_urls = list()
+        img_urls = list()
+        atags = list()
+        for section in sections:
+            for atag in section.find_all('a'):
+                atags.append(atag)
+                page_urls.append(atag['href'])
+                img_urls.append(atag.img['data-src'])
+
+        coroutines = [getPage(url) for url in page_urls]
+        pages = await asyncio.gather(*coroutines)
+
+        coroutines = [getPicsAndChangeSrcSavePage(page)
+                    for page in pages]
+        page_names = list()
+        for page_coroutine in coroutines:
+            page_names.append(await page_coroutine)
+
+        img_pathes = await fetchImages(img_urls)
+
+        for index in range(len(atags)):
+            atags[index]['href'] = page_names[index]
+            atags[index].img['src'] = img_pathes[index]
+
+        # write index.html file
+        with open('index.html', 'w') as index_page:
+            index_page.write(str(soup))
+
+
+    async def getPage(url):
+        client = httpclient.AsyncHTTPClient()
+        print(url)
+        response = to_asyncio_future(client.fetch(url))
+        result = await response
+        return result.body
+
+
+    async def getPicsAndChangeSrcSavePage(htmlpage):
+        soup = BeautifulSoup(htmlpage, "html5lib")
+        page_name = soup.head.title.get_text()
+        page_name = validFileName(page_name) + '.html'
+        imgs = soup.find_all('img', attrs={'data-src': pattern})
+        img_urls = list()
+        for img in imgs:
+            url = img['data-src']
+            img_urls.append(url)
+        file_pathes = await fetchImages(img_urls)
+        # replace all img tag's src
+        for index in range(len(imgs)):
+            imgs[index]['src'] = file_pathes[index]
+        # save page to file
+        with open(page_name, 'w') as page_file:
+            page_file.write(str(soup))
+        return page_name
+
+
+    async def fetchImages(urls):
+        client = httpclient.AsyncHTTPClient()
+        responses = await asyncio.gather(
+                *[to_asyncio_future(client.fetch(url)) for url in urls])
+        if(not os.path.exists('images')):
+            os.mkdir('images')
+
+        file_pathes = list()
+        for response in responses:
+            name = response.effective_url
+            md5generator.update(bytes(name, 'utf-8'))
+            encoded_name = md5generator.hexdigest()
+            # get extension type in headers such as image/jpeg
+            ext = response.headers['Content-Type'].split('/')[1]
+            file_name = encoded_name + '.' + ext
+            file_path = 'images' + os.sep + file_name
+            with open(file_path, 'wb') as output:
+                output.write(response.body)
+            file_pathes.append(file_path)
+        return file_pathes
+
+
+    if __name__ == '__main__':
+        AsyncIOMainLoop().install()
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(getUrls())
+```
+
+更新记录：   
+    2018-02-23： 添加代码

@@ -110,6 +110,7 @@ canonifyurls = false
   # neteaseLoader = "aHR0cHM6Ly9hcGkuZ2VudGllLjE2My5jb20vcGMvbGl2ZXNjcmlwdC5odG1s"
   # 
   # add uyan comments js
+  syntaxHighlighter = "highlight.js"
   uyanID = 2148137
   # Customize date format use to render blog post date, categories and other
   # You must use date format used by Go Time package https://golang.org/pkg/time/
