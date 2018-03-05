@@ -2,12 +2,12 @@
 title = "多功能启动U盘"
 date = 2017-11-19T09:37:10+08:00
 tags = ["多系统", "启动U盘"]
-categories = ['折腾', 'linux']
+categories = ['linux']
 keywords = ['多功能','安装U盘']
 +++
 
-制作一个同时具备一下四个功能的多功能启动U盘   
-1\. **数据存储** 2\. **windows系统安装**    
+制作一个同时具备一下四个功能的多功能启动U盘
+1\. **数据存储** 2\. **windows系统安装**
 3\. **linux的livecd** 4\. **mac安装**
 <!--more-->
 ## 0. 缘由
@@ -20,18 +20,18 @@ U盘总大小为29G，将其规划如下
 
 编号| 内容 | 大小
 -----|-----|----|
-1\. | fat32 数据区  |  14G   
-2\. | fat32 `grub`、`Clover`以及`winPE`和`gentoo admincd` |     8G   
-3\. | hfsplus `macOS High Sierra`安装文件                   |   7G   
+1\. | fat32 数据区  |  14G
+2\. | fat32 `grub`、`Clover`以及`winPE`和`gentoo admincd` |     8G
+3\. | hfsplus `macOS High Sierra`安装文件                   |   7G
 
 ## 2. 分区
-1\. 格式化   
+1\. 格式化
 
 使用linux的gparted工具按照上述规划进行分区，将3个分区都格式化成`fat32`，并且命名。其中
 mac安装分区由于需要使用黑苹果安装，为了能够指定安装到该分区，该分区应该具备能够被macOS挂载
 的格式和方便识别的名称，简单起见，都格式化成`fat32`。
 
-2\. 设置grub分区参数   
+2\. 设置grub分区参数
 
 gparted 设置`esp，boot`参数，使启动时计算机知道该分区为启动分区，找到efi文件夹的位置。
 ![gparted part creation](/images/post-images/gparted_multifunctional_usb.gif)
@@ -123,7 +123,7 @@ PE型的iso文件与windows安装盘的iso不同，一般都可以直接解压�
 然后配置相应的`menuentry`，对于BIOS模式的grub:
 
     menuentry "winpe" {
-      ntldr /bootmgr  
+      ntldr /bootmgr
     }
 对于EFI模式的grub:
 
@@ -255,7 +255,7 @@ bios模式启动的grub，需要加载的模块不同，因此需要用到启动
         initrd /isolinux/gentoo.igz
     }
 
-    if [ x${grub_platform} == xefi ]; then  
+    if [ x${grub_platform} == xefi ]; then
       menuentry "winpe" {
         chainloader /efi/microsoft/boot/bootx64.efi
       }
@@ -266,7 +266,7 @@ bios模式启动的grub，需要加载的模块不同，因此需要用到启动
       }
     fi
 
-    if [ x${grub_platform} == xefi ]; then  
+    if [ x${grub_platform} == xefi ]; then
         menuentry "clover" {
             insmod part_gpt
             insmod ntfs

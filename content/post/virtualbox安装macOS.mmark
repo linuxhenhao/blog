@@ -1,5 +1,5 @@
 +++
-categories = ["macos","linux"]
+categories = ["macOS","linux"]
 date = "2017-06-12T19:58:48+08:00"
 draft = [false]
 keywords = ["Sierra", "virtualbox", "linux"]

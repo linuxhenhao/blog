@@ -1,7 +1,9 @@
----
-title: "编译安装python3.4.7 For XP"
-date: "2017-09-20T21:47:34+08:00"
----
++++
+title = "编译安装python3.4.7 For XP"
+date = "2017-09-20T21:47:34+08:00"
+categories = ["python", "programming"]
+markup = "mmark"
++++
 
 ## 前言
 因为项目要求，必须支持XP系统。偶尔翻[python官网](https://www.python.org)支持Xp的最新的
@@ -23,7 +25,7 @@ office、SQL的相关东西可以自定义安装的时候取消勾选。从[MSDN
 需要通过svn下载一些external source，脚本里面推荐使用的就是这个。注意，1.9以及之后的版
 本不支持XP，因此需要下载[1.8版本][3]
 
-### [perl][4]      
+### [perl][4]
 
 编译openssl时需要perl，这里下载的是Strawberry perl。
 
@@ -35,21 +37,21 @@ openssl等库，完成之后在PCbuild文件夹下得到一个可以运行的pyt
 2. 打包，在编译完成之后希望能够打包成官方发布的msi形式的安装包，用于在其他电脑上安装。但是找了较长
 时间，找到一些过时的文档，但是找到了`tools\msi\msi.py`这么个脚本，可是这里面的内容还是用python2
 写的，所以为了打包编译出来的python3.4.7，又安装了一遍python2.7
-  2.1 安装python2.7   
-  2.2 通过`get-pip.py`安装`pip`，将`python27/Scripts`文件夹添加到系统环境变量，使pip可以从cmd运行。   
-  2.3 从[微软官网下载][7] VC用于编译某些pip下载安装需要编译的模块。   
-  2.4 安装pywin32模块。运行`pip install pypiwin32`安装此模块。   
-  2.5 还需要安装[cabarc][6]。  
+  2.1 安装python2.7
+  2.2 通过`get-pip.py`安装`pip`，将`python27/Scripts`文件夹添加到系统环境变量，使pip可以从cmd运行。
+  2.3 从[微软官网下载][7] VC用于编译某些pip下载安装需要编译的模块。
+  2.4 安装pywin32模块。运行`pip install pypiwin32`安装此模块。
+  2.5 还需要安装[cabarc][6]。
   2.6 `msi.py`依赖了一些`hg manifest`来获取所有文件名列表，用于添加合适的文件到安装包。实际上，cpython
   的开发已经迁移到了git，下载过来的源码包里面并不包含一个`.hg`文件夹，`hg manifest`是无法运行成功的。这
   里写了一个脚本，实现了`msi.py`中返回文件列表dict的功能，修改一下msi.py中的`hgmanifest`函数，import此
   脚本，返回`myHgmanifest.hgmanifest(srcdir)`的结果，即可实现目的。点击[下载脚本](/uploads/myHgmanifest.zip)，
   用压缩包中的脚本替换掉`Tools\msi`中相应的脚本即可。
 
-3. 编译文档。在第2步完成后，用python27运行msi.py，发现缺少文档，打包失败，因此需要生成打包所需的文档。   
+3. 编译文档。在第2步完成后，用python27运行msi.py，发现缺少文档，打包失败，因此需要生成打包所需的文档。
    3.1 将python27安装目录中的`python.exe`复制重命名为`py.exe`，因为编译文档的bat文件中用了此命令，实际就是运行`python.exe`
-   3.2 pip install sphinx，安装生成文档所需的模块。   
-   3.3 到Python3.4.7源码目录中的`\Doc\`文件夹下运行`make.bat htmlhelp`命令，生成帮助文档。   
+   3.2 pip install sphinx，安装生成文档所需的模块。
+   3.3 到Python3.4.7源码目录中的`\Doc\`文件夹下运行`make.bat htmlhelp`命令，生成帮助文档。
 
 4. 生成msi安装包。运行`python msi.py`，最终，在`Tools\msi`文件夹下会生成python3.4.7.xxxx.msi的安装包，可以拿到别的电脑上安装去啦！
 

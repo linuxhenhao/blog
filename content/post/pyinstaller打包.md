@@ -2,7 +2,7 @@
 title = "Python软件打包分发"
 date = 2018-01-22T20:11:12+08:00
 tags = ["python", "打包"]
-categories = ['program']
+categories = ['python']
 keywords = ['python','打包']
 markup = "mmark"
 +++
