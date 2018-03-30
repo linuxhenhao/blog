@@ -4,6 +4,7 @@ date = 2018-03-17T17:29:54+08:00
 tags = ["Django", "Docker"]
 categories = ['web', 'linux']
 keywords = ['Django','mysql', 'redis']
+draft = true
 markup = "mmark"
 +++
 不知道什么时候流行起来的静态博客风，用github或者gitlab的pages服务搭建静态网站，用markdown
@@ -115,7 +116,10 @@ django的migrate只会创建表, 而不会创建数据库, 因此需要提前连
 7. 创建api的app，用RESTFulAPI实现评论的接口`python3 manage.py startapp comments_api`
 
 ## 2. 表设计和页面设计
-基于AbstractUser继承的user表, 添加custom model field: appid 和 apikey用于验证,
+EncryptedPair: 和django的auth的User表进行oneTooneField，内容是根据用户名、密码和salt
+生成的appkey和appid，在网站上通过写入appkey和appid来进行权限验证，避免网页中出现明文的
+用户名、密码。
+Site：和User是1对多关系，用ForeignKey添加Site到
 
 reverse: 在views.py的module level和def xx_view()内部使用reverse时, 只要在module level
 用了reverse, 就会导致resolver内部出错, 原因是*reverse需要在urlpatterns定义完了之后反查,

@@ -126,8 +126,18 @@ PS: 然而，实际在使用hook-<name>.py模式添加hiddenimports的时候，�
 在用PyInstaller和InstallForge打包完成后，一个python项目对应的像模像样的exe的安装包就生成
 了：）。
 
+## 3. InnoSetUP
+[InnoSetup][3]是InstallForge同类型的打包软件，之前使用InstallForge在XP上打包的exe安装
+包无法在Win7系统上安装。InnoSetup更新比较多，实时的跟进系统支持，对于Win7以及之上的win10
+都有很好的支持，并且在本应用场景简单打包整个文件夹比InstallForge更好用，整体来说功能更强
+一些。比较著名的本地文件夹同步软件FreeFileSync就是用InnoSetup打包的。使用时打开一个简单
+的example.iss脚本，修改适应需要打包的内容，比如源文件夹，默认安装位置，exe输出位置，运行
+的exe文件名称、路径等，然后build即可，还支持多语言安装包，可以对安装界面进行本地化。
+
 修改记录：
     2018.02.02：添加非import载入包的处理和PyInstaller打包软件import查找的顺序
+    2018.03.30：添加关于innosetup打包的内容
 
 [1]:http://www.pyinstaller.org
 [2]:http://www.installforge.net
+[3]:http://www.jrsoftware.org/isinfo.php
