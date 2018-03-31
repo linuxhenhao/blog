@@ -76,5 +76,5 @@ post-update 的 hook， 通过密钥验证直接将内容 push 一份到 github 
   $ git remote add vps git@xxx.xxx:~/blog  # 添加 vps 上的仓库作远程
   $ git push -u vps  # push 内容到 vps
 ```
-之后，每次更新内容后　git push 就可以了，　如果确定不再需要将内容　push 到 gitlab　
-也可以将 gitlab 的　remote 删除．
+之后，每次更新内容后 git push 就可以了，如果确定不再需要将内容 push 到 gitlab　
+也可以将 gitlab 的 remote 删除．
