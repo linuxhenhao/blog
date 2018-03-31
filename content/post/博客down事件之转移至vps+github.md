@@ -55,6 +55,8 @@ post-update 的 hook， 通过密钥验证直接将内容 push 一份到 github 
   > cat > /usr/bin/update-blog-public << EOF
   #!/bin/sh
   cd /home/git/blogpages
+  git unset GIT_DIR  # git 优先使用　GIT_DIR 环境变量而非 PWD 作为 repo 的位置
+                     # 为了使 cd 生效， unset 掉环境变量
   git merge master  # 更新到 master 的内容
   hugo
   EOF
