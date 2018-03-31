@@ -35,7 +35,7 @@ HD硬盘+硬盘座：根文件系统以及保存个人文件的分区都放在�
 的东西，丢了实在可惜，所以可以再买两个大小一样的HD硬盘（我使用的是 1 T 大小的），然后加上 RAID1 的硬盘
 盒，组建一个 RAID1 冗余。这里推荐一款物美价廉的 RAID1 硬盘盒——[GODO][3]，买的时候注意和商家说明，需要
 买断电后接通电直接处于打开状态的盒子。这个主要源于使用智能插座远程控制的需求。默认情况下，无论之前该
-盒子是打开还是关闭状态，断电之后再接通，该盒子都处于关闭状态。这样时没有办法实现以插座作为开关控制
+盒子是打开还是关闭状态，断电之后再接通，该盒子都处于关闭状态。这样是没有办法实现以插座作为开关控制
 整个系统启动的。幸运的是，该盒子已经有断电再通电保持开启状态的版本，购买时和客服沟通即可。特别感谢
 一下他们的技术支持，指导我把原先买的盒子用焊锡改造成保持开启版本。
 
@@ -150,8 +150,30 @@ AriaNG 这种，就需要自己写 Python 脚本或者是 systemd 的 service �
 还可以有更多的玩法，比如加个音响定时报个天气预报什么的，只有想不到没有做不到啊。具体的配置
 等天再说：）
 
+### 2.6 定时备份到 RAID1 冗余
+btrfs 除了方便的 snapshot 之外， send 和 receive 功能也是非常的好用。由于所有的数据都
+放在数据分区，定时对数据分区作 snapshot， 然后 send receive 到 RAID1 分区就实现了增量
+备份。
+
+使用三个文件实现[cron.py][5],[bakseafile.sh][6],[btrfs-backup.py][7]。
+
+其中cron.py 执行定时任务，执行成功之后会写入 /var/log/ 文件夹作记录，实现一个相对 Linux
+自带 cron 有一定区别的功能。 Linux 自带的 cron， 定期执行任务，是用时间点作为判据的，
+比如每天7点执行一次， 如果这一天7点刚好没开机，八点开机，那么这一天就不会执行这个任务。
+cron.py 使用时间间隔作为判据， 每次成功执行写log记录执行的时间，在启动时检查，如果距离
+上次执行成功间隔大于要求的间隔，则执行任务。
+
+bakseafile.sh是一个写好btrfs-backup.py执行所需参数的简单bash脚本。btrfs-backup.py是
+在 github 上找到的一个别人写的可以保留固定数量的 snapshot 的 btrfs 备份脚本。
+
+通过 supervisord 执行 cron.py, cron.py 中配置好定时执行 bakseafile.sh, 在 bakseafile.sh
+中修改保留备份的数量、备份的源文件夹， snapshot相对源文件夹的位置， 目标文件夹。
+
 
 [1]:http://www.orangepi.cn/orangepiplus2/index_cn.html
 [2]:https://linux-sunxi.org/H3
 [3]:https://detail.tmall.com/item.htm?spm=a230r.1.14.13.b31051815IU1QZ&id=35338661217&ns=1&abbucket=4
 [4]:https://www.armbian.com/orange-pi-plus-2/
+[5]:https://raw.githubusercontent.com/linuxhenhao/config-files/master/orangepi/cron.py
+[6]:https://raw.githubusercontent.com/linuxhenhao/config-files/master/orangepi/bakseafile.sh
+[7]:https://raw.githubusercontent.com/linuxhenhao/config-files/master/orangepi/btrfs-backup.py
