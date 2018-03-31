@@ -66,6 +66,10 @@ post-update 的 hook， 通过密钥验证直接将内容 push 一份到 github 
 添加域名区分之前存在的服务。这样在 VPS 上就实现了 接受 git push -> push 到 github ->
 更新 worktree 内容　-> hugo 生成静态页面　-> nginx服务　的功能路线．
 
+其中的　unset GIT_DIR 变量开始没有发现，在 shell 中执行时由于没有 GIT_DIR 这个环境变量，
+因此没有出现问题， 但是通过 git push 触发 hooks 时，环境变量中有这个值， 从而导致
+`fatal: Not a git repository: '.'` 问题。从 stackoverflow 上找到的答案。
+
 回到个人电脑上：
 ```bash
   $ cd blog  # 进入blog内容所在的repo
