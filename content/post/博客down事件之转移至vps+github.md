@@ -43,6 +43,8 @@ post-update 的 hook， 通过密钥验证直接将内容 push 一份到 github 
   update-blog-public  # 运行 update-blog-public 命令
   EOF
   $ git worktree add ../blogpages  # 添加一个 worktree，用来给 hugo 和 nginx 使用
+                                   # 该动作会自动添加一个名为 blogpages 的　branch
+                                   # 并且　checkout 到　../blogpages　文件夹
                                    # 每次push后 worktree 中的内容通过 update-blog-public
                                    # 进行更新
   $ ssh-keygen  # 生成不需要密码的sshkey pair，默认名称即可
@@ -53,7 +55,7 @@ post-update 的 hook， 通过密钥验证直接将内容 push 一份到 github 
   > cat > /usr/bin/update-blog-public << EOF
   #!/bin/sh
   cd /home/git/blogpages
-  git checkout master  # 更新到 master 的内容
+  git merge master  # 更新到 master 的内容
   hugo
   EOF
   > chmod +x /usr/bin/update-blog-public
@@ -68,5 +70,5 @@ post-update 的 hook， 通过密钥验证直接将内容 push 一份到 github 
   $ git remote add vps git@xxx.xxx:~/blog  # 添加 vps 上的仓库作远程
   $ git push -u vps  # push 内容到 vps
 ```
-之后，每次更新内容后　git push -u vps 就可以了，　如果确定不再需要将内容　push 到 gitlab　
+之后，每次更新内容后　git push 就可以了，　如果确定不再需要将内容　push 到 gitlab　
 也可以将 gitlab 的　remote 删除．
