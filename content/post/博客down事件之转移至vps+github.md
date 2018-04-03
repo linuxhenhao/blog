@@ -1,9 +1,9 @@
 +++
 title = "博客down事件之转移至vps+github"
 date = 2018-03-31T10:41:16+08:00
-tags = ["kvm", "linux"]
-categories = ['cat1', 'cat2']
-keywords = ['key1','key2']
+tags = ["blog", "git hooks"]
+categories = ['web', 'linux']
+keywords = ['blog','gitlab', 'git hooks']
 markup = "mmark"
 +++
 昨天晚上更新了一篇博客，想看看显示效果，结果发现 gitlab 给了个404，尴尬。过两天是不是可以看
