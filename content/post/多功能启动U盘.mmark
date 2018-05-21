@@ -50,6 +50,13 @@ grub的安装。
 启动。
 
     grub-install --target=x86_64-efi --efi-directory /mnt --root-directory /mnt /dev/sdc
+
+*注意*: 对于计算机内部的硬盘，grub-install会将相应的启动路径信息写入到cmos当中，但是作为移动用的U盘，
+这一行为显然是无法在不同计算机间迁移的。对于未在cmos中存在信息的分区，计算机会读取默认路径，也就是带有
+esp标签的分区的`EFI/boot/boot.efi和EFI/boot/bootx64.efi`。为了让多功能启动U盘在其他电脑上的UEFI
+模式下也能用，我们需要将安装好之后的分区内的`EFI/debian/grubx64.efi`复制到该分区的`EFI/boot/bootx64.efi`,
+为了确保能启动，可以再复制一份保存为`boot.efi`在同一文件夹下。
+
 3.2 grub-bios 安装
 
     grub-install --target=i386-pc --root-directory /mnt /dev/sdc
@@ -273,6 +280,9 @@ bios模式启动的grub，需要加载的模块不同，因此需要用到启动
             chainloader /efi/clover/cloverx64.efi
         }
     fi
+
+修改记录： 20180521： 添加关于efi模式正确运行需要的操作
+
 [1]:http://www.syslinux.org/wiki/index.php?title=MEMDISK#Windows_NT.2F2000.2FXP.2F2003.2FVista.2F2008.2F7_.28NT_based.29
 [2]:https://wiki.archlinux.org/index.php/GRUB#.22No_suitable_mode_found.22_error
 [3]:https://askubuntu.com/questions/399732/how-to-check-if-grub-is-in-efi-or-bios-mode
