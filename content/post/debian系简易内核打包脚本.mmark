@@ -12,8 +12,18 @@ keywords = ['kernel deb package','debian']
 既然经常追新，那么就免不了经常更新内核，使用系统本身的包管理系统是一个非常方便的选择。
 但是又不喜欢安装太多的打包的`dpkg-package`工具，也没有时间去了解debian打包官方模式。
 简单的使用`dpkg -b`打包文件为deb成了我的常用打包方式。配套的，为`arm|x86_64`两个架构
-创建了打包脚本。
+创建了打包脚本。 *误：发现内核自带了打包脚本，详情见具体文章内容*
 <!--more-->
+搞半天，发现我写的打包脚本生成的linux-header包很大，而且不够完善，在x86编译内核外模块时
+会出现缺少文件的情况，然后发现内核自带了打包脚本，包括deb和rpm系。如果只需要二进制包不打包
+源码包的话`make bindeb-pkg`即可。还有以下几个target：
+
+    make deb-pkg  # 包含源码的deb包
+    make rpm-pkg  # 生成包含源码包在内的rpm包
+    make binrpm-pkg  # 生成不包含源码包在内的rpm包
+虽然如此，但是之前的脚本工作倒也不是无用工，其实内核带的打包脚本差不太多，主要是对于linux-headers
+包里面到底需要哪些文件不需要哪些文件的认识不够清晰全面。
+---
 其中的`linux-headers`包，为了让`arm`上`make script`能够成功，从而能够
 在arm上编译对以内核的第三方模块，比通常的官方包多了很多文件。
 
@@ -279,3 +289,6 @@ keywords = ['kernel deb package','debian']
     dpkg -b ${IMG_DIR}
     dpkg -b ${MOD_DIR}
     dpkg -b ${HDR_DIR}
+
+
+更新：2018-06-18：添加关于内核自带打包脚本的内容
