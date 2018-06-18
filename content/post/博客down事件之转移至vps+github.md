@@ -55,7 +55,7 @@ post-update 的 hook， 通过密钥验证直接将内容 push 一份到 github 
   > cat > /usr/bin/update-blog-public << EOF
   #!/bin/sh
   cd /home/git/blogpages
-  git unset GIT_DIR  # git 优先使用　GIT_DIR 环境变量而非 PWD 作为 repo 的位置
+  unset GIT_DIR  # git 优先使用　GIT_DIR 环境变量而非 PWD 作为 repo 的位置
                      # 为了使 cd 生效， unset 掉环境变量
   git merge master  # 更新到 master 的内容
   hugo
@@ -78,3 +78,5 @@ post-update 的 hook， 通过密钥验证直接将内容 push 一份到 github 
 ```
 之后，每次更新内容后 git push 就可以了，如果确定不再需要将内容 push 到 gitlab　
 也可以将 gitlab 的 remote 删除．
+
+更新记录： 2018-06-11： update-blog-public中的内容修复
