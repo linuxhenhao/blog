@@ -2,7 +2,7 @@
 title = "XMind打包脚本"
 date = 2018-05-21T21:52:09+08:00
 tags = ["deb", "xmind"]
-categories = ['linux']
+categories = ['operating_system']
 keywords = ['XMind','deb package']
 markup = "mmark"
 +++

@@ -2,7 +2,7 @@
 title = "Linux桌面体系文件默认打开方式工作机理"
 date = 2017-12-08T19:12:46+08:00
 tags = ["文件打开方式", "linux"]
-categories = ['linux', 'others']
+categories = ['operating_system']
 keywords = ['文件打开方式', 'xdg-open', 'mime']
 +++
 ## 缘由

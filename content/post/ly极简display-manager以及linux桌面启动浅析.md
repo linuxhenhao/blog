@@ -1,8 +1,8 @@
 +++
 title = "Ly极简display Manager以及linux桌面启动浅析"
 date = 2018-02-06T22:23:53+08:00
-tags = ["linux", "desktop"]
-categories = ['linux', 'desktop']
+tags = ["operating_system"]
+categories = ['operating_system', 'linux']
 keywords = ['ly', 'display manager', 'desktop startup process']
 markup = "mmark"
 +++

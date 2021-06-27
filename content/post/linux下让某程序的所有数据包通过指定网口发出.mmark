@@ -2,7 +2,7 @@
 title = "Linux下让某程序的所有数据包通过指定网口发出"
 date = 2017-10-29T13:27:35+08:00
 tags = ["route", "linux"]
-categories = ['network', 'linux']
+categories = ['network']
 keywords = ['ip-rule','iptables']
 +++
 让某程序的所有数据通过指定网口发出。这是结合上一篇搭建的虚拟连接实现的特定功能，达到一些

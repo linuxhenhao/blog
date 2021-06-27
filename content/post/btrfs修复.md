@@ -2,7 +2,7 @@
 title = "Btrfs修复(伪)及损坏预防"
 date = 2018-04-15T11:33:13+08:00
 tags = ["orangepi", "btrfs"]
-categories = ['linux']
+categories = ['operating_system']
 keywords = ['orangepi','btrfs', 'repair']
 markup = "mmark"
 +++

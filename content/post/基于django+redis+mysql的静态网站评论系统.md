@@ -2,7 +2,7 @@
 title = "基于django+redis+mysql的静态网站评论系统"
 date = 2018-03-17T17:29:54+08:00
 tags = ["Django", "Docker"]
-categories = ['web', 'linux']
+categories = ['web']
 keywords = ['Django','mysql', 'redis']
 draft = true
 markup = "mmark"

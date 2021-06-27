@@ -2,7 +2,7 @@
 title = "Iptables中owener信息的来源以及wireguard发包带有owner信息的原因探索"
 date = 2017-10-30T19:41:47+08:00
 tags = ["iptables", "owner"]
-categories = ['linux', 'network']
+categories = ['network']
 keywords = ['iptables','owner match']
 +++
 在上一篇关于iptables让特定程序走特定网卡的文章中用到了iptables的owner match，有些好奇

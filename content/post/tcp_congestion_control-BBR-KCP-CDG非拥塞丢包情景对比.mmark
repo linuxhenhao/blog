@@ -1,5 +1,5 @@
 +++
-categories= ["network", "linux"]
+categories= ["network"]
 tags= ["congestion", "control","network","tcp"]
 keywords= ["BBR","kcp","cdg","Delay Gradient","none congestion related loss"]
 title= "Tcp_congestion_control BBR KCP CDG非拥塞丢包情景对比"

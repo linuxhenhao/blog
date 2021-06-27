@@ -2,7 +2,7 @@
 title = "Debian系简易内核打包脚本"
 date = 2017-11-27T20:29:02+08:00
 tags = ["debian", "linux", "kernel package"]
-categories = ['linux']
+categories = ['operating_system']
 keywords = ['kernel deb package','debian']
 +++
 

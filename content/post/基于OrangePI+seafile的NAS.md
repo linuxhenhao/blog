@@ -2,7 +2,7 @@
 title = "基于OrangePi+seafile的NAS"
 date = 2018-03-30T14:12:25+08:00
 tags = ["armhf", "linux"]
-categories = ['linux', 'web']
+categories = ['storage']
 keywords = ['orangepi','seafile', 'NAS']
 markup = "mmark"
 +++

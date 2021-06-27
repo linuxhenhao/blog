@@ -2,7 +2,7 @@
 title = "博客down事件之转移至vps+github"
 date = 2018-03-31T10:41:16+08:00
 tags = ["blog", "git hooks"]
-categories = ['web', 'linux']
+categories = ['web']
 keywords = ['blog','gitlab', 'git hooks']
 markup = "mmark"
 +++

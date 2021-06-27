@@ -2,7 +2,7 @@
 title = "记wireguard的ip Rule配置问题"
 date = 2017-10-28T21:24:28+08:00
 tags = ["route", "linux"]
-categories = ['network', 'linux']
+categories = ['network']
 keywords = ['ip-rule','wireguard']
 +++
 虽然学过计算机网络, 但是实践却并不多, 这里以wireguard建立的连接为例, 实践了一下路由配置,

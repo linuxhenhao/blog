@@ -2,7 +2,7 @@
 title = "pyqtgraph实时画图卡顿问题发现及解决"
 date = 2018-03-22T22:31:30+08:00
 tags = ["pyqtgraph", "卡顿"]
-categories = ['python', 'program']
+categories = ['programming']
 keywords = ['pyqtgraph','卡顿']
 markup = "mmark"
 +++

@@ -1,5 +1,5 @@
 +++
-categories = ["linux"]
+categories = ["operating_system"]
 date = "2017-06-07T21:24:07+08:00"
 draft = false
 keywords = ["libimobiledevice","ios", "ifuse"]

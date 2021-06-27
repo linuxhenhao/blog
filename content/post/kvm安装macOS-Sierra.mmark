@@ -3,7 +3,7 @@ date = "2017-06-04T20:51:18+08:00"
 draft = false
 title = "kvm安装macOS Sierra"
 tags = ["kvm", "linux", "macOS Sierra"]
-categories = ["linux", "macOS"]
+categories = ["operating_system"]
 +++
 
 通过修改进行一些修改可以使用virtualbox安装macOS，但是virtualbox跟进内核更新往往存在一定的落后，而kvm不存在这个问题，可以使用最新的内核，而且virt-manager的管理使用起来也很方便。因此采用kvm来安装macOS Sierra。
