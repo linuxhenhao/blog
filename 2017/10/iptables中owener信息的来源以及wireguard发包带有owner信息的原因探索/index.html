@@ -1,0 +1,78 @@
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=generator content="Hugo 0.84.1 with theme Tranquilpeak 0.4.8-BETA"><meta name=author content="Yu Huang"><meta name=keywords content="iptables,owner match"><meta name=description content="在上一篇关于iptables让特定程序走特定网卡的文章中用到了iptables的owner match，有些好奇
+到底是如何知道uid、gid信息的。简单看了眼kernel的代码，应该是找到了答案。"><meta property="og:description" content="在上一篇关于iptables让特定程序走特定网卡的文章中用到了iptables的owner match，有些好奇
+到底是如何知道uid、gid信息的。简单看了眼kernel的代码，应该是找到了答案。"><meta property="og:type" content="article"><meta property="og:title" content="Iptables中owener信息的来源以及wireguard发包带有owner信息的原因探索"><meta name=twitter:title content="Iptables中owener信息的来源以及wireguard发包带有owner信息的原因探索"><meta property="og:url" content="https://blog.huangyu.me/2017/10/iptables%E4%B8%ADowener%E4%BF%A1%E6%81%AF%E7%9A%84%E6%9D%A5%E6%BA%90%E4%BB%A5%E5%8F%8Awireguard%E5%8F%91%E5%8C%85%E5%B8%A6%E6%9C%89owner%E4%BF%A1%E6%81%AF%E7%9A%84%E5%8E%9F%E5%9B%A0%E6%8E%A2%E7%B4%A2/"><meta property="twitter:url" content="https://blog.huangyu.me/2017/10/iptables%E4%B8%ADowener%E4%BF%A1%E6%81%AF%E7%9A%84%E6%9D%A5%E6%BA%90%E4%BB%A5%E5%8F%8Awireguard%E5%8F%91%E5%8C%85%E5%B8%A6%E6%9C%89owner%E4%BF%A1%E6%81%AF%E7%9A%84%E5%8E%9F%E5%9B%A0%E6%8E%A2%E7%B4%A2/"><meta property="og:site_name" content="多学多思考"><meta property="og:description" content="在上一篇关于iptables让特定程序走特定网卡的文章中用到了iptables的owner match，有些好奇
+到底是如何知道uid、gid信息的。简单看了眼kernel的代码，应该是找到了答案。"><meta name=twitter:description content="在上一篇关于iptables让特定程序走特定网卡的文章中用到了iptables的owner match，有些好奇
+到底是如何知道uid、gid信息的。简单看了眼kernel的代码，应该是找到了答案。"><meta property="og:locale" content="zh-cn"><meta property="article:published_time" content="2017-10-30T19:41:47"><meta property="article:modified_time" content="2017-10-30T19:41:47"><meta property="article:section" content="linux"><meta property="article:section" content="network"><meta property="article:tag" content="iptables"><meta property="article:tag" content="owner"><meta name=twitter:card content="summary"><meta name=twitter:site content="@linuxhenhao"><meta name=twitter:creator content="@linuxhenhao"><meta property="og:image" content="https://blog.huangyu.me/images/header.png"><meta property="twitter:image" content="https://blog.huangyu.me/images/header.png"><title>Iptables中owener信息的来源以及wireguard发包带有owner信息的原因探索</title><link rel=icon href=/favicon.ico><link rel=canonical href=https://blog.huangyu.me/2017/10/iptables%E4%B8%ADowener%E4%BF%A1%E6%81%AF%E7%9A%84%E6%9D%A5%E6%BA%90%E4%BB%A5%E5%8F%8Awireguard%E5%8F%91%E5%8C%85%E5%B8%A6%E6%9C%89owner%E4%BF%A1%E6%81%AF%E7%9A%84%E5%8E%9F%E5%9B%A0%E6%8E%A2%E7%B4%A2/><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin=anonymous><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.css integrity="sha256-vuXZ9LGmmwtjqFX1F+EKin1ThZMub58gKULUyf0qECk=" crossorigin=anonymous><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css integrity="sha256-SEa4XYAHihTcEP1f5gARTB2K26Uk8PsndQYHQC1f4jU=" crossorigin=anonymous><link rel=stylesheet href=/css/style-twzjdbqhmnnacqs0pwwdzcdbt8yhv8giawvjqjmyfoqnvazl0dalmnhdkvp7.min.css></head><body><div id=blog><header id=header data-behavior=4><i id=btn-open-sidebar class="fa fa-lg fa-bars"></i><div class=header-title><a class=header-title-link href=/>多学多思考</a></div><a class=header-right-picture href=/#about><img class=header-picture src=https://blog.huangyu.me/images/header.png alt=作者的图片></a></header><nav id=sidebar data-behavior=4><div class=sidebar-container><div class=sidebar-profile><a href=/#about><img class=sidebar-profile-picture src=https://blog.huangyu.me/images/header.png alt=作者的图片></a><h4 class=sidebar-profile-name>Yu Huang</h4><h5 class=sidebar-profile-bio>学而不思则罔，思而不学则殆</h5></div><ul class=sidebar-buttons><li class=sidebar-button><a class=sidebar-button-link href=/categories><i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+<span class=sidebar-button-desc>分类</span></a></li><li class=sidebar-button><a class=sidebar-button-link href=/tags><i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+<span class=sidebar-button-desc>标签</span></a></li><li class=sidebar-button><a class=sidebar-button-link href=/archives><i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+<span class=sidebar-button-desc>归档</span></a></li><li class=sidebar-button><a class=sidebar-button-link href=/#about><i class="sidebar-button-icon fa fa-lg fa-question"></i>
+<span class=sidebar-button-desc>关于</span></a></li><li class=sidebar-button><a class=sidebar-button-link href=/><i class="sidebar-button-icon fa fa-lg fa-home"></i>
+<span class=sidebar-button-desc>首页</span></a></li></ul><ul class=sidebar-buttons><li class=sidebar-button><a class=sidebar-button-link href=/#mail><i class="sidebar-button-icon fa fa-lg fa-envelope-o"></i>
+<span class=sidebar-button-desc>diwang90#gmail</span></a></li><li class=sidebar-button><a class=sidebar-button-link href=https://github.com/linuxhenhao target=_blank rel=noopener><i class="sidebar-button-icon fa fa-lg fa-github"></i>
+<span class=sidebar-button-desc>GitHub</span></a></li></ul><ul class=sidebar-buttons><li class=sidebar-button><a class=sidebar-button-link href=/index.xml><i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+<span class=sidebar-button-desc>RSS</span></a></li></ul></div></nav><div id=main data-behavior=4 class=hasCoverMetaIn><article class=post itemscope itemtype=http://schema.org/BlogPosting><div class="post-header main-content-wrap text-left"><h1 class=post-title itemprop=headline>Iptables中owener信息的来源以及wireguard发包带有owner信息的原因探索</h1><div class="postShorten-meta post-meta"><time itemprop=datePublished datetime=2017-10-30T19:41:47+08:00>十月 30, 2017</time>
+<span>发布在</span>
+<a class=category-link href=/categories/linux>linux</a>,
+<a class=category-link href=/categories/network>network</a></div></div><div class="post-content markdown" itemprop=articleBody><div class=main-content-wrap><p>在上一篇关于iptables让特定程序走特定网卡的文章中用到了iptables的owner match，有些好奇
+到底是如何知道<code>uid、gid</code>信息的。简单看了眼kernel的代码，应该是找到了答案。</p><p>google的时候找到了netfilter_queue的代码，其中关于uid、gid获取的部分用的是</p><pre><code>struct ntf_data-&gt;sk-&gt;uid、gid</code></pre><p>那么socket结构当中是不是本身就包含了<code>uid、gid</code>信息？在内核代码中找到了答案。
+用</p><pre><code>find . -exec grep -iE &#39;(uid|gid)&#39; {} \;</code></pre><p>在4.13.10内核代码的net文件夹下的socket.c文件中找到了</p><pre><code>struct socket *sock_alloc(void)
+{
+    struct inode *inode;
+    struct socket *sock;
+
+    inode = new_inode_pseudo(sock_mnt-&gt;mnt_sb);
+    if (!inode)
+        return NULL;
+
+    sock = SOCKET_I(inode);
+
+    kmemcheck_annotate_bitfield(sock, type);
+    inode-&gt;i_ino = get_next_ino();
+    inode-&gt;i_mode = S_IFSOCK | S_IRWXUGO;
+    inode-&gt;i_uid = current_fsuid();
+    inode-&gt;i_gid = current_fsgid();
+    inode-&gt;i_op = &amp;sockfs_inode_ops;
+
+    this_cpu_add(sockets_in_use, 1);
+    return sock;
+}</code></pre><p>该代码用来初始化一个用来通讯的socket，不管是tcp还是udp等，都会调用到这个接口。创建一个虚拟
+的inode，*nix下一切皆文件的思想很明显，这个inode通过current_fsuid()和current_fsgid()获取
+到uid和gid. 然后通过SOCKET_I生成socket用来进行通讯。所有的包都在sk_buff（简称ＳＫＢ）中传输
+，其中从本系统发出的包的SKB中会有一个<code>skb->sock</code>指向这个包的来源。netfilter作为内核组件，
+自然能够得到该sock，从而简单的得到包的<code>uid、gid</code>。</p><h2 id=wireguard相关问题>wireguard相关问题</h2><h3 id=一般虚拟连接的>一般虚拟连接的</h3><p>虚拟连接软件都是创建一个虚拟网卡，然后系统将其当成实际的网卡来使用，从而达到利用虚拟连接软件
+建立的虚拟连接传输包的目的。</p><p>虚拟连接软件的虚拟网卡应该模拟实际网卡的行为。那么我们看wireguard的问题。从系统来说，一个
+包从应用层一直传输到device，从device发出之后的包当然不会再带有本系统发包来源sock信息了，
+这应该只是内核空间能看到的信息。但是wireguard却不是如此，它从头到尾用的都是初始的skb，而
+这个skb带有sock信息，这造成了包发到它创建的虚拟网卡之后，从内核再次发出时仍带有包发到虚拟网卡
+之前的信息，特别是所关注的owner信息。这种非常规的行为会在进行<code>iptables</code>规则设置时产生我所遇到
+的问题。</p><h3 id=源码分析>源码分析</h3><p>在wireguard的device.c当中，<code>xmit</code>为发包函数</p><pre><code>static netdev_tx_t xmit(struct sk_buff *skb, struct net_device *dev)</code></pre><p>其skb对象就包含了用户软件的<code>sock</code>信息。它通过<code>__skb_queue_tail(&packets, skb)</code>直接将
+该skb添加到了对应route的peer（wireguard的其他结点都是peer，维护了一个peer结构，用来保存
+peer相关信息，它包含一个代发送包列表）待发送队列当中。然后通过调用send.c中的</p><pre><code>void packet_send_staged_packets(struct wireguard_peer *peer)</code></pre><p>将各个<code>peer</code>对象中队列的包发往相应的网络上的主机。该函数通过调用同一文件内的</p><pre><code>static void packet_create_data(struct sk_buff *first)
+queue_enqueue_per_device_and_peer(&amp;wg-&gt;encrypt_queue, &amp;peer-&gt;tx_queue, first,
+   wg-&gt;packet_crypt_wq, &amp;wg-&gt;encrypt_queue.last_cpu);
+# queueing.h中上述enqueue函数的关键点
+queue_work_on(cpu, wq, &amp;per_cpu_ptr(device_queue-&gt;worker, cpu)-&gt;work)    </code></pre><p>将要发送的包添加加密队列中。然后首先放到加密worker中进行包的加密，此时skb中的
+sock信息还是那个从软件发出的信息，没有改变。加密通过send.c中的skb_encrypt加密：</p><pre><code>static inline bool skb_encrypt(struct sk_buff *skb,
+                     struct noise_keypair *keypair, bool have_simd)</code></pre><p>查看该函数源码，使用了加密函数加密，变更了skb里面的数据内容，更新checksum，但是，skb->
+sock仍然没有更改，在此之后，包含skb的list就被放入发送队列进行发送了。</p><pre><code>queue_enqueue_per_peer(&amp;PACKET_PEER(first)-&gt;tx_queue, first, state);</code></pre><p>send.c中有tx_queue的work具体实现，通过使用</p><pre><code>static void packet_create_data_done(struct sk_buff *first, struct wireguard_peer *peer)
+{
+  ...
+  if (likely(!socket_send_skb_to_peer(peer, skb, PACKET_CB(skb)-&gt;ds) &amp;&amp; !is_keepalive))
+  ...
+}</code></pre><p>进行数据包的发送，使用的时socket_send_skb_to_peer，该函数用<code>send4</code>和<code>send6</code>，在<code>sendx</code>
+函数中，对skb的dev、mark进行了设置，但是同样skb->sock没有更改，然后调用</p><pre><code>udp_tunnel_xmit_skb(rt, sock, skb, fl.saddr, fl.daddr, ds,
+  ip4_dst_hoplimit(&amp;rt-&gt;dst), 0, fl.fl4_sport, fl.fl4_dport, false, false);
+{
+  ...
+  if (!skb-&gt;sk)
+    skb-&gt;sk = sk;
+  ...
+}</code></pre><p><strong>这就是关键，这个判断，skb->sk由于出自本机，是带有sk的，这里作判断，如果有就不做更改，没有，
+将该skb的sk设置成wireguard用来发送的sock</strong>，这个机制应该是不合理的，虚拟连接软件应当做到
+尽可能的与实际网卡相同的行为，从而在配置诸如iptables、ip-rule方面简单方便。网络包到网卡之后
+其发送的sk信息应当被抛弃，所以这个判断应该删除。</p></div></div><div id=post-footer class="post-footer main-content-wrap"><div class=post-footer-tags><span class="text-color-light text-small">标签</span><br><a class="tag tag--primary tag--small" href=/tags/iptables/>iptables</a>
+<a class="tag tag--primary tag--small" href=/tags/owner/>owner</a></div><div class=post-actions-wrap><nav><ul class="post-actions post-action-nav"><li class=post-action><a class="post-action-btn btn btn--default tooltip--top" href=/2017/11/%E5%A4%9A%E5%8A%9F%E8%83%BD%E5%90%AF%E5%8A%A8u%E7%9B%98/ data-tooltip=多功能启动U盘><i class="fa fa-angle-left"></i>
+<span class="hide-xs hide-sm text-small icon-ml">下一篇</span></a></li><li class=post-action><a class="post-action-btn btn btn--default tooltip--top" href=/2017/10/linux%E4%B8%8B%E8%AE%A9%E6%9F%90%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%89%80%E6%9C%89%E6%95%B0%E6%8D%AE%E5%8C%85%E9%80%9A%E8%BF%87%E6%8C%87%E5%AE%9A%E7%BD%91%E5%8F%A3%E5%8F%91%E5%87%BA/ data-tooltip=Linux下让某程序的所有数据包通过指定网口发出><span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+<i class="fa fa-angle-right"></i></a></li></ul></nav><ul class="post-actions post-action-share"><li class="post-action hide-lg hide-md hide-sm"><a class="post-action-btn btn btn--default btn-open-shareoptions" href=#btn-open-shareoptions><i class="fa fa-share-alt"></i></a></li><li class=post-action><a class="post-action-btn btn btn--default" href=#><i class="fa fa-list"></i></a></li></ul></div></div></article><footer id=footer class=main-content-wrap><span class=copyrights>&copy; 2021 Yu Huang. All Rights Reserved</span></footer></div><div id=bottom-bar class=post-bottom-bar data-behavior=4><div class=post-actions-wrap><nav><ul class="post-actions post-action-nav"><li class=post-action><a class="post-action-btn btn btn--default tooltip--top" href=/2017/11/%E5%A4%9A%E5%8A%9F%E8%83%BD%E5%90%AF%E5%8A%A8u%E7%9B%98/ data-tooltip=多功能启动U盘><i class="fa fa-angle-left"></i>
+<span class="hide-xs hide-sm text-small icon-ml">下一篇</span></a></li><li class=post-action><a class="post-action-btn btn btn--default tooltip--top" href=/2017/10/linux%E4%B8%8B%E8%AE%A9%E6%9F%90%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%89%80%E6%9C%89%E6%95%B0%E6%8D%AE%E5%8C%85%E9%80%9A%E8%BF%87%E6%8C%87%E5%AE%9A%E7%BD%91%E5%8F%A3%E5%8F%91%E5%87%BA/ data-tooltip=Linux下让某程序的所有数据包通过指定网口发出><span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+<i class="fa fa-angle-right"></i></a></li></ul></nav><ul class="post-actions post-action-share"><li class="post-action hide-lg hide-md hide-sm"><a class="post-action-btn btn btn--default btn-open-shareoptions" href=#btn-open-shareoptions><i class="fa fa-share-alt"></i></a></li><li class=post-action><a class="post-action-btn btn btn--default" href=#><i class="fa fa-list"></i></a></li></ul></div></div><div id=share-options-bar class=share-options-bar data-behavior=4><i id=btn-close-shareoptions class="fa fa-close"></i><ul class=share-options></ul></div><div id=share-options-mask class=share-options-mask></div></div><div id=about><div id=about-card><div id=about-btn-close><i class="fa fa-remove"></i></div><img id=about-card-picture src=https://blog.huangyu.me/images/header.png alt=作者的图片><h4 id=about-card-name>Yu Huang</h4><div id=about-card-bio>学而不思则罔，思而不学则殆</div><div id=about-card-job><i class="fa fa-briefcase"></i><br>想做程序猿</div><div id=about-card-location><i class="fa fa-map-marker"></i><br>Dream road</div></div></div><div id=cover style=background-image:url(https://blog.huangyu.me/images/cover.jpg)></div><script src=https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin=anonymous></script><script src=https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin=anonymous></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js integrity="sha256-GEAnjcTqVP+vBp3SSc8bEDQqvWAZMiHyUSIorrWwH50=" crossorigin=anonymous></script><script src=/js/script-pcw6v3xilnxydl1vddzazdverrnn9ctynvnxgwho987mfyqkuylcb1nlt.min.js></script><script lang=javascript>window.onload=updateMinWidth,window.onresize=updateMinWidth,document.getElementById("sidebar").addEventListener("transitionend",updateMinWidth);function updateMinWidth(){var b=document.getElementById("sidebar"),a=document.getElementById("main"),c,d,e;a.style.minWidth="",c=getComputedStyle(a).getPropertyValue("min-width"),d=getComputedStyle(b).getPropertyValue("width"),e=getComputedStyle(b).getPropertyValue("left"),a.style.minWidth=`calc(${c} - ${d} - ${e})`}</script><script>$(document).ready(function(){hljs.configure({classPrefix:'',useBR:!1}),$('pre.code-highlight > code, pre > code').each(function(b,a){$(this).hasClass('codeblock')||$(this).addClass('codeblock'),hljs.highlightBlock(a)})})</script></body></html>

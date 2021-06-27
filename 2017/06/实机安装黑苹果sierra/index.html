@@ -1,0 +1,111 @@
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=generator content="Hugo 0.84.1 with theme Tranquilpeak 0.4.8-BETA"><meta name=author content="Yu Huang"><meta name=keywords content="黑苹果,实机安装"><meta name=description content="虚拟机里面不论是kvm还是virtualbox都安装过Sierra了，即使是在SSD上使用，其流畅性和舒适度还是无法和实机安装相比的，
+因此最终还是安装了黑苹果，用起来很舒服。
+
+首先是主机参数：
+
+cpu:       i5 4590
+主板:      B85M-d2v
+显卡:      hd4600集显，AMD R9 285
+声卡:      RealTek ACL 887
+网卡:      rtl8111"><meta property="og:description" content="虚拟机里面不论是kvm还是virtualbox都安装过Sierra了，即使是在SSD上使用，其流畅性和舒适度还是无法和实机安装相比的，
+因此最终还是安装了黑苹果，用起来很舒服。
+
+首先是主机参数：
+
+cpu:       i5 4590
+主板:      B85M-d2v
+显卡:      hd4600集显，AMD R9 285
+声卡:      RealTek ACL 887
+网卡:      rtl8111"><meta property="og:type" content="article"><meta property="og:title" content="实机安装黑苹果Sierra"><meta name=twitter:title content="实机安装黑苹果Sierra"><meta property="og:url" content="https://blog.huangyu.me/2017/06/%E5%AE%9E%E6%9C%BA%E5%AE%89%E8%A3%85%E9%BB%91%E8%8B%B9%E6%9E%9Csierra/"><meta property="twitter:url" content="https://blog.huangyu.me/2017/06/%E5%AE%9E%E6%9C%BA%E5%AE%89%E8%A3%85%E9%BB%91%E8%8B%B9%E6%9E%9Csierra/"><meta property="og:site_name" content="多学多思考"><meta property="og:description" content="虚拟机里面不论是kvm还是virtualbox都安装过Sierra了，即使是在SSD上使用，其流畅性和舒适度还是无法和实机安装相比的，
+因此最终还是安装了黑苹果，用起来很舒服。
+
+首先是主机参数：
+
+cpu:       i5 4590
+主板:      B85M-d2v
+显卡:      hd4600集显，AMD R9 285
+声卡:      RealTek ACL 887
+网卡:      rtl8111"><meta name=twitter:description content="虚拟机里面不论是kvm还是virtualbox都安装过Sierra了，即使是在SSD上使用，其流畅性和舒适度还是无法和实机安装相比的，
+因此最终还是安装了黑苹果，用起来很舒服。
+
+首先是主机参数：
+
+cpu:       i5 4590
+主板:      B85M-d2v
+显卡:      hd4600集显，AMD R9 285
+声卡:      RealTek ACL 887
+网卡:      rtl8111"><meta property="og:locale" content="zh-cn"><meta property="article:published_time" content="2017-06-15T23:36:03"><meta property="article:modified_time" content="2017-06-15T23:36:03"><meta property="article:section" content="hacintosh"><meta property="article:section" content="macOS"><meta property="article:tag" content="黑苹果"><meta property="article:tag" content="实机安装"><meta name=twitter:card content="summary"><meta name=twitter:site content="@linuxhenhao"><meta name=twitter:creator content="@linuxhenhao"><meta property="og:image" content="https://blog.huangyu.me/images/header.png"><meta property="twitter:image" content="https://blog.huangyu.me/images/header.png"><title>实机安装黑苹果Sierra</title><link rel=icon href=/favicon.ico><link rel=canonical href=https://blog.huangyu.me/2017/06/%E5%AE%9E%E6%9C%BA%E5%AE%89%E8%A3%85%E9%BB%91%E8%8B%B9%E6%9E%9Csierra/><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin=anonymous><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.css integrity="sha256-vuXZ9LGmmwtjqFX1F+EKin1ThZMub58gKULUyf0qECk=" crossorigin=anonymous><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css integrity="sha256-SEa4XYAHihTcEP1f5gARTB2K26Uk8PsndQYHQC1f4jU=" crossorigin=anonymous><link rel=stylesheet href=/css/style-twzjdbqhmnnacqs0pwwdzcdbt8yhv8giawvjqjmyfoqnvazl0dalmnhdkvp7.min.css></head><body><div id=blog><header id=header data-behavior=4><i id=btn-open-sidebar class="fa fa-lg fa-bars"></i><div class=header-title><a class=header-title-link href=/>多学多思考</a></div><a class=header-right-picture href=/#about><img class=header-picture src=https://blog.huangyu.me/images/header.png alt=作者的图片></a></header><nav id=sidebar data-behavior=4><div class=sidebar-container><div class=sidebar-profile><a href=/#about><img class=sidebar-profile-picture src=https://blog.huangyu.me/images/header.png alt=作者的图片></a><h4 class=sidebar-profile-name>Yu Huang</h4><h5 class=sidebar-profile-bio>学而不思则罔，思而不学则殆</h5></div><ul class=sidebar-buttons><li class=sidebar-button><a class=sidebar-button-link href=/categories><i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+<span class=sidebar-button-desc>分类</span></a></li><li class=sidebar-button><a class=sidebar-button-link href=/tags><i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+<span class=sidebar-button-desc>标签</span></a></li><li class=sidebar-button><a class=sidebar-button-link href=/archives><i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+<span class=sidebar-button-desc>归档</span></a></li><li class=sidebar-button><a class=sidebar-button-link href=/#about><i class="sidebar-button-icon fa fa-lg fa-question"></i>
+<span class=sidebar-button-desc>关于</span></a></li><li class=sidebar-button><a class=sidebar-button-link href=/><i class="sidebar-button-icon fa fa-lg fa-home"></i>
+<span class=sidebar-button-desc>首页</span></a></li></ul><ul class=sidebar-buttons><li class=sidebar-button><a class=sidebar-button-link href=/#mail><i class="sidebar-button-icon fa fa-lg fa-envelope-o"></i>
+<span class=sidebar-button-desc>diwang90#gmail</span></a></li><li class=sidebar-button><a class=sidebar-button-link href=https://github.com/linuxhenhao target=_blank rel=noopener><i class="sidebar-button-icon fa fa-lg fa-github"></i>
+<span class=sidebar-button-desc>GitHub</span></a></li></ul><ul class=sidebar-buttons><li class=sidebar-button><a class=sidebar-button-link href=/index.xml><i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+<span class=sidebar-button-desc>RSS</span></a></li></ul></div></nav><div id=main data-behavior=4 class=hasCoverMetaIn><article class=post itemscope itemtype=http://schema.org/BlogPosting><div class="post-header main-content-wrap text-left"><h1 class=post-title itemprop=headline>实机安装黑苹果Sierra</h1><div class="postShorten-meta post-meta"><time itemprop=datePublished datetime=2017-06-15T23:36:03+08:00>六月 15, 2017</time>
+<span>发布在</span>
+<a class=category-link href=/categories/hacintosh>hacintosh</a>,
+<a class=category-link href=/categories/macos>macOS</a></div></div><div class="post-content markdown" itemprop=articleBody><div class=main-content-wrap><p>虚拟机里面不论是kvm还是virtualbox都安装过Sierra了，即使是在SSD上使用，其流畅性和舒适度还是无法和实机安装相比的，
+因此最终还是安装了黑苹果，用起来很舒服。</p><h3 id=首先是主机参数>首先是主机参数：</h3><p>cpu: i5 4590<br>主板: B85M-d2v<br>显卡: hd4600集显，AMD R9 285<br>声卡: RealTek ACL 887<br>网卡: rtl8111</p><p>由于macOS换到x86平台已经很长时间了，而且都是intel的cpu，所以黑苹果安装比较容易，主要解决了hd4600的完整驱动，
+以及声卡网卡的驱动，一切就搞定了。</p><p>现在一般都是采用Clover + UEFI + GPT的方式安装了，我这次的安装同样是这个方案，clover实在是做了太多的工作，极大
+的简化了黑苹果的安装和使用。</p><h2 id=1-在虚拟机的macos的app-store中下载安装app>1. 在虚拟机的macOS的app Store中下载安装app</h2><p>下载之后会在/Applications文件夹中，我这里下载的是Sierra的安装包，路径为
+<code>/Applications/Install macOS Sierra.app</code>然后</p><pre><code>/Applications/Install macOS Sierra.app/contents/Resources/createinstallmedia --volume /Volumes/{usb} \
+--applicationpath /Applications/Install macOS Sierra.app --nointeraction</code></pre><p>其中{usb}是通过host分配给virtualbox虚拟机的U盘的名称，mac自动挂载，会给它一个命名，比如一个label为“哈哈的U盘”，
+那么就是<code>--volume /Volumes/哈哈的U盘</code>。创建安装盘完成后，就可以进行第二步，clover的设置了。</p><h2 id=2-clover设置>2. clover设置</h2><p><a href=https://github.com/linuxhenhao/hackintosh>github</a>上有clover的efi文件夹和config.plist文件
+由于采用的是UEFI+CLOVER+GPT的方式安装系统，是不需要像mbr那样在分区表那块写入第一阶段引导代码的，uefi会直接找efi分区，
+然后找该分区下EFI文件夹下的boot/boot.efi，也可以不是这个文件名，那就需要用譬如windows平台下的easyEFI添加一下clover
+的<code>/EFI/CLOVER/CLOVERX64.EFI</code>。</p><h3 id=21-clover-安装>2.1 clover 安装</h3><p>首先需要新建，或者已有一个fat32的分区，大小500M或者2、300M都可以，需要添加esp和boot的标签，这样主板的uefi固件才能知道
+这个分区是存放efi文件的分区。然后在该分区下新建一个<code>EFI</code>文件夹，将上面的github里的CLOVER文件夹放到该文件夹下，新建一个
+<code>Boot</code>文件夹在<code>EFI</code>文件夹下，然后把CLOVER文件夹下的CLOVERX64.EFI复制过来，文件名改为<code>Bootx64.efi</code>，这个是选择以EFI
+方式启动后的默认加载文件的文件名，不用写入机器固件中。
+或者从CLOVER的<a href=https://sourceforge.net/projects/cloverefiboot/files/Bootable_ISO/>SourceForge</a>页面下载
+iso文件，复制iso里的boot和clover文件夹到新建的EFI文件夹下就OK。<figure><img src=/images/bootableEFIClover.png alt="clover efi"></figure></p><h3 id=22-clover的配置>2.2 clover的配置</h3><h4 id=221-efi驱动文件>2.2.1 efi驱动文件</h4><p>安装好clover之后接下来就是配置了，由于clover开发者们的great works，我们现在可以很简单的就安装好黑苹果，对于EFI方式
+安装，需要的efi驱动文件都应该放在EFI/CLOVER/drivers64UEFI文件夹下，有几个必须的efi文件，如果缺少的话一定要下载放好，
+否者安装过程都进不了，直接卡死。</p><p>hfsplus.efi # 用来读取hfsplus分区的内容，做出来的安装U盘就是这个格式，所以这是必须的
+partitiondxe.efi # 不知道干什么的，clover的wiki上说这个是必须的
+osxaptiofix2drv.efi # 做一些仿冒工作，然内核能够启动（好像是这样）
+fsinject.efi # inject kext必须的驱动</p><h4 id=222-kext文件>2.2.2 kext文件</h4><p>clover可以加载内核扩展，当然对于新的macOS，由于SIP的存在，必须在clover的配置文件里配置了CsrActiveConfig才可以加载
+和更改系统/S/L/E文件夹下面的kext。kext放置的位置在<code>/EFI/CLOVER/kexts/版本号/</code>，如果列出的版本号中没有你的macOS版本，
+kexts放到Other文件夹下就可以。
+只有一个扩展是必须的<em>FakeSMC.kext</em>，最新的<a href=https://bitbucket.org/RehabMan/os-x-fakesmc-kozlek/downloads/>下载地址</a>
+我这里还有一个rtl8111.kext的网卡驱动,<a href=https://bitbucket.org/RehabMan/os-x-realtek-network/downloads/>下载地址</a>
+还有Lilu.kext <a href=https://github.com/vit9696/Lilu>地址</a>，这是一个提供方便patch内核扩展的扩展，可以减少很多重复工作，不需要修
+该系统硬盘上的kext文件而热修改内容，从而实现一些功能，比如我的声卡就是用依赖于Lilu的AppleALC.kext驱动的，<a href=https://github.com/vit9696/AppleALC>地址</a>
+当然，AppleALC.kext还需要在config.plist进行layout的指定，不然出不了声音。</p><h4 id=223-configplist文件>2.2.3 config.plist文件</h4><p>这是配置的关键，可以仿冒硬件id，让硬件使用原生驱动，可以patch系统的内核扩展，让其支持我们的硬件，只有正确的配置文件才能够达到
+比较好的使用体验，当然第一步是一个能够让系统启动起来的配置文件，可以参考我的<a href=https://github.com/linuxhenhao/hackintosh>github</a>
+中的配置文件。主要是显卡问题，不论是intel的集显还是amd、nv的独显，一般都可以直接用bing搜索相应的显卡型号+hackintosh或者clover得到
+我们需要的配置。一些具体细节的东西需要参考clover的<a href=https://clover-wiki.zetam.org/Configuration>wiki</a>。
+这些kext都是放在/EFI/CLOVER/kexts/10.12或者others里面。</p><h5 id=显卡>显卡</h5><p>这里我的独显启动很蛋疼，在Yosemite的时候还可以免配置使用，但是之后的所有版本，都需要开启集显，并且把集显设置为primary的情况下，盲着
+在clover的界面（因为只有一个显示器，接的独显）进入mac，然后系统进来后，login界面会让R9 285显示出来。很麻烦，所以最后只用HD4600的集显了。</p><p>hd4600的配置，需要配置两个地方，一个是Graphics选项下的Inject部分的Intel设置为True，还需要设置ig-platfor-id.</p><pre><code>&lt;key&gt;Graphics&lt;/key&gt;
+	&lt;dict&gt;
+		&lt;key&gt;Inject&lt;/key&gt;
+		&lt;dict&gt;
+			&lt;key&gt;ATI&lt;/key&gt;
+			&lt;false/&gt;
+			&lt;key&gt;Intel&lt;/key&gt;
+			&lt;true/&gt;
+			&lt;key&gt;NVidia&lt;/key&gt;
+			&lt;false/&gt;
+		&lt;/dict&gt;
+		&lt;key&gt;ig-platform-id&lt;/key&gt;
+		&lt;string&gt;0x0a260006&lt;/string&gt;
+		&lt;key&gt;NvidiaSingle&lt;/key&gt;
+		&lt;false/&gt;
+	&lt;/dict&gt;</code></pre><p>只有Inject intel设置为True了，clover才会应用后面的ig-platform-id，ig-platform-id对应的是显卡不同的端口情况，需要找到合适的，只能搜索
+然后一个个测试。有一个必须提出的问题是，由于苹果早就不支持VGA接口了，所以接在VGA接口上是不能够正常驱动的，原来在不inject intel的情况下，系统
+可以进入图形界面，但是不识别显卡型号，并且显存只有7M。inject之后，还接到VGA口上开机黑屏，而接到DVI接口上正常工作，显存和型号都正常。当然
+hdmi和dp接口也都是可以工作的。</p><h5 id=声卡>声卡</h5><pre><code>&lt;key&gt;Audio&lt;/key&gt;
+		&lt;dict&gt;
+			&lt;key&gt;Inject&lt;/key&gt;
+			&lt;string&gt;11&lt;/string&gt;
+		&lt;/dict&gt;</code></pre><p>由于Lilu和AppleALC的存在，只要对audio inject就行了，具体情况的话由于接口的不同，这个值不同，对于B85M-d2v主板自带的ALC887, 设置为11就可以了。
+这个id和上面的显卡id一样，即使成功调用了mac的系统驱动，但是也需要找到对应的layout id，才能够使前面版、后面版的声音都能够正常控制。开始直接
+inject 1，后面版的输出没有问题，但是前面板没有声音，改成11就解决了。只能通过一个一个的试，找到合适的id值。具体型号的驱动有哪些layout id，可以在
+AppleALC的github repo的<a href=https://github.com/vit9696/AppleALC/tree/master/Resources>Resources</a>文件夹里找到对应的显卡型号文件夹，里面包含
+了所有目前被支持的ID值。</p><h2 id=总结>总结</h2><p>其实有了CLover，找到合适的配置文件之后，安装过程是比较简单的，驱动只要有了网卡驱动声卡驱动，显卡驱动，那么最基本的问题也都解决了，安装之后可以
+正常更新、安装软件，体验很好。</p></div></div><div id=post-footer class="post-footer main-content-wrap"><div class=post-footer-tags><span class="text-color-light text-small">标签</span><br><a class="tag tag--primary tag--small" href=/tags/%E9%BB%91%E8%8B%B9%E6%9E%9C/>黑苹果</a>
+<a class="tag tag--primary tag--small" href=/tags/%E5%AE%9E%E6%9C%BA%E5%AE%89%E8%A3%85/>实机安装</a></div><div class=post-actions-wrap><nav><ul class="post-actions post-action-nav"><li class=post-action><a class="post-action-btn btn btn--default tooltip--top" href=/2017/09/%E6%8A%BD%E8%B1%A1%E5%88%86%E5%B1%82-%E4%BB%A5twisted%E4%B8%BA%E4%BE%8B/ data-tooltip=抽象分层-以twisted为例><i class="fa fa-angle-left"></i>
+<span class="hide-xs hide-sm text-small icon-ml">下一篇</span></a></li><li class=post-action><a class="post-action-btn btn btn--default tooltip--top" href=/2017/06/virtualbox%E5%AE%89%E8%A3%85macos/ data-tooltip=virtualbox安装macOS><span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+<i class="fa fa-angle-right"></i></a></li></ul></nav><ul class="post-actions post-action-share"><li class="post-action hide-lg hide-md hide-sm"><a class="post-action-btn btn btn--default btn-open-shareoptions" href=#btn-open-shareoptions><i class="fa fa-share-alt"></i></a></li><li class=post-action><a class="post-action-btn btn btn--default" href=#><i class="fa fa-list"></i></a></li></ul></div></div></article><footer id=footer class=main-content-wrap><span class=copyrights>&copy; 2021 Yu Huang. All Rights Reserved</span></footer></div><div id=bottom-bar class=post-bottom-bar data-behavior=4><div class=post-actions-wrap><nav><ul class="post-actions post-action-nav"><li class=post-action><a class="post-action-btn btn btn--default tooltip--top" href=/2017/09/%E6%8A%BD%E8%B1%A1%E5%88%86%E5%B1%82-%E4%BB%A5twisted%E4%B8%BA%E4%BE%8B/ data-tooltip=抽象分层-以twisted为例><i class="fa fa-angle-left"></i>
+<span class="hide-xs hide-sm text-small icon-ml">下一篇</span></a></li><li class=post-action><a class="post-action-btn btn btn--default tooltip--top" href=/2017/06/virtualbox%E5%AE%89%E8%A3%85macos/ data-tooltip=virtualbox安装macOS><span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+<i class="fa fa-angle-right"></i></a></li></ul></nav><ul class="post-actions post-action-share"><li class="post-action hide-lg hide-md hide-sm"><a class="post-action-btn btn btn--default btn-open-shareoptions" href=#btn-open-shareoptions><i class="fa fa-share-alt"></i></a></li><li class=post-action><a class="post-action-btn btn btn--default" href=#><i class="fa fa-list"></i></a></li></ul></div></div><div id=share-options-bar class=share-options-bar data-behavior=4><i id=btn-close-shareoptions class="fa fa-close"></i><ul class=share-options></ul></div><div id=share-options-mask class=share-options-mask></div></div><div id=about><div id=about-card><div id=about-btn-close><i class="fa fa-remove"></i></div><img id=about-card-picture src=https://blog.huangyu.me/images/header.png alt=作者的图片><h4 id=about-card-name>Yu Huang</h4><div id=about-card-bio>学而不思则罔，思而不学则殆</div><div id=about-card-job><i class="fa fa-briefcase"></i><br>想做程序猿</div><div id=about-card-location><i class="fa fa-map-marker"></i><br>Dream road</div></div></div><div id=cover style=background-image:url(https://blog.huangyu.me/images/cover.jpg)></div><script src=https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin=anonymous></script><script src=https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin=anonymous></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js integrity="sha256-GEAnjcTqVP+vBp3SSc8bEDQqvWAZMiHyUSIorrWwH50=" crossorigin=anonymous></script><script src=/js/script-pcw6v3xilnxydl1vddzazdverrnn9ctynvnxgwho987mfyqkuylcb1nlt.min.js></script><script lang=javascript>window.onload=updateMinWidth,window.onresize=updateMinWidth,document.getElementById("sidebar").addEventListener("transitionend",updateMinWidth);function updateMinWidth(){var b=document.getElementById("sidebar"),a=document.getElementById("main"),c,d,e;a.style.minWidth="",c=getComputedStyle(a).getPropertyValue("min-width"),d=getComputedStyle(b).getPropertyValue("width"),e=getComputedStyle(b).getPropertyValue("left"),a.style.minWidth=`calc(${c} - ${d} - ${e})`}</script><script>$(document).ready(function(){hljs.configure({classPrefix:'',useBR:!1}),$('pre.code-highlight > code, pre > code').each(function(b,a){$(this).hasClass('codeblock')||$(this).addClass('codeblock'),hljs.highlightBlock(a)})})</script></body></html>

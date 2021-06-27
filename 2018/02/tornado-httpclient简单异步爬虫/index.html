@@ -1,0 +1,161 @@
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=generator content="Hugo 0.84.1 with theme Tranquilpeak 0.4.8-BETA"><meta name=author content="Yu Huang"><meta name=keywords content="tornado,爬虫,asyncio"><meta name=description content="最近要写篇论文，需要给abstract画个图。在同学那里看到他画的一张图感觉很不错，一问原来是用3Ds marks
+画的。他还给推荐了一个微信公众号，专为科研3D绘图发布教程。为了方便随时随地能够看教程，就生出了
+爬下来的想法。"><meta property="og:description" content="最近要写篇论文，需要给abstract画个图。在同学那里看到他画的一张图感觉很不错，一问原来是用3Ds marks
+画的。他还给推荐了一个微信公众号，专为科研3D绘图发布教程。为了方便随时随地能够看教程，就生出了
+爬下来的想法。"><meta property="og:type" content="article"><meta property="og:title" content="Tornado Httpclient简单异步爬虫"><meta name=twitter:title content="Tornado Httpclient简单异步爬虫"><meta property="og:url" content="https://blog.huangyu.me/2018/02/tornado-httpclient%E7%AE%80%E5%8D%95%E5%BC%82%E6%AD%A5%E7%88%AC%E8%99%AB/"><meta property="twitter:url" content="https://blog.huangyu.me/2018/02/tornado-httpclient%E7%AE%80%E5%8D%95%E5%BC%82%E6%AD%A5%E7%88%AC%E8%99%AB/"><meta property="og:site_name" content="多学多思考"><meta property="og:description" content="最近要写篇论文，需要给abstract画个图。在同学那里看到他画的一张图感觉很不错，一问原来是用3Ds marks
+画的。他还给推荐了一个微信公众号，专为科研3D绘图发布教程。为了方便随时随地能够看教程，就生出了
+爬下来的想法。"><meta name=twitter:description content="最近要写篇论文，需要给abstract画个图。在同学那里看到他画的一张图感觉很不错，一问原来是用3Ds marks
+画的。他还给推荐了一个微信公众号，专为科研3D绘图发布教程。为了方便随时随地能够看教程，就生出了
+爬下来的想法。"><meta property="og:locale" content="zh-cn"><meta property="article:published_time" content="2018-02-21T10:26:49"><meta property="article:modified_time" content="2018-02-21T10:26:49"><meta property="article:section" content="web"><meta property="article:tag" content="tornado"><meta property="article:tag" content="爬虫"><meta name=twitter:card content="summary"><meta name=twitter:site content="@linuxhenhao"><meta name=twitter:creator content="@linuxhenhao"><meta property="og:image" content="https://blog.huangyu.me/images/header.png"><meta property="twitter:image" content="https://blog.huangyu.me/images/header.png"><title>Tornado Httpclient简单异步爬虫</title><link rel=icon href=/favicon.ico><link rel=canonical href=https://blog.huangyu.me/2018/02/tornado-httpclient%E7%AE%80%E5%8D%95%E5%BC%82%E6%AD%A5%E7%88%AC%E8%99%AB/><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin=anonymous><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.css integrity="sha256-vuXZ9LGmmwtjqFX1F+EKin1ThZMub58gKULUyf0qECk=" crossorigin=anonymous><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css integrity="sha256-SEa4XYAHihTcEP1f5gARTB2K26Uk8PsndQYHQC1f4jU=" crossorigin=anonymous><link rel=stylesheet href=/css/style-twzjdbqhmnnacqs0pwwdzcdbt8yhv8giawvjqjmyfoqnvazl0dalmnhdkvp7.min.css></head><body><div id=blog><header id=header data-behavior=4><i id=btn-open-sidebar class="fa fa-lg fa-bars"></i><div class=header-title><a class=header-title-link href=/>多学多思考</a></div><a class=header-right-picture href=/#about><img class=header-picture src=https://blog.huangyu.me/images/header.png alt=作者的图片></a></header><nav id=sidebar data-behavior=4><div class=sidebar-container><div class=sidebar-profile><a href=/#about><img class=sidebar-profile-picture src=https://blog.huangyu.me/images/header.png alt=作者的图片></a><h4 class=sidebar-profile-name>Yu Huang</h4><h5 class=sidebar-profile-bio>学而不思则罔，思而不学则殆</h5></div><ul class=sidebar-buttons><li class=sidebar-button><a class=sidebar-button-link href=/categories><i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+<span class=sidebar-button-desc>分类</span></a></li><li class=sidebar-button><a class=sidebar-button-link href=/tags><i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+<span class=sidebar-button-desc>标签</span></a></li><li class=sidebar-button><a class=sidebar-button-link href=/archives><i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+<span class=sidebar-button-desc>归档</span></a></li><li class=sidebar-button><a class=sidebar-button-link href=/#about><i class="sidebar-button-icon fa fa-lg fa-question"></i>
+<span class=sidebar-button-desc>关于</span></a></li><li class=sidebar-button><a class=sidebar-button-link href=/><i class="sidebar-button-icon fa fa-lg fa-home"></i>
+<span class=sidebar-button-desc>首页</span></a></li></ul><ul class=sidebar-buttons><li class=sidebar-button><a class=sidebar-button-link href=/#mail><i class="sidebar-button-icon fa fa-lg fa-envelope-o"></i>
+<span class=sidebar-button-desc>diwang90#gmail</span></a></li><li class=sidebar-button><a class=sidebar-button-link href=https://github.com/linuxhenhao target=_blank rel=noopener><i class="sidebar-button-icon fa fa-lg fa-github"></i>
+<span class=sidebar-button-desc>GitHub</span></a></li></ul><ul class=sidebar-buttons><li class=sidebar-button><a class=sidebar-button-link href=/index.xml><i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+<span class=sidebar-button-desc>RSS</span></a></li></ul></div></nav><div id=main data-behavior=4 class=hasCoverMetaIn><article class=post itemscope itemtype=http://schema.org/BlogPosting><div class="post-header main-content-wrap text-left"><h1 class=post-title itemprop=headline>Tornado Httpclient简单异步爬虫</h1><div class="postShorten-meta post-meta"><time itemprop=datePublished datetime=2018-02-21T10:26:49+08:00>二月 21, 2018</time>
+<span>发布在</span>
+<a class=category-link href=/categories/web>web</a></div></div><div class="post-content markdown" itemprop=articleBody><div class=main-content-wrap><p>最近要写篇论文，需要给abstract画个图。在同学那里看到他画的一张图感觉很不错，一问原来是用3Ds marks
+画的。他还给推荐了一个微信公众号，专为科研3D绘图发布教程。为了方便随时随地能够看教程，就生出了
+爬下来的想法。</p><p>也用 python 几年时间了， python 做爬虫似乎比较流行，实际就 python 的特性来看，python 对于爬虫方面
+的应用确实适用：丰富的库可以减少大量重复工作，可以用较少的代码实现功能，网络爬虫的性能瓶颈往往
+在于网络IO而非 python代码的执行速度。</p><p>用浏览器打开该公众号的网址，发现可以直接查看，说明该公众号内容并未做验证，不需要cookie，不需要
+通过微信，直接用tornado的httpclient就可以爬取，是一个最基础的爬取过程。</p><p>爬虫爬取内容的过程：
+获取网页内容->理解网页内容->获取需要的内容</p><h3 id=1-获取网页内容>1. 获取网页内容</h3><p>就是通过url获取入口页面的html内容。</p><h3 id=2-理解网页内容>2. 理解网页内容</h3><p>这里就各显神通了，对于内容简单的 html 内容，可以直接手工处理。对于稍微复杂一点，不涉及太多或者复杂
+js 运行的 html 网页，可以用能够理解 html 各标签的库处理，比如本文使用的 beautifulsoup4。对于
+更复杂的网页，可以使用 selenium 或者类似的手段，直接通过 headless 的浏览器对网页内容进行处理。
+然后就可以通过 API 调用高效的进行后续的处理。</p><h3 id=3-获取所需的内容>3. 获取所需的内容</h3><p>根据<code>2</code>中的处理后的对象，可以轻易获取想要的内容。比如<code>img</code>标签的<code>src</code>，<code>a</code>标签的<code>href</code>。然后
+获取相应内容即可。</p><h2 id=公众号教程页面爬取>公众号教程页面爬取</h2><h3 id=1-公众号内容组织>1. 公众号内容组织</h3><p>该公众号的内容组织十分简单，一个总览页，罗列了绝大部分的（最新的可能没有）教程，每个教程用一个代表
+最终成果的图片，点击图片可以跳转到相应的教程页面。</p><h3 id=2-需要的处理>2. 需要的处理</h3><p>爬这个教程需要将首页及图片爬过来，然后将每个图片中的<code>a</code>标签的对应的详细教程页面爬取过来。将<code>a</code>
+标签的<code>href</code>替换为本地的网址，以保存文件夹作为根目录。将所有的图片保存到本地的<code>images</code>文件夹
+中，将所有对应的<code>img</code>标签的<code>src</code>替换程本地以根目录作为网站根的地址。对于教程详细页面的文件名，
+需要将<code>titile</code>提取出来作为文件名保存，以<code>.html</code>作为后缀。所有的图片也进行重命名，将<code>url</code>的
+地址进行<code>base32</code>编码。</p><h3 id=3-tornadohttpclient--asyncio异步获取内容>3. tornado-httpclient + asyncio异步获取内容</h3><p>tornado中包含有一个AsyncHTTPClient实现，可以使用它非常方面的实现内容的异步非阻塞获取，加快内
+容获取。tornado 包含对asyncio的支持，在所有的tornado相关代码运行之前，需要将asyncio的loop
+设置为tornado的loop，并且编写代码时，需要注意到tornado的<code>future</code>和asyncio的<code>future</code>不同，
+可以使用<code>tornado.platform.asyncio</code>中的<code>to_asyncio_future</code>和<code>to_tornado_future</code>相互
+转换。下面是一个简单示例：</p><pre><code>from tornado.platform.asyncio import AsyncIOMainLoop, to_asyncio_future
+
+AsyncIOMainLoop().install()  # 使用asyncio的loop作为tornaod的loop
+to_asyncio_future(TORNADO_FUTURE)  # 将tornado的future转化为asyncio的future</code></pre><p>可以用asyncio.gather将多个tornado的<code>AsyncHTTPClient.fetch</code>的<code>future</code>对象集合到一起，
+并行获取，如果采用<code>循环 + await</code>的方式，则是序列化运行的，无法起到加速的目的。</p><p>该公众号的<code>img</code>标签和<code>a</code>标签的<code>src</code>或者<code>href</code>都是藏在其他属性当中，通过页面加载过程中的<code>js</code>
+代码将其设置的，因此代码中需要作相应的处理。这是非常简单的<code>获取 + 设置</code>属性的过程，直接用beautifulsoup4
+载入html内容并修改就是，无需使用浏览器加载或<code>js</code>代码运行器。</p><p>具体代码：</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python>    <span style=color:#f92672>import</span> re
+    <span style=color:#f92672>from</span> hashlib <span style=color:#f92672>import</span> md5
+
+
+    pattern <span style=color:#f92672>=</span> re<span style=color:#f92672>.</span>compile(<span style=color:#e6db74>&#39;\w+&#39;</span>)
+    md5generator <span style=color:#f92672>=</span> md5()
+
+
+    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>validFileName</span>(string):
+        pattern <span style=color:#f92672>=</span> re<span style=color:#f92672>.</span>compile(<span style=color:#e6db74>&#39;[\w]&#39;</span>, flags<span style=color:#f92672>=</span>re<span style=color:#f92672>.</span>UNICODE)
+
+        <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>validator</span>(s):
+            <span style=color:#66d9ef>if</span>(pattern<span style=color:#f92672>.</span>match(s) <span style=color:#f92672>is</span> <span style=color:#f92672>not</span> <span style=color:#66d9ef>None</span>):
+                <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>True</span>
+            <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>False</span>
+        result <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;&#34;</span>
+        newfilter <span style=color:#f92672>=</span> filter(validator, string)
+        <span style=color:#66d9ef>for</span> i <span style=color:#f92672>in</span> newfilter:
+            result <span style=color:#f92672>+=</span> i
+        <span style=color:#66d9ef>return</span> result
+
+
+    <span style=color:#66d9ef>async</span> <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>getUrls</span>():
+        client <span style=color:#f92672>=</span> httpclient<span style=color:#f92672>.</span>HTTPClient()
+        response <span style=color:#f92672>=</span> client<span style=color:#f92672>.</span>fetch(
+                <span style=color:#e6db74>&#34;https://mp.weixin.qq.com/s?__biz=MzIyNjM1MzQ1OA==&amp;mid=100001567&amp;&#34;</span>
+                <span style=color:#e6db74>&#34;idx=1&amp;sn=eb1c1bf42e819e3bd0cfa8ff820e868b&amp;pass_ticket=&#34;</span>
+                <span style=color:#e6db74>&#34;7IZjYPWAyGSWFIcxM&#34;</span>
+                <span style=color:#e6db74>&#34;c3oTa1zQ56eGL</span><span style=color:#e6db74>%2F</span><span style=color:#e6db74>0hiuQkQUZncSHpTZxfQV5tAg0%2Bk8NERI0&#34;</span>)
+        soup <span style=color:#f92672>=</span> BeautifulSoup(response<span style=color:#f92672>.</span>body, <span style=color:#e6db74>&#34;html5lib&#34;</span>)
+        sections <span style=color:#f92672>=</span> soup<span style=color:#f92672>.</span>find_all(<span style=color:#e6db74>&#39;section&#39;</span>, attrs<span style=color:#f92672>=</span>{<span style=color:#e6db74>&#39;data-tools&#39;</span>: <span style=color:#e6db74>&#39;135编辑器&#39;</span>})
+        page_urls <span style=color:#f92672>=</span> list()
+        img_urls <span style=color:#f92672>=</span> list()
+        atags <span style=color:#f92672>=</span> list()
+        <span style=color:#66d9ef>for</span> section <span style=color:#f92672>in</span> sections:
+            <span style=color:#66d9ef>for</span> atag <span style=color:#f92672>in</span> section<span style=color:#f92672>.</span>find_all(<span style=color:#e6db74>&#39;a&#39;</span>):
+                atags<span style=color:#f92672>.</span>append(atag)
+                page_urls<span style=color:#f92672>.</span>append(atag[<span style=color:#e6db74>&#39;href&#39;</span>])
+                img_urls<span style=color:#f92672>.</span>append(atag<span style=color:#f92672>.</span>img[<span style=color:#e6db74>&#39;data-src&#39;</span>])
+
+        coroutines <span style=color:#f92672>=</span> [getPage(url) <span style=color:#66d9ef>for</span> url <span style=color:#f92672>in</span> page_urls]
+        pages <span style=color:#f92672>=</span> <span style=color:#66d9ef>await</span> asyncio<span style=color:#f92672>.</span>gather(<span style=color:#f92672>*</span>coroutines)
+
+        coroutines <span style=color:#f92672>=</span> [getPicsAndChangeSrcSavePage(page)
+                    <span style=color:#66d9ef>for</span> page <span style=color:#f92672>in</span> pages]
+        page_names <span style=color:#f92672>=</span> list()
+        <span style=color:#66d9ef>for</span> page_coroutine <span style=color:#f92672>in</span> coroutines:
+            page_names<span style=color:#f92672>.</span>append(<span style=color:#66d9ef>await</span> page_coroutine)
+
+        img_pathes <span style=color:#f92672>=</span> <span style=color:#66d9ef>await</span> fetchImages(img_urls)
+
+        <span style=color:#66d9ef>for</span> index <span style=color:#f92672>in</span> range(len(atags)):
+            atags[index][<span style=color:#e6db74>&#39;href&#39;</span>] <span style=color:#f92672>=</span> page_names[index]
+            atags[index]<span style=color:#f92672>.</span>img[<span style=color:#e6db74>&#39;src&#39;</span>] <span style=color:#f92672>=</span> img_pathes[index]
+
+        <span style=color:#75715e># write index.html file</span>
+        <span style=color:#66d9ef>with</span> open(<span style=color:#e6db74>&#39;index.html&#39;</span>, <span style=color:#e6db74>&#39;w&#39;</span>) <span style=color:#66d9ef>as</span> index_page:
+            index_page<span style=color:#f92672>.</span>write(str(soup))
+
+
+    <span style=color:#66d9ef>async</span> <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>getPage</span>(url):
+        client <span style=color:#f92672>=</span> httpclient<span style=color:#f92672>.</span>AsyncHTTPClient()
+        print(url)
+        response <span style=color:#f92672>=</span> to_asyncio_future(client<span style=color:#f92672>.</span>fetch(url))
+        result <span style=color:#f92672>=</span> <span style=color:#66d9ef>await</span> response
+        <span style=color:#66d9ef>return</span> result<span style=color:#f92672>.</span>body
+
+
+    <span style=color:#66d9ef>async</span> <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>getPicsAndChangeSrcSavePage</span>(htmlpage):
+        soup <span style=color:#f92672>=</span> BeautifulSoup(htmlpage, <span style=color:#e6db74>&#34;html5lib&#34;</span>)
+        page_name <span style=color:#f92672>=</span> soup<span style=color:#f92672>.</span>head<span style=color:#f92672>.</span>title<span style=color:#f92672>.</span>get_text()
+        page_name <span style=color:#f92672>=</span> validFileName(page_name) <span style=color:#f92672>+</span> <span style=color:#e6db74>&#39;.html&#39;</span>
+        imgs <span style=color:#f92672>=</span> soup<span style=color:#f92672>.</span>find_all(<span style=color:#e6db74>&#39;img&#39;</span>, attrs<span style=color:#f92672>=</span>{<span style=color:#e6db74>&#39;data-src&#39;</span>: pattern})
+        img_urls <span style=color:#f92672>=</span> list()
+        <span style=color:#66d9ef>for</span> img <span style=color:#f92672>in</span> imgs:
+            url <span style=color:#f92672>=</span> img[<span style=color:#e6db74>&#39;data-src&#39;</span>]
+            img_urls<span style=color:#f92672>.</span>append(url)
+        file_pathes <span style=color:#f92672>=</span> <span style=color:#66d9ef>await</span> fetchImages(img_urls)
+        <span style=color:#75715e># replace all img tag&#39;s src</span>
+        <span style=color:#66d9ef>for</span> index <span style=color:#f92672>in</span> range(len(imgs)):
+            imgs[index][<span style=color:#e6db74>&#39;src&#39;</span>] <span style=color:#f92672>=</span> file_pathes[index]
+        <span style=color:#75715e># save page to file</span>
+        <span style=color:#66d9ef>with</span> open(page_name, <span style=color:#e6db74>&#39;w&#39;</span>) <span style=color:#66d9ef>as</span> page_file:
+            page_file<span style=color:#f92672>.</span>write(str(soup))
+        <span style=color:#66d9ef>return</span> page_name
+
+
+    <span style=color:#66d9ef>async</span> <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>fetchImages</span>(urls):
+        client <span style=color:#f92672>=</span> httpclient<span style=color:#f92672>.</span>AsyncHTTPClient()
+        responses <span style=color:#f92672>=</span> <span style=color:#66d9ef>await</span> asyncio<span style=color:#f92672>.</span>gather(
+                <span style=color:#f92672>*</span>[to_asyncio_future(client<span style=color:#f92672>.</span>fetch(url)) <span style=color:#66d9ef>for</span> url <span style=color:#f92672>in</span> urls])
+        <span style=color:#66d9ef>if</span>(<span style=color:#f92672>not</span> os<span style=color:#f92672>.</span>path<span style=color:#f92672>.</span>exists(<span style=color:#e6db74>&#39;images&#39;</span>)):
+            os<span style=color:#f92672>.</span>mkdir(<span style=color:#e6db74>&#39;images&#39;</span>)
+
+        file_pathes <span style=color:#f92672>=</span> list()
+        <span style=color:#66d9ef>for</span> response <span style=color:#f92672>in</span> responses:
+            name <span style=color:#f92672>=</span> response<span style=color:#f92672>.</span>effective_url
+            md5generator<span style=color:#f92672>.</span>update(bytes(name, <span style=color:#e6db74>&#39;utf-8&#39;</span>))
+            encoded_name <span style=color:#f92672>=</span> md5generator<span style=color:#f92672>.</span>hexdigest()
+            <span style=color:#75715e># get extension type in headers such as image/jpeg</span>
+            ext <span style=color:#f92672>=</span> response<span style=color:#f92672>.</span>headers[<span style=color:#e6db74>&#39;Content-Type&#39;</span>]<span style=color:#f92672>.</span>split(<span style=color:#e6db74>&#39;/&#39;</span>)[<span style=color:#ae81ff>1</span>]
+            file_name <span style=color:#f92672>=</span> encoded_name <span style=color:#f92672>+</span> <span style=color:#e6db74>&#39;.&#39;</span> <span style=color:#f92672>+</span> ext
+            file_path <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;images&#39;</span> <span style=color:#f92672>+</span> os<span style=color:#f92672>.</span>sep <span style=color:#f92672>+</span> file_name
+            <span style=color:#66d9ef>with</span> open(file_path, <span style=color:#e6db74>&#39;wb&#39;</span>) <span style=color:#66d9ef>as</span> output:
+                output<span style=color:#f92672>.</span>write(response<span style=color:#f92672>.</span>body)
+            file_pathes<span style=color:#f92672>.</span>append(file_path)
+        <span style=color:#66d9ef>return</span> file_pathes
+
+
+    <span style=color:#66d9ef>if</span> __name__ <span style=color:#f92672>==</span> <span style=color:#e6db74>&#39;__main__&#39;</span>:
+        AsyncIOMainLoop()<span style=color:#f92672>.</span>install()
+        loop <span style=color:#f92672>=</span> asyncio<span style=color:#f92672>.</span>get_event_loop()
+        loop<span style=color:#f92672>.</span>run_until_complete(getUrls())</code></pre></div><p>更新记录：</p><pre><code>2018-02-23： 添加代码</code></pre></div></div><div id=post-footer class="post-footer main-content-wrap"><div class=post-footer-tags><span class="text-color-light text-small">标签</span><br><a class="tag tag--primary tag--small" href=/tags/tornado/>tornado</a>
+<a class="tag tag--primary tag--small" href=/tags/%E7%88%AC%E8%99%AB/>爬虫</a></div><div class=post-actions-wrap><nav><ul class="post-actions post-action-nav"><li class=post-action><a class="post-action-btn btn btn--default tooltip--top" href=/2018/03/pyqtgraph%E5%AE%9E%E6%97%B6%E7%94%BB%E5%9B%BE%E5%8D%A1%E9%A1%BF%E9%97%AE%E9%A2%98%E5%8F%91%E7%8E%B0%E5%8F%8A%E8%A7%A3%E5%86%B3/ data-tooltip=pyqtgraph实时画图卡顿问题发现及解决><i class="fa fa-angle-left"></i>
+<span class="hide-xs hide-sm text-small icon-ml">下一篇</span></a></li><li class=post-action><a class="post-action-btn btn btn--default tooltip--top" href=/2018/02/ly%E6%9E%81%E7%AE%80display-manager%E4%BB%A5%E5%8F%8Alinux%E6%A1%8C%E9%9D%A2%E5%90%AF%E5%8A%A8%E6%B5%85%E6%9E%90/ data-tooltip="Ly极简display Manager以及linux桌面启动浅析"><span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+<i class="fa fa-angle-right"></i></a></li></ul></nav><ul class="post-actions post-action-share"><li class="post-action hide-lg hide-md hide-sm"><a class="post-action-btn btn btn--default btn-open-shareoptions" href=#btn-open-shareoptions><i class="fa fa-share-alt"></i></a></li><li class=post-action><a class="post-action-btn btn btn--default" href=#><i class="fa fa-list"></i></a></li></ul></div></div></article><footer id=footer class=main-content-wrap><span class=copyrights>&copy; 2021 Yu Huang. All Rights Reserved</span></footer></div><div id=bottom-bar class=post-bottom-bar data-behavior=4><div class=post-actions-wrap><nav><ul class="post-actions post-action-nav"><li class=post-action><a class="post-action-btn btn btn--default tooltip--top" href=/2018/03/pyqtgraph%E5%AE%9E%E6%97%B6%E7%94%BB%E5%9B%BE%E5%8D%A1%E9%A1%BF%E9%97%AE%E9%A2%98%E5%8F%91%E7%8E%B0%E5%8F%8A%E8%A7%A3%E5%86%B3/ data-tooltip=pyqtgraph实时画图卡顿问题发现及解决><i class="fa fa-angle-left"></i>
+<span class="hide-xs hide-sm text-small icon-ml">下一篇</span></a></li><li class=post-action><a class="post-action-btn btn btn--default tooltip--top" href=/2018/02/ly%E6%9E%81%E7%AE%80display-manager%E4%BB%A5%E5%8F%8Alinux%E6%A1%8C%E9%9D%A2%E5%90%AF%E5%8A%A8%E6%B5%85%E6%9E%90/ data-tooltip="Ly极简display Manager以及linux桌面启动浅析"><span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+<i class="fa fa-angle-right"></i></a></li></ul></nav><ul class="post-actions post-action-share"><li class="post-action hide-lg hide-md hide-sm"><a class="post-action-btn btn btn--default btn-open-shareoptions" href=#btn-open-shareoptions><i class="fa fa-share-alt"></i></a></li><li class=post-action><a class="post-action-btn btn btn--default" href=#><i class="fa fa-list"></i></a></li></ul></div></div><div id=share-options-bar class=share-options-bar data-behavior=4><i id=btn-close-shareoptions class="fa fa-close"></i><ul class=share-options></ul></div><div id=share-options-mask class=share-options-mask></div></div><div id=about><div id=about-card><div id=about-btn-close><i class="fa fa-remove"></i></div><img id=about-card-picture src=https://blog.huangyu.me/images/header.png alt=作者的图片><h4 id=about-card-name>Yu Huang</h4><div id=about-card-bio>学而不思则罔，思而不学则殆</div><div id=about-card-job><i class="fa fa-briefcase"></i><br>想做程序猿</div><div id=about-card-location><i class="fa fa-map-marker"></i><br>Dream road</div></div></div><div id=cover style=background-image:url(https://blog.huangyu.me/images/cover.jpg)></div><script src=https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin=anonymous></script><script src=https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin=anonymous></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js integrity="sha256-GEAnjcTqVP+vBp3SSc8bEDQqvWAZMiHyUSIorrWwH50=" crossorigin=anonymous></script><script src=/js/script-pcw6v3xilnxydl1vddzazdverrnn9ctynvnxgwho987mfyqkuylcb1nlt.min.js></script><script lang=javascript>window.onload=updateMinWidth,window.onresize=updateMinWidth,document.getElementById("sidebar").addEventListener("transitionend",updateMinWidth);function updateMinWidth(){var b=document.getElementById("sidebar"),a=document.getElementById("main"),c,d,e;a.style.minWidth="",c=getComputedStyle(a).getPropertyValue("min-width"),d=getComputedStyle(b).getPropertyValue("width"),e=getComputedStyle(b).getPropertyValue("left"),a.style.minWidth=`calc(${c} - ${d} - ${e})`}</script><script>$(document).ready(function(){hljs.configure({classPrefix:'',useBR:!1}),$('pre.code-highlight > code, pre > code').each(function(b,a){$(this).hasClass('codeblock')||$(this).addClass('codeblock'),hljs.highlightBlock(a)})})</script></body></html>

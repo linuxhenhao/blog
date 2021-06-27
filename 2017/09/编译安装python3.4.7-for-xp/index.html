@@ -1,0 +1,69 @@
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=generator content="Hugo 0.84.1 with theme Tranquilpeak 0.4.8-BETA"><meta name=author content="Yu Huang"><meta name=keywords content><meta name=description content="前言
+
+因为项目要求，必须支持XP系统。偶尔翻python官网支持Xp的最新的
+python版本已经到了3.4.7，都是一些安全性的更新。但是官方如今不再提供直接可以安装的binary
+文件下载，需要自己编译安装，因此做个记录。参考官方wiki
+和python-doc
+openssl wiki"><meta property="og:description" content="前言
+
+因为项目要求，必须支持XP系统。偶尔翻python官网支持Xp的最新的
+python版本已经到了3.4.7，都是一些安全性的更新。但是官方如今不再提供直接可以安装的binary
+文件下载，需要自己编译安装，因此做个记录。参考官方wiki
+和python-doc
+openssl wiki"><meta property="og:type" content="article"><meta property="og:title" content="编译安装python3.4.7 For XP"><meta name=twitter:title content="编译安装python3.4.7 For XP"><meta property="og:url" content="https://blog.huangyu.me/2017/09/%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85python3.4.7-for-xp/"><meta property="twitter:url" content="https://blog.huangyu.me/2017/09/%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85python3.4.7-for-xp/"><meta property="og:site_name" content="多学多思考"><meta property="og:description" content="前言
+
+因为项目要求，必须支持XP系统。偶尔翻python官网支持Xp的最新的
+python版本已经到了3.4.7，都是一些安全性的更新。但是官方如今不再提供直接可以安装的binary
+文件下载，需要自己编译安装，因此做个记录。参考官方wiki
+和python-doc
+openssl wiki"><meta name=twitter:description content="前言
+
+因为项目要求，必须支持XP系统。偶尔翻python官网支持Xp的最新的
+python版本已经到了3.4.7，都是一些安全性的更新。但是官方如今不再提供直接可以安装的binary
+文件下载，需要自己编译安装，因此做个记录。参考官方wiki
+和python-doc
+openssl wiki"><meta property="og:locale" content="zh-cn"><meta property="article:published_time" content="2017-09-20T21:47:34"><meta property="article:modified_time" content="2017-09-20T21:47:34"><meta property="article:section" content="python"><meta property="article:section" content="programming"><meta name=twitter:card content="summary"><meta name=twitter:site content="@linuxhenhao"><meta name=twitter:creator content="@linuxhenhao"><meta property="og:image" content="https://blog.huangyu.me/images/header.png"><meta property="twitter:image" content="https://blog.huangyu.me/images/header.png"><title>编译安装python3.4.7 For XP</title><link rel=icon href=/favicon.ico><link rel=canonical href=https://blog.huangyu.me/2017/09/%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85python3.4.7-for-xp/><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin=anonymous><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.css integrity="sha256-vuXZ9LGmmwtjqFX1F+EKin1ThZMub58gKULUyf0qECk=" crossorigin=anonymous><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css integrity="sha256-SEa4XYAHihTcEP1f5gARTB2K26Uk8PsndQYHQC1f4jU=" crossorigin=anonymous><link rel=stylesheet href=/css/style-twzjdbqhmnnacqs0pwwdzcdbt8yhv8giawvjqjmyfoqnvazl0dalmnhdkvp7.min.css></head><body><div id=blog><header id=header data-behavior=4><i id=btn-open-sidebar class="fa fa-lg fa-bars"></i><div class=header-title><a class=header-title-link href=/>多学多思考</a></div><a class=header-right-picture href=/#about><img class=header-picture src=https://blog.huangyu.me/images/header.png alt=作者的图片></a></header><nav id=sidebar data-behavior=4><div class=sidebar-container><div class=sidebar-profile><a href=/#about><img class=sidebar-profile-picture src=https://blog.huangyu.me/images/header.png alt=作者的图片></a><h4 class=sidebar-profile-name>Yu Huang</h4><h5 class=sidebar-profile-bio>学而不思则罔，思而不学则殆</h5></div><ul class=sidebar-buttons><li class=sidebar-button><a class=sidebar-button-link href=/categories><i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+<span class=sidebar-button-desc>分类</span></a></li><li class=sidebar-button><a class=sidebar-button-link href=/tags><i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+<span class=sidebar-button-desc>标签</span></a></li><li class=sidebar-button><a class=sidebar-button-link href=/archives><i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+<span class=sidebar-button-desc>归档</span></a></li><li class=sidebar-button><a class=sidebar-button-link href=/#about><i class="sidebar-button-icon fa fa-lg fa-question"></i>
+<span class=sidebar-button-desc>关于</span></a></li><li class=sidebar-button><a class=sidebar-button-link href=/><i class="sidebar-button-icon fa fa-lg fa-home"></i>
+<span class=sidebar-button-desc>首页</span></a></li></ul><ul class=sidebar-buttons><li class=sidebar-button><a class=sidebar-button-link href=/#mail><i class="sidebar-button-icon fa fa-lg fa-envelope-o"></i>
+<span class=sidebar-button-desc>diwang90#gmail</span></a></li><li class=sidebar-button><a class=sidebar-button-link href=https://github.com/linuxhenhao target=_blank rel=noopener><i class="sidebar-button-icon fa fa-lg fa-github"></i>
+<span class=sidebar-button-desc>GitHub</span></a></li></ul><ul class=sidebar-buttons><li class=sidebar-button><a class=sidebar-button-link href=/index.xml><i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+<span class=sidebar-button-desc>RSS</span></a></li></ul></div></nav><div id=main data-behavior=4 class=hasCoverMetaIn><article class=post itemscope itemtype=http://schema.org/BlogPosting><div class="post-header main-content-wrap text-left"><h1 class=post-title itemprop=headline>编译安装python3.4.7 For XP</h1><div class="postShorten-meta post-meta"><time itemprop=datePublished datetime=2017-09-20T21:47:34+08:00>九月 20, 2017</time>
+<span>发布在</span>
+<a class=category-link href=/categories/python>python</a>,
+<a class=category-link href=/categories/programming>programming</a></div></div><div class="post-content markdown" itemprop=articleBody><div class=main-content-wrap><h2 id=前言>前言</h2><p>因为项目要求，必须支持XP系统。偶尔翻<a href=https://www.python.org>python官网</a>支持Xp的最新的
+python版本已经到了3.4.7，都是一些安全性的更新。但是官方如今不再提供直接可以安装的binary
+文件下载，需要自己编译安装，因此做个记录。参考<a href=https://wiki.python.org/moin/VS2010>官方wiki</a>
+和<a href=https://docs.python.org/devguide/setup.html#windows-compiling>python-doc</a>
+<a href=https://wiki.openssl.org/index.php/Compilation_and_Installation>openssl wiki</a></p><h2 id=准备>准备</h2><h3 id=visual-studio-2010-pro>Visual Studio 2010 pro</h3><p>可以在XP上运行的最高版本的vs，并且支持使用PCbuild中的方式，也就是新的python编译安装脚
+本运行，因此首先需要下载安装此编译环境。安装的过程中，安装VC++即可，其他的诸如F#、C#、
+office、SQL的相关东西可以自定义安装的时候取消勾选。从<a href=https://msdn.itellyou.cn>MSDN itellyou</a>下载会比官网快。
+安装完成后需要将vs stuido安装文件夹中的<code>VC\bin</code>添加到环境变量当中。使我们可以直接在cmd
+中运行nmake之类的命令。</p><h3 id=tortoisesvn1><a href=https://www.tortoisesvn.net/downloads.html>tortoiseSVN</a></h3><p>需要通过svn下载一些external source，脚本里面推荐使用的就是这个。注意，1.9以及之后的版
+本不支持XP，因此需要下载<a href=https://sourceforge.net/projects/tortoisesvn/files/1.8.12/Application/>1.8版本</a></p><h3 id=perl4><a href=http://strawberryperl.com/>perl</a></h3><p>编译openssl时需要perl，这里下载的是Strawberry perl。</p><h2 id=编译>编译</h2><ol><li>所有的编译，都应该在上述软件安装完成后，重新打开cmd，以获得新的PATH。python的源码文件夹所在
+的路径不能包含空格，否则会在编译tcl时失败。</li><li>运行<code>PCbuild\build.bat -e</code>，加的参数会调用<code>get_externals.bat</code>并且编译外部依赖，包含tk、tcl、
+openssl等库，完成之后在PCbuild文件夹下得到一个可以运行的python.exe</li><li><p>打包，在编译完成之后希望能够打包成官方发布的msi形式的安装包，用于在其他电脑上安装。但是找了较长
+时间，找到一些过时的文档，但是找到了<code>tools\msi\msi.py</code>这么个脚本，可是这里面的内容还是用python2
+写的，所以为了打包编译出来的python3.4.7，又安装了一遍python2.7
+2.1 安装python2.7
+2.2 通过<code>get-pip.py</code>安装<code>pip</code>，将<code>python27/Scripts</code>文件夹添加到系统环境变量，使pip可以从cmd运行。
+2.3 从<a href=http://aka.ms/vcpython27>微软官网下载</a> VC用于编译某些pip下载安装需要编译的模块。
+2.4 安装pywin32模块。运行<code>pip install pypiwin32</code>安装此模块。
+2.5 还需要安装<a href="https://www.microsoft.com/en-us/download/details.aspx?id=16818">cabarc</a>。
+2.6 <code>msi.py</code>依赖了一些<code>hg manifest</code>来获取所有文件名列表，用于添加合适的文件到安装包。实际上，cpython
+的开发已经迁移到了git，下载过来的源码包里面并不包含一个<code>.hg</code>文件夹，<code>hg manifest</code>是无法运行成功的。这
+里写了一个脚本，实现了<code>msi.py</code>中返回文件列表dict的功能，修改一下msi.py中的<code>hgmanifest</code>函数，import此
+脚本，返回<code>myHgmanifest.hgmanifest(srcdir)</code>的结果，即可实现目的。点击<a href=/uploads/myHgmanifest.zip>下载脚本</a>，
+用压缩包中的脚本替换掉<code>Tools\msi</code>中相应的脚本即可。</p></li><li><p>编译文档。在第2步完成后，用python27运行msi.py，发现缺少文档，打包失败，因此需要生成打包所需的文档。
+3.1 将python27安装目录中的<code>python.exe</code>复制重命名为<code>py.exe</code>，因为编译文档的bat文件中用了此命令，实际就是运行<code>python.exe</code>
+3.2 pip install sphinx，安装生成文档所需的模块。
+3.3 到Python3.4.7源码目录中的<code>\Doc\</code>文件夹下运行<code>make.bat htmlhelp</code>命令，生成帮助文档。</p></li><li><p>生成msi安装包。运行<code>python msi.py</code>，最终，在<code>Tools\msi</code>文件夹下会生成python3.4.7.xxxx.msi的安装包，可以拿到别的电脑上安装去啦！</p></li></ol><h2 id=总结>总结</h2><p>可以发现，给自己编译的困难主要源于未被维护的msi.py打包脚本了，后续发布的python安装包都是通过另外的
+方式打包的，所以需要做一些修复工作，主要是python源码包里已经没有.hg文件夹了，需要用另外的方式生成制作
+打包文件所需的文件dict。总而言之，并不复杂，主要是一个逐渐发现问题、解决问题、发现新问题、再解决的过程。
+所幸，最终得到了所需的安装包。</p><p>更新记录：</p><pre><code>2018.1.22 修复了msdn itell you的链接</code></pre></div></div><div id=post-footer class="post-footer main-content-wrap"><div class=post-actions-wrap><nav><ul class="post-actions post-action-nav"><li class=post-action><a class="post-action-btn btn btn--default tooltip--top" href=/2017/10/google-scholar-%E5%A4%87%E5%BF%98/ data-tooltip="google scholar 备忘"><i class="fa fa-angle-left"></i>
+<span class="hide-xs hide-sm text-small icon-ml">下一篇</span></a></li><li class=post-action><a class="post-action-btn btn btn--default tooltip--top" href=/2017/09/%E6%8A%BD%E8%B1%A1%E5%88%86%E5%B1%82-%E4%BB%A5twisted%E4%B8%BA%E4%BE%8B/ data-tooltip=抽象分层-以twisted为例><span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+<i class="fa fa-angle-right"></i></a></li></ul></nav><ul class="post-actions post-action-share"><li class="post-action hide-lg hide-md hide-sm"><a class="post-action-btn btn btn--default btn-open-shareoptions" href=#btn-open-shareoptions><i class="fa fa-share-alt"></i></a></li><li class=post-action><a class="post-action-btn btn btn--default" href=#><i class="fa fa-list"></i></a></li></ul></div></div></article><footer id=footer class=main-content-wrap><span class=copyrights>&copy; 2021 Yu Huang. All Rights Reserved</span></footer></div><div id=bottom-bar class=post-bottom-bar data-behavior=4><div class=post-actions-wrap><nav><ul class="post-actions post-action-nav"><li class=post-action><a class="post-action-btn btn btn--default tooltip--top" href=/2017/10/google-scholar-%E5%A4%87%E5%BF%98/ data-tooltip="google scholar 备忘"><i class="fa fa-angle-left"></i>
+<span class="hide-xs hide-sm text-small icon-ml">下一篇</span></a></li><li class=post-action><a class="post-action-btn btn btn--default tooltip--top" href=/2017/09/%E6%8A%BD%E8%B1%A1%E5%88%86%E5%B1%82-%E4%BB%A5twisted%E4%B8%BA%E4%BE%8B/ data-tooltip=抽象分层-以twisted为例><span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+<i class="fa fa-angle-right"></i></a></li></ul></nav><ul class="post-actions post-action-share"><li class="post-action hide-lg hide-md hide-sm"><a class="post-action-btn btn btn--default btn-open-shareoptions" href=#btn-open-shareoptions><i class="fa fa-share-alt"></i></a></li><li class=post-action><a class="post-action-btn btn btn--default" href=#><i class="fa fa-list"></i></a></li></ul></div></div><div id=share-options-bar class=share-options-bar data-behavior=4><i id=btn-close-shareoptions class="fa fa-close"></i><ul class=share-options></ul></div><div id=share-options-mask class=share-options-mask></div></div><div id=about><div id=about-card><div id=about-btn-close><i class="fa fa-remove"></i></div><img id=about-card-picture src=https://blog.huangyu.me/images/header.png alt=作者的图片><h4 id=about-card-name>Yu Huang</h4><div id=about-card-bio>学而不思则罔，思而不学则殆</div><div id=about-card-job><i class="fa fa-briefcase"></i><br>想做程序猿</div><div id=about-card-location><i class="fa fa-map-marker"></i><br>Dream road</div></div></div><div id=cover style=background-image:url(https://blog.huangyu.me/images/cover.jpg)></div><script src=https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin=anonymous></script><script src=https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin=anonymous></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js integrity="sha256-GEAnjcTqVP+vBp3SSc8bEDQqvWAZMiHyUSIorrWwH50=" crossorigin=anonymous></script><script src=/js/script-pcw6v3xilnxydl1vddzazdverrnn9ctynvnxgwho987mfyqkuylcb1nlt.min.js></script><script lang=javascript>window.onload=updateMinWidth,window.onresize=updateMinWidth,document.getElementById("sidebar").addEventListener("transitionend",updateMinWidth);function updateMinWidth(){var b=document.getElementById("sidebar"),a=document.getElementById("main"),c,d,e;a.style.minWidth="",c=getComputedStyle(a).getPropertyValue("min-width"),d=getComputedStyle(b).getPropertyValue("width"),e=getComputedStyle(b).getPropertyValue("left"),a.style.minWidth=`calc(${c} - ${d} - ${e})`}</script><script>$(document).ready(function(){hljs.configure({classPrefix:'',useBR:!1}),$('pre.code-highlight > code, pre > code').each(function(b,a){$(this).hasClass('codeblock')||$(this).addClass('codeblock'),hljs.highlightBlock(a)})})</script></body></html>
