@@ -3,3 +3,4 @@
 * linux
 * programming
 * computer science
+* thoughts about work and life
