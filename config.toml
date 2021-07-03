@@ -1,7 +1,7 @@
 baseURL = "https://blog.huangyu.me/"
 languageCode = "zh-cn"
 defaultContentLanguage = "zh-cn"                             # en / zh-cn / ... (This field determines which i18n file to use)
-title = "HuangYu的博客"
+title = "ThinkerYu的博客"
 preserveTaxonomyNames = true
 enableRobotsTXT = true
 enableEmoji = true
@@ -21,7 +21,7 @@ googleAnalytics = ""      # UA-XXXXXXXX-X
 copyright = ""            # default: author.name ↓        # 默认为下面配置的author.name ↓
 
 [author]                  # essential                     # 必需
-  name = "Huang Yu"
+  name = "thinkeryu"
 
 [sitemap]                 # essential                     # 必需
   changefreq = "weekly"
@@ -134,10 +134,10 @@ copyright = ""            # default: author.name ↓        # 默认为下面配
     warn = 180              # Display warning if the last modified time is more than these days ago.    # 如果文章最后更新于这天数之前，显示警告
 
   [params.gitment]          # Gitment is a comment system based on GitHub issues. see https://github.com/imsun/gitment
-    owner = ""              # Your GitHub ID
-    repo = ""               # The repo to store comments
-    clientId = ""           # Your client ID
-    clientSecret = ""       # Your client secret
+    owner = "linuxhenhao"              # Your GitHub ID
+    repo = "blog"               # The repo to store comments
+    clientId = "e6672c053ad6c6056f71"           # Your client ID
+    clientSecret = "c13fdda944329c62818b9bbf0b00a23658614f3e"       # Your client secret
 
   [params.utterances]       # https://utteranc.es/
     owner = ""              # Your GitHub ID
