@@ -1,0 +1,566 @@
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><title>Debian系简易内核打包脚本 - HuangYu的博客</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=cache-control content="no-transform"><meta http-equiv=cache-control content="no-siteapp"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=author content="Huang Yu"><meta name=description content="作为一个尝鲜党，经常会关注内核的新特性，喜欢在自己的电脑上装上最新的内核。维护了一个 较为精简的适用于自用笔记本和台式机的内核配置文件github。
+既然经常追新，那么就免不了经常更新内核，使用系统本身的包管理系统是一个非常方便的选择。 但是又不喜欢安装太多的打包的dpkg-package工具，也没有时间去了解debian打包官方模式。 简单的使用dpkg -b打包文件为deb成了我的常用打包方式。配套的，为arm|x86_64两个架构 创建了打包脚本。 误：发现内核自带了打包脚本，详情见具体文章内容
+"><meta name=keywords content="kernel deb package,debian"><meta name=generator content="Hugo 0.84.4 with theme even"><link rel=canonical href=https://blog.huangyu.me/post/debian%E7%B3%BB%E7%AE%80%E6%98%93%E5%86%85%E6%A0%B8%E6%89%93%E5%8C%85%E8%84%9A%E6%9C%AC/><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/manifest.json><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link href=/sass/main.min.b5a744db6de49a86cadafb3b70f555ab443f83c307a483402259e94726b045ff.css rel=stylesheet><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous><meta property="og:title" content="Debian系简易内核打包脚本"><meta property="og:description" content="作为一个尝鲜党，经常会关注内核的新特性，喜欢在自己的电脑上装上最新的内核。维护了一个
+较为精简的适用于自用笔记本和台式机的内核配置文件github。
+
+既然经常追新，那么就免不了经常更新内核，使用系统本身的包管理系统是一个非常方便的选择。
+但是又不喜欢安装太多的打包的dpkg-package工具，也没有时间去了解debian打包官方模式。
+简单的使用dpkg -b打包文件为deb成了我的常用打包方式。配套的，为arm|x86_64两个架构
+创建了打包脚本。 误：发现内核自带了打包脚本，详情见具体文章内容"><meta property="og:type" content="article"><meta property="og:url" content="https://blog.huangyu.me/post/debian%E7%B3%BB%E7%AE%80%E6%98%93%E5%86%85%E6%A0%B8%E6%89%93%E5%8C%85%E8%84%9A%E6%9C%AC/"><meta property="article:section" content="post"><meta property="article:published_time" content="2017-11-27T20:29:02+08:00"><meta property="article:modified_time" content="2017-11-27T20:29:02+08:00"><meta itemprop=name content="Debian系简易内核打包脚本"><meta itemprop=description content="作为一个尝鲜党，经常会关注内核的新特性，喜欢在自己的电脑上装上最新的内核。维护了一个
+较为精简的适用于自用笔记本和台式机的内核配置文件github。
+
+既然经常追新，那么就免不了经常更新内核，使用系统本身的包管理系统是一个非常方便的选择。
+但是又不喜欢安装太多的打包的dpkg-package工具，也没有时间去了解debian打包官方模式。
+简单的使用dpkg -b打包文件为deb成了我的常用打包方式。配套的，为arm|x86_64两个架构
+创建了打包脚本。 误：发现内核自带了打包脚本，详情见具体文章内容"><meta itemprop=datePublished content="2017-11-27T20:29:02+08:00"><meta itemprop=dateModified content="2017-11-27T20:29:02+08:00"><meta itemprop=wordCount content="1653"><meta itemprop=keywords content="debian,linux,kernel package,"><meta name=twitter:card content="summary"><meta name=twitter:title content="Debian系简易内核打包脚本"><meta name=twitter:description content="作为一个尝鲜党，经常会关注内核的新特性，喜欢在自己的电脑上装上最新的内核。维护了一个
+较为精简的适用于自用笔记本和台式机的内核配置文件github。
+
+既然经常追新，那么就免不了经常更新内核，使用系统本身的包管理系统是一个非常方便的选择。
+但是又不喜欢安装太多的打包的dpkg-package工具，也没有时间去了解debian打包官方模式。
+简单的使用dpkg -b打包文件为deb成了我的常用打包方式。配套的，为arm|x86_64两个架构
+创建了打包脚本。 误：发现内核自带了打包脚本，详情见具体文章内容"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script><script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>HuangYu的博客</a></div><div class=mobile-navbar-icon><span></span><span></span><span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><a href=/><li class=mobile-menu-item>Home</li></a><a href=/post/><li class=mobile-menu-item>Archives</li></a><a href=/tags/><li class=mobile-menu-item>Tags</li></a><a href=/categories/><li class=mobile-menu-item>Categories</li></a></ul></nav><div class=container id=mobile-panel><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>HuangYu的博客</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/categories/>Categories</a></li></ul></nav></header><main id=main class=main><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>Debian系简易内核打包脚本</h1><div class=post-meta><span class=post-time>2017-11-27</span><div class=post-category><a href=/categories/operating_system/>operating_system</a></div></div></header><div class=post-toc id=post-toc><h2 class=post-toc-title>文章目录</h2><div class="post-toc-content always-active"></div></div><div class=post-content><p>作为一个尝鲜党，经常会关注内核的新特性，喜欢在自己的电脑上装上最新的内核。维护了一个
+较为精简的适用于自用笔记本和台式机的内核配置文件<a href=https://github.com/linuxhenhao/config-files>github</a>。</p><p>既然经常追新，那么就免不了经常更新内核，使用系统本身的包管理系统是一个非常方便的选择。
+但是又不喜欢安装太多的打包的<code>dpkg-package</code>工具，也没有时间去了解debian打包官方模式。
+简单的使用<code>dpkg -b</code>打包文件为deb成了我的常用打包方式。配套的，为<code>arm|x86_64</code>两个架构
+创建了打包脚本。 <em>误：发现内核自带了打包脚本，详情见具体文章内容</em></p><p>搞半天，发现我写的打包脚本生成的linux-header包很大，而且不够完善，在x86编译内核外模块时
+会出现缺少文件的情况，然后发现内核自带了打包脚本，包括deb和rpm系。如果只需要二进制包不打包
+源码包的话<code>make bindeb-pkg</code>即可。还有以下几个target：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback>make deb-pkg  # 包含源码的deb包
+make rpm-pkg  # 生成包含源码包在内的rpm包
+make binrpm-pkg  # 生成不包含源码包在内的rpm包</code></pre></td></tr></table></div></div><p>虽然如此，但是之前的脚本工作倒也不是无用工，其实内核带的打包脚本差不太多，主要是对于linux-headers</p><h2 id=包里面到底需要哪些文件不需要哪些文件的认识不够清晰全面>包里面到底需要哪些文件不需要哪些文件的认识不够清晰全面。</h2><p>其中的<code>linux-headers</code>包，为了让<code>arm</code>上<code>make script</code>能够成功，从而能够
+在arm上编译对以内核的第三方模块，比通常的官方包多了很多文件。</p><p>注:script里面有很多二进制文件，没有cross_compile选项，所以只能安装到arm后编译，所以需要
+能够完整的构建编译过程的文件。当然有些精简可以作，懒得扣太细了。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>  1
+</span><span class=lnt>  2
+</span><span class=lnt>  3
+</span><span class=lnt>  4
+</span><span class=lnt>  5
+</span><span class=lnt>  6
+</span><span class=lnt>  7
+</span><span class=lnt>  8
+</span><span class=lnt>  9
+</span><span class=lnt> 10
+</span><span class=lnt> 11
+</span><span class=lnt> 12
+</span><span class=lnt> 13
+</span><span class=lnt> 14
+</span><span class=lnt> 15
+</span><span class=lnt> 16
+</span><span class=lnt> 17
+</span><span class=lnt> 18
+</span><span class=lnt> 19
+</span><span class=lnt> 20
+</span><span class=lnt> 21
+</span><span class=lnt> 22
+</span><span class=lnt> 23
+</span><span class=lnt> 24
+</span><span class=lnt> 25
+</span><span class=lnt> 26
+</span><span class=lnt> 27
+</span><span class=lnt> 28
+</span><span class=lnt> 29
+</span><span class=lnt> 30
+</span><span class=lnt> 31
+</span><span class=lnt> 32
+</span><span class=lnt> 33
+</span><span class=lnt> 34
+</span><span class=lnt> 35
+</span><span class=lnt> 36
+</span><span class=lnt> 37
+</span><span class=lnt> 38
+</span><span class=lnt> 39
+</span><span class=lnt> 40
+</span><span class=lnt> 41
+</span><span class=lnt> 42
+</span><span class=lnt> 43
+</span><span class=lnt> 44
+</span><span class=lnt> 45
+</span><span class=lnt> 46
+</span><span class=lnt> 47
+</span><span class=lnt> 48
+</span><span class=lnt> 49
+</span><span class=lnt> 50
+</span><span class=lnt> 51
+</span><span class=lnt> 52
+</span><span class=lnt> 53
+</span><span class=lnt> 54
+</span><span class=lnt> 55
+</span><span class=lnt> 56
+</span><span class=lnt> 57
+</span><span class=lnt> 58
+</span><span class=lnt> 59
+</span><span class=lnt> 60
+</span><span class=lnt> 61
+</span><span class=lnt> 62
+</span><span class=lnt> 63
+</span><span class=lnt> 64
+</span><span class=lnt> 65
+</span><span class=lnt> 66
+</span><span class=lnt> 67
+</span><span class=lnt> 68
+</span><span class=lnt> 69
+</span><span class=lnt> 70
+</span><span class=lnt> 71
+</span><span class=lnt> 72
+</span><span class=lnt> 73
+</span><span class=lnt> 74
+</span><span class=lnt> 75
+</span><span class=lnt> 76
+</span><span class=lnt> 77
+</span><span class=lnt> 78
+</span><span class=lnt> 79
+</span><span class=lnt> 80
+</span><span class=lnt> 81
+</span><span class=lnt> 82
+</span><span class=lnt> 83
+</span><span class=lnt> 84
+</span><span class=lnt> 85
+</span><span class=lnt> 86
+</span><span class=lnt> 87
+</span><span class=lnt> 88
+</span><span class=lnt> 89
+</span><span class=lnt> 90
+</span><span class=lnt> 91
+</span><span class=lnt> 92
+</span><span class=lnt> 93
+</span><span class=lnt> 94
+</span><span class=lnt> 95
+</span><span class=lnt> 96
+</span><span class=lnt> 97
+</span><span class=lnt> 98
+</span><span class=lnt> 99
+</span><span class=lnt>100
+</span><span class=lnt>101
+</span><span class=lnt>102
+</span><span class=lnt>103
+</span><span class=lnt>104
+</span><span class=lnt>105
+</span><span class=lnt>106
+</span><span class=lnt>107
+</span><span class=lnt>108
+</span><span class=lnt>109
+</span><span class=lnt>110
+</span><span class=lnt>111
+</span><span class=lnt>112
+</span><span class=lnt>113
+</span><span class=lnt>114
+</span><span class=lnt>115
+</span><span class=lnt>116
+</span><span class=lnt>117
+</span><span class=lnt>118
+</span><span class=lnt>119
+</span><span class=lnt>120
+</span><span class=lnt>121
+</span><span class=lnt>122
+</span><span class=lnt>123
+</span><span class=lnt>124
+</span><span class=lnt>125
+</span><span class=lnt>126
+</span><span class=lnt>127
+</span><span class=lnt>128
+</span><span class=lnt>129
+</span><span class=lnt>130
+</span><span class=lnt>131
+</span><span class=lnt>132
+</span><span class=lnt>133
+</span><span class=lnt>134
+</span><span class=lnt>135
+</span><span class=lnt>136
+</span><span class=lnt>137
+</span><span class=lnt>138
+</span><span class=lnt>139
+</span><span class=lnt>140
+</span><span class=lnt>141
+</span><span class=lnt>142
+</span><span class=lnt>143
+</span><span class=lnt>144
+</span><span class=lnt>145
+</span><span class=lnt>146
+</span><span class=lnt>147
+</span><span class=lnt>148
+</span><span class=lnt>149
+</span><span class=lnt>150
+</span><span class=lnt>151
+</span><span class=lnt>152
+</span><span class=lnt>153
+</span><span class=lnt>154
+</span><span class=lnt>155
+</span><span class=lnt>156
+</span><span class=lnt>157
+</span><span class=lnt>158
+</span><span class=lnt>159
+</span><span class=lnt>160
+</span><span class=lnt>161
+</span><span class=lnt>162
+</span><span class=lnt>163
+</span><span class=lnt>164
+</span><span class=lnt>165
+</span><span class=lnt>166
+</span><span class=lnt>167
+</span><span class=lnt>168
+</span><span class=lnt>169
+</span><span class=lnt>170
+</span><span class=lnt>171
+</span><span class=lnt>172
+</span><span class=lnt>173
+</span><span class=lnt>174
+</span><span class=lnt>175
+</span><span class=lnt>176
+</span><span class=lnt>177
+</span><span class=lnt>178
+</span><span class=lnt>179
+</span><span class=lnt>180
+</span><span class=lnt>181
+</span><span class=lnt>182
+</span><span class=lnt>183
+</span><span class=lnt>184
+</span><span class=lnt>185
+</span><span class=lnt>186
+</span><span class=lnt>187
+</span><span class=lnt>188
+</span><span class=lnt>189
+</span><span class=lnt>190
+</span><span class=lnt>191
+</span><span class=lnt>192
+</span><span class=lnt>193
+</span><span class=lnt>194
+</span><span class=lnt>195
+</span><span class=lnt>196
+</span><span class=lnt>197
+</span><span class=lnt>198
+</span><span class=lnt>199
+</span><span class=lnt>200
+</span><span class=lnt>201
+</span><span class=lnt>202
+</span><span class=lnt>203
+</span><span class=lnt>204
+</span><span class=lnt>205
+</span><span class=lnt>206
+</span><span class=lnt>207
+</span><span class=lnt>208
+</span><span class=lnt>209
+</span><span class=lnt>210
+</span><span class=lnt>211
+</span><span class=lnt>212
+</span><span class=lnt>213
+</span><span class=lnt>214
+</span><span class=lnt>215
+</span><span class=lnt>216
+</span><span class=lnt>217
+</span><span class=lnt>218
+</span><span class=lnt>219
+</span><span class=lnt>220
+</span><span class=lnt>221
+</span><span class=lnt>222
+</span><span class=lnt>223
+</span><span class=lnt>224
+</span><span class=lnt>225
+</span><span class=lnt>226
+</span><span class=lnt>227
+</span><span class=lnt>228
+</span><span class=lnt>229
+</span><span class=lnt>230
+</span><span class=lnt>231
+</span><span class=lnt>232
+</span><span class=lnt>233
+</span><span class=lnt>234
+</span><span class=lnt>235
+</span><span class=lnt>236
+</span><span class=lnt>237
+</span><span class=lnt>238
+</span><span class=lnt>239
+</span><span class=lnt>240
+</span><span class=lnt>241
+</span><span class=lnt>242
+</span><span class=lnt>243
+</span><span class=lnt>244
+</span><span class=lnt>245
+</span><span class=lnt>246
+</span><span class=lnt>247
+</span><span class=lnt>248
+</span><span class=lnt>249
+</span><span class=lnt>250
+</span><span class=lnt>251
+</span><span class=lnt>252
+</span><span class=lnt>253
+</span><span class=lnt>254
+</span><span class=lnt>255
+</span><span class=lnt>256
+</span><span class=lnt>257
+</span><span class=lnt>258
+</span><span class=lnt>259
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash><span class=cp>#!/bin/bash
+</span><span class=cp></span>
+<span class=c1># export cross compile envs if arm specified as a parameter</span>
+<span class=k>if</span> <span class=o>[</span> x<span class=s2>&#34;</span><span class=nv>$1</span><span class=s2>&#34;</span> <span class=o>==</span> <span class=s2>&#34;x&#34;</span> <span class=o>]</span><span class=p>;</span> <span class=k>then</span>
+<span class=nb>echo</span> <span class=s2>&#34;Usage: </span><span class=nv>$0</span><span class=s2> &lt;arm|default&gt;&#34;</span>
+<span class=nb>echo</span> <span class=s2>&#34;      default means host platform&#34;</span>
+<span class=nb>exit</span> <span class=m>0</span>
+<span class=k>else</span>
+<span class=k>case</span> <span class=nv>$1</span> in
+    <span class=s2>&#34;arm&#34;</span><span class=o>)</span>
+        <span class=nb>export</span> <span class=nv>ARCH</span><span class=o>=</span>arm
+        <span class=nb>export</span> <span class=nv>CROSS_COMPILE</span><span class=o>=</span>arm-linux-gnueabihf-
+        <span class=p>;;</span>
+    <span class=s2>&#34;default&#34;</span><span class=o>)</span>
+        <span class=nb>echo</span> <span class=k>$(</span>uname -m<span class=k>)</span>
+        <span class=nv>ARCH</span><span class=o>=</span><span class=k>$(</span>uname -m<span class=k>)</span>
+        <span class=p>;;</span>
+<span class=k>esac</span>
+<span class=k>fi</span>
+
+<span class=k>function</span> GetPKGArch<span class=o>()</span>
+<span class=o>{</span>
+<span class=k>if</span> <span class=o>[</span> <span class=k>$(</span>uname -m<span class=k>)</span> <span class=o>==</span> <span class=s2>&#34;x86_64&#34;</span> <span class=o>]</span><span class=p>;</span><span class=k>then</span>
+<span class=nb>echo</span> <span class=s2>&#34;amd64&#34;</span>
+<span class=k>else</span>
+<span class=nb>echo</span> <span class=s2>&#34;i386&#34;</span>
+<span class=k>fi</span>
+<span class=o>}</span>
+
+<span class=k>function</span> DirCheck<span class=o>()</span>
+<span class=o>{</span>
+<span class=k>if</span> <span class=o>[</span> ! -d <span class=nv>$1</span> <span class=o>]</span><span class=p>;</span><span class=k>then</span>
+mkdir -p <span class=nv>$1</span>
+<span class=k>fi</span>
+<span class=o>}</span>
+
+<span class=k>function</span> fileCheck<span class=o>()</span>
+<span class=o>{</span>
+<span class=k>if</span> <span class=o>[</span> -e <span class=nv>$1</span> <span class=o>]</span><span class=p>;</span> <span class=k>then</span>
+    rm -rf <span class=nv>$1</span>
+<span class=k>fi</span>
+<span class=o>}</span>
+
+<span class=c1># copy with parents path, only can do this in kernel source dir</span>
+<span class=k>function</span> copy_fullpath<span class=o>()</span>
+<span class=o>{</span>
+find <span class=nv>$1</span> -name <span class=s2>&#34;*.h&#34;</span> -exec cp --parents <span class=o>{}</span> <span class=nv>$2</span> <span class=se>\;</span>
+find <span class=nv>$1</span> -name <span class=s2>&#34;*.conf&#34;</span> -exec cp --parents <span class=o>{}</span> <span class=nv>$2</span> <span class=se>\;</span>
+find <span class=nv>$1</span> -name <span class=s2>&#34;Makefile*&#34;</span> -exec cp --parents <span class=o>{}</span> <span class=nv>$2</span> <span class=se>\;</span>
+find <span class=nv>$1</span> -name <span class=s2>&#34;Kbuild*&#34;</span> -exec cp --parents <span class=o>{}</span> <span class=nv>$2</span> <span class=se>\;</span>
+find <span class=nv>$1</span> -name <span class=s2>&#34;Kconfig*&#34;</span> -exec cp --parents <span class=o>{}</span> <span class=nv>$2</span> <span class=se>\;</span>
+<span class=c1># find $1 -type f -executable -exec cp --parents {} $2 \;</span>
+<span class=o>}</span>
+<span class=c1># copy essensial header files to dest dir</span>
+<span class=c1># eg: headers_prepare /usr/src/linux-headers-$VERSION</span>
+<span class=k>function</span> headers_prepare<span class=o>()</span>
+<span class=o>{</span>
+<span class=c1># copy to build headers deb</span>
+<span class=c1># cp -r ./include ${HDR_DIR}/usr/src/linux-headers-$VERSION</span>
+<span class=c1># cp ./.kernelvariables $1</span>
+make prepare
+make scripts
+<span class=c1># make scripts will produce include/config/auto.conf</span>
+<span class=c1># which is needed by the build process of any external module</span>
+cp ./.config <span class=nv>$1</span>
+cp ./Module.symvers <span class=nv>$1</span>
+cp --parents ./arch/Kconfig  <span class=nv>$1</span>
+cp --parents ./include/config/kernel.release <span class=nv>$1</span>
+
+cp ./Makefile <span class=nv>$1</span>
+<span class=c1>#cp ./Kbuild $1</span>
+cp ./Kconfig <span class=nv>$1</span>
+
+<span class=c1># copy dir in include to $1</span>
+<span class=c1># copy_fullpath src dst</span>
+<span class=nv>dirs</span><span class=o>=(</span>block certs crypto drivers firmware fs include <span class=se>\
+</span><span class=se></span>    init ipc kernel lib mm net samples security sound <span class=se>\
+</span><span class=se></span>    tools usr virt<span class=o>)</span>
+<span class=c1># dirs=(include)</span>
+<span class=k>for</span> dir in <span class=si>${</span><span class=nv>dirs</span><span class=p>[@]</span><span class=si>}</span><span class=p>;</span>
+<span class=k>do</span>
+    <span class=c1># copy executables/makefile/kbuild/kconfig/.h</span>
+    <span class=nb>echo</span> <span class=s2>&#34;copy_full path </span><span class=nv>$dir</span><span class=s2> </span><span class=nv>$1</span><span class=s2>&#34;</span>
+    copy_fullpath <span class=nv>$dir</span> <span class=nv>$1</span>/
+<span class=k>done</span>
+
+<span class=c1># for arch dir, only copy targed arch dir for cross compile</span>
+<span class=c1>#if [ &#34;x$ARCH&#34; == &#34;xx86_64&#34; ]; then</span>
+<span class=c1>#    HDR_ARCH=.  # copy other architectures&#39; headers for</span>
+<span class=c1>#                # cross compile</span>
+<span class=c1>#else</span>
+<span class=c1>#    HDR_ARCH=$ARCH</span>
+<span class=c1>#fi</span>
+<span class=c1>#copy_fullpath ./arch/${HDR_ARCH} $1/</span>
+copy_fullpath ./arch/ <span class=nv>$1</span>/
+
+cp -r scripts <span class=nv>$1</span>/
+<span class=o>}</span>
+
+
+<span class=nv>RELEASE_FILE</span><span class=o>=</span>include/config/kernel.release
+<span class=k>if</span> <span class=o>[</span> -e <span class=nv>$RELEASE_FILE</span> <span class=o>]</span><span class=p>;</span> <span class=k>then</span>
+<span class=nv>VERSION</span><span class=o>=</span><span class=k>$(</span>cat include/config/kernel.release<span class=k>)</span>
+<span class=k>else</span>
+<span class=nb>echo</span> <span class=s2>&#34;make prepare and then make, this will build the release file needed &#34;</span>
+<span class=nb>exit</span> <span class=m>0</span>
+<span class=k>fi</span>
+<span class=nv>INSTALL_PATH</span><span class=o>=</span>./linux-image-<span class=nv>$VERSION</span>/boot/
+<span class=nv>INSTALL_MOD_PATH</span><span class=o>=</span>./linux-modules-<span class=nv>$VERSION</span>/lib/
+<span class=nv>HDR_PATH</span><span class=o>=</span>./linux-headers-<span class=nv>$VERSION</span>/usr/src/linux-headers-<span class=nv>$VERSION</span>
+<span class=nv>IMG_DIR</span><span class=o>=</span>./linux-image-<span class=nv>$VERSION</span>
+<span class=nv>MOD_DIR</span><span class=o>=</span>./linux-modules-<span class=nv>$VERSION</span>
+<span class=nv>HDR_DIR</span><span class=o>=</span>./linux-headers-<span class=nv>$VERSION</span>
+
+
+
+<span class=k>if</span> <span class=o>[</span> <span class=s2>&#34;x</span><span class=nv>$ARCH</span><span class=s2>&#34;</span> !<span class=o>=</span> <span class=s2>&#34;xarm&#34;</span> <span class=o>]</span><span class=p>;</span><span class=k>then</span>
+<span class=nv>PKG_ARCH</span><span class=o>=</span><span class=k>$(</span> GetPKGArch <span class=k>)</span>
+<span class=nv>ARCH_ALIA</span><span class=o>=</span><span class=si>${</span><span class=nv>PKG_ARCH</span><span class=si>}</span>
+<span class=nv>UPDATE_GRUB</span><span class=o>=</span><span class=s2>&#34;update-grub&#34;</span>
+<span class=nv>KERNEL_DEPS</span><span class=o>=</span><span class=s2>&#34;&#34;</span>
+<span class=nv>MAKE_UINITRD</span><span class=o>=</span><span class=s2>&#34;&#34;</span>
+<span class=k>else</span>
+<span class=nv>ARCH_ALIA</span><span class=o>=</span><span class=si>${</span><span class=nv>ARCH</span><span class=si>}</span>hf
+<span class=nv>UPDATE_GRUB</span><span class=o>=</span><span class=s2>&#34;&#34;</span>
+<span class=nv>KERNEL_DEPS</span><span class=o>=</span><span class=s2>&#34;u-boot-tools&#34;</span>
+<span class=nv>MAKE_UINITRD</span><span class=o>=</span><span class=s2>&#34;genuinitrd&#34;</span>
+<span class=k>fi</span>
+
+
+<span class=nb>echo</span> <span class=nv>$ARCH</span>
+
+
+DirCheck <span class=si>${</span><span class=nv>IMG_DIR</span><span class=si>}</span>/boot
+DirCheck <span class=si>${</span><span class=nv>IMG_DIR</span><span class=si>}</span>/DEBIAN
+DirCheck <span class=si>${</span><span class=nv>HDR_DIR</span><span class=si>}</span>/usr/src/linux-headers-<span class=nv>$VERSION</span>/
+DirCheck <span class=si>${</span><span class=nv>HDR_DIR</span><span class=si>}</span>/DEBIAN
+
+DirCheck <span class=si>${</span><span class=nv>MOD_DIR</span><span class=si>}</span>/lib
+DirCheck <span class=si>${</span><span class=nv>MOD_DIR</span><span class=si>}</span>/DEBIAN
+rm -rf <span class=si>${</span><span class=nv>INSTALL_PATH</span><span class=si>}</span>/*
+rm -rf <span class=si>${</span><span class=nv>INSTALL_MOD_PATH</span><span class=si>}</span>/*
+
+fileCheck ./<span class=si>${</span><span class=nv>IMG_DIR</span><span class=si>}</span>/DEBIAN/control
+cat &gt;./<span class=si>${</span><span class=nv>IMG_DIR</span><span class=si>}</span>/DEBIAN/control<span class=s>&lt;&lt;EOF
+</span><span class=s>Package: linux-image-$VERSION
+</span><span class=s>Version: $VERSION
+</span><span class=s>Architecture: $ARCH_ALIA
+</span><span class=s>Depends: $KERNEL_DEPS
+</span><span class=s>Maintainer: huangyu&lt;diwang90@gmail.com&gt;
+</span><span class=s>Description: linux kernel
+</span><span class=s>EOF</span>
+
+
+fileCheck ./<span class=si>${</span><span class=nv>IMG_DIR</span><span class=si>}</span>/DEBIAN/postinst
+cat &gt;./<span class=si>${</span><span class=nv>IMG_DIR</span><span class=si>}</span>/DEBIAN/postinst<span class=s>&lt;&lt;EOF
+</span><span class=s>#!/bin/bash
+</span><span class=s>function genuinitrd()
+</span><span class=s>{
+</span><span class=s>cp /boot/initrd.img-$VERSION /tmp
+</span><span class=s>cd /tmp
+</span><span class=s>mkimage -A arm -T ramdisk -C none -n uInitrd -d initrd.img-$VERSION uinitrd
+</span><span class=s>cp uinitrd /boot/initrd.img-$VERSION
+</span><span class=s>}
+</span><span class=s>if [ -e /boot/initrd.img-$VERSION ];then
+</span><span class=s>rm /boot/initrd.img-$VERSION
+</span><span class=s>update-initramfs -k $VERSION -c
+</span><span class=s>fi
+</span><span class=s>EOF</span>
+
+chmod <span class=m>0555</span> ./<span class=si>${</span><span class=nv>IMG_DIR</span><span class=si>}</span>/DEBIAN/postinst
+
+fileCheck ./<span class=si>${</span><span class=nv>IMG_DIR</span><span class=si>}</span>/DEBIAN/postrm
+cat &gt;./<span class=si>${</span><span class=nv>IMG_DIR</span><span class=si>}</span>/DEBIAN/postrm<span class=s>&lt;&lt;EOF
+</span><span class=s>#!/bin/bash
+</span><span class=s>${UPDATE_GRUB}
+</span><span class=s>EOF</span>
+
+chmod <span class=m>0555</span> ./<span class=si>${</span><span class=nv>IMG_DIR</span><span class=si>}</span>/DEBIAN/postrm
+
+
+fileCheck ./<span class=si>${</span><span class=nv>MOD_DIR</span><span class=si>}</span>/DEBIAN/control
+cat &gt;./<span class=si>${</span><span class=nv>MOD_DIR</span><span class=si>}</span>/DEBIAN/control<span class=s>&lt;&lt;EOF
+</span><span class=s>Package: linux-modules-$VERSION
+</span><span class=s>Version: $VERSION
+</span><span class=s>Architecture: $ARCH_ALIA
+</span><span class=s>Depends: linux-image-$VERSION
+</span><span class=s>Maintainer: huangyu&lt;diwang90@gmail.com&gt;
+</span><span class=s>Description: linux kernel modules
+</span><span class=s>EOF</span>
+
+
+fileCheck ./<span class=si>${</span><span class=nv>MOD_DIR</span><span class=si>}</span>/DEBIAN/postinst
+cat &gt;./<span class=si>${</span><span class=nv>MOD_DIR</span><span class=si>}</span>/DEBIAN/postinst<span class=s>&lt;&lt;EOF
+</span><span class=s>#!/bin/bash
+</span><span class=s>function genuinitrd()
+</span><span class=s>{
+</span><span class=s>cp /boot/initrd.img-$VERSION /tmp
+</span><span class=s>cd /tmp
+</span><span class=s>mkimage -A arm -T ramdisk -C none -n uInitrd -d initrd.img-$VERSION uinitrd
+</span><span class=s>cp uinitrd /boot/initrd.img-$VERSION
+</span><span class=s>}
+</span><span class=s>if [ -e /boot/initrd.img-$VERSION ];then
+</span><span class=s>rm /boot/initrd.img-$VERSION
+</span><span class=s>fi
+</span><span class=s>update-initramfs -k $VERSION -c
+</span><span class=s>${MAKE_UINITRD}
+</span><span class=s>${UPDATE_GRUB}
+</span><span class=s>EOF</span>
+
+fileCheck ./<span class=si>${</span><span class=nv>HDR_DIR</span><span class=si>}</span>/DEBIAN/control
+cat &gt;./<span class=si>${</span><span class=nv>HDR_DIR</span><span class=si>}</span>/DEBIAN/control<span class=s>&lt;&lt;EOF
+</span><span class=s>Package: linux-headers-$VERSION
+</span><span class=s>Version: $VERSION
+</span><span class=s>Architecture: $ARCH_ALIA
+</span><span class=s>Depends: linux-image-$VERSION, linux-modules-$VERSION
+</span><span class=s>Maintainer: huangyu&lt;diwang90@gmail.com&gt;
+</span><span class=s>Description: linux kernel headers
+</span><span class=s>EOF</span>
+
+fileCheck ./<span class=si>${</span><span class=nv>HDR_DIR</span><span class=si>}</span>/DEBIAN/postinst
+cat &gt;./<span class=si>${</span><span class=nv>HDR_DIR</span><span class=si>}</span>/DEBIAN/postinst<span class=s>&lt;&lt;EOF
+</span><span class=s>#!/bin/bash
+</span><span class=s>if [ -e /lib/modules/$VERSION ];then
+</span><span class=s>ln -sf /usr/src/linux-headers-$VERSION /lib/modules/$VERSION/build
+</span><span class=s>ln -sf /usr/src/linux-headers-$VERSION /lib/modules/$VERSION/source
+</span><span class=s>fi
+</span><span class=s>EOF</span>
+
+chmod <span class=m>0555</span> ./<span class=si>${</span><span class=nv>MOD_DIR</span><span class=si>}</span>/DEBIAN/postinst
+chmod <span class=m>0555</span> ./<span class=si>${</span><span class=nv>HDR_DIR</span><span class=si>}</span>/DEBIAN/postinst
+
+<span class=nv>INSTALL_PATH</span><span class=o>=</span>./<span class=si>${</span><span class=nv>IMG_DIR</span><span class=si>}</span>/boot/ make install
+<span class=nv>INSTALL_MOD_PATH</span><span class=o>=</span>./<span class=si>${</span><span class=nv>MOD_DIR</span><span class=si>}</span>/ make modules_install
+
+<span class=c1># headers file prepare</span>
+headers_prepare <span class=si>${</span><span class=nv>HDR_PATH</span><span class=si>}</span>
+
+<span class=c1>#find ./scripts -type f -executable -exec cp --parents {} ${KBUILD_PATH} \;  </span>
+<span class=c1># copy to build kbuild</span>
+
+<span class=c1># delete firmware, get them from official repo</span>
+<span class=k>if</span> <span class=o>[</span> -e <span class=si>${</span><span class=nv>MOD_DIR</span><span class=si>}</span>/lib/firmware <span class=o>]</span><span class=p>;</span> <span class=k>then</span>
+rm -r <span class=si>${</span><span class=nv>MOD_DIR</span><span class=si>}</span>/lib/firmware
+<span class=k>fi</span>
+<span class=c1># delete symlink to this compile dir</span>
+rm  <span class=si>${</span><span class=nv>MOD_DIR</span><span class=si>}</span>/lib/modules/<span class=nv>$VERSION</span>/build
+rm  <span class=si>${</span><span class=nv>MOD_DIR</span><span class=si>}</span>/lib/modules/<span class=nv>$VERSION</span>/source
+
+<span class=c1># for arm kernel, using zImage and uInitrd</span>
+<span class=k>if</span> <span class=o>[</span> <span class=s2>&#34;x</span><span class=nv>$ARCH</span><span class=s2>&#34;</span> <span class=o>==</span> <span class=s2>&#34;xarm&#34;</span> <span class=o>]</span><span class=p>;</span><span class=k>then</span>
+cp arch/arm/boot/zImage <span class=si>${</span><span class=nv>INSTALL_PATH</span><span class=si>}</span>/vmlinuz-<span class=nv>$VERSION</span>
+<span class=k>fi</span>
+
+
+sudo chown -R root:root <span class=si>${</span><span class=nv>IMG_DIR</span><span class=si>}</span> <span class=si>${</span><span class=nv>MOD_DIR</span><span class=si>}</span> <span class=si>${</span><span class=nv>HDR_DIR</span><span class=si>}</span>
+dpkg -b <span class=si>${</span><span class=nv>IMG_DIR</span><span class=si>}</span>
+dpkg -b <span class=si>${</span><span class=nv>MOD_DIR</span><span class=si>}</span>
+dpkg -b <span class=si>${</span><span class=nv>HDR_DIR</span><span class=si>}</span></code></pre></td></tr></table></div></div><p>更新：2018-06-18：添加关于内核自带打包脚本的内容</p></div><div class=post-copyright><p class=copyright-item><span class=item-title>文章作者</span>
+<span class=item-content>Huang Yu</span></p><p class=copyright-item><span class=item-title>上次更新</span>
+<span class=item-content>2017-11-27</span></p></div><footer class=post-footer><div class=post-tags><a href=/tags/debian/>debian</a>
+<a href=/tags/linux/>linux</a>
+<a href=/tags/kernel-package/>kernel package</a></div><nav class=post-nav><a class=prev href=/post/linux%E6%A1%8C%E9%9D%A2%E4%BD%93%E7%B3%BB%E6%96%87%E4%BB%B6%E9%BB%98%E8%AE%A4%E6%89%93%E5%BC%80%E6%96%B9%E5%BC%8F%E5%B7%A5%E4%BD%9C%E6%9C%BA%E7%90%86/><i class="iconfont icon-left"></i>
+<span class="prev-text nav-default">Linux桌面体系文件默认打开方式工作机理</span>
+<span class="prev-text nav-mobile">上一篇</span></a>
+<a class=next href=/post/%E5%A4%9A%E5%8A%9F%E8%83%BD%E5%90%AF%E5%8A%A8u%E7%9B%98/><span class="next-text nav-default">多功能启动U盘</span>
+<span class="next-text nav-mobile">下一篇</span>
+<i class="iconfont icon-right"></i></a></nav></footer></article></div></div></main><footer id=footer class=footer><div class=social-links><a href=https://www.linkedin.com/in/yuhuang-keepmoving class="iconfont icon-linkedin" title=linkedin></a><a href=https://github.com/linuxhenhao class="iconfont icon-github" title=github></a><a href=https://blog.huangyu.me/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a></div><div class=copyright><span class=power-by>由 <a class=hexo-link href=https://gohugo.io>Hugo</a> 强力驱动</span>
+<span class=division>|</span>
+<span class=theme-info>主题 -
+<a class=theme-link href=https://github.com/olOwOlo/hugo-theme-even>Even</a></span>
+<span class=copyright-year>&copy;
+2017 -
+2021<span class=heart><i class="iconfont icon-heart"></i></span><span>Huang Yu</span></span></div></footer><div class=back-to-top id=back-to-top><i class="iconfont icon-up"></i></div></div><script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script><script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script><script src=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin=anonymous></script><script type=text/javascript src=/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js></script><script type=text/javascript>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}}</script><script async src=https://cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js integrity="sha256-HGLuEfFcsUJGhvB8cQ8nr0gai9EucOOaIxFw7qxmd+w=" crossorigin=anonymous></script></body></html>

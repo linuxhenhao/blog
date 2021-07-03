@@ -1,0 +1,53 @@
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><title>笔记本图形界面启动慢问题探索与解决 - HuangYu的博客</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=cache-control content="no-transform"><meta http-equiv=cache-control content="no-siteapp"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=author content="Huang Yu"><meta name=description content="问题描述：Y460 i3core m核显+ AMD HD5650，使用较老的硬件切换方式切换显卡。 新装Debian testing，内核版本4.16，分别为i915和radeon驱动两张显卡。在启动 后，显示出display manager的登陆界面正确输入用户名和密码后需要几十妙时间 等待图形界面出现。
+"><meta name=keywords content="slow,graphic driver,systemd-analyze"><meta name=generator content="Hugo 0.84.4 with theme even"><link rel=canonical href=https://blog.huangyu.me/post/%E7%AC%94%E8%AE%B0%E6%9C%AC%E5%9B%BE%E5%BD%A2%E7%95%8C%E9%9D%A2%E5%90%AF%E5%8A%A8%E6%85%A2%E9%97%AE%E9%A2%98%E6%8E%A2%E7%B4%A2%E4%B8%8E%E8%A7%A3%E5%86%B3/><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/manifest.json><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link href=/sass/main.min.b5a744db6de49a86cadafb3b70f555ab443f83c307a483402259e94726b045ff.css rel=stylesheet><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous><meta property="og:title" content="笔记本图形界面启动慢问题探索与解决"><meta property="og:description" content="问题描述：Y460 i3core m核显+ AMD HD5650，使用较老的硬件切换方式切换显卡。
+新装Debian testing，内核版本4.16，分别为i915和radeon驱动两张显卡。在启动
+后，显示出display manager的登陆界面正确输入用户名和密码后需要几十妙时间
+等待图形界面出现。"><meta property="og:type" content="article"><meta property="og:url" content="https://blog.huangyu.me/post/%E7%AC%94%E8%AE%B0%E6%9C%AC%E5%9B%BE%E5%BD%A2%E7%95%8C%E9%9D%A2%E5%90%AF%E5%8A%A8%E6%85%A2%E9%97%AE%E9%A2%98%E6%8E%A2%E7%B4%A2%E4%B8%8E%E8%A7%A3%E5%86%B3/"><meta property="article:section" content="post"><meta property="article:published_time" content="2018-05-10T23:14:59+08:00"><meta property="article:modified_time" content="2018-05-10T23:14:59+08:00"><meta itemprop=name content="笔记本图形界面启动慢问题探索与解决"><meta itemprop=description content="问题描述：Y460 i3core m核显+ AMD HD5650，使用较老的硬件切换方式切换显卡。
+新装Debian testing，内核版本4.16，分别为i915和radeon驱动两张显卡。在启动
+后，显示出display manager的登陆界面正确输入用户名和密码后需要几十妙时间
+等待图形界面出现。"><meta itemprop=datePublished content="2018-05-10T23:14:59+08:00"><meta itemprop=dateModified content="2018-05-10T23:14:59+08:00"><meta itemprop=wordCount content="1329"><meta itemprop=keywords content="desktop ui,linux,"><meta name=twitter:card content="summary"><meta name=twitter:title content="笔记本图形界面启动慢问题探索与解决"><meta name=twitter:description content="问题描述：Y460 i3core m核显+ AMD HD5650，使用较老的硬件切换方式切换显卡。
+新装Debian testing，内核版本4.16，分别为i915和radeon驱动两张显卡。在启动
+后，显示出display manager的登陆界面正确输入用户名和密码后需要几十妙时间
+等待图形界面出现。"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script><script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>HuangYu的博客</a></div><div class=mobile-navbar-icon><span></span><span></span><span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><a href=/><li class=mobile-menu-item>Home</li></a><a href=/post/><li class=mobile-menu-item>Archives</li></a><a href=/tags/><li class=mobile-menu-item>Tags</li></a><a href=/categories/><li class=mobile-menu-item>Categories</li></a></ul></nav><div class=container id=mobile-panel><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>HuangYu的博客</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/categories/>Categories</a></li></ul></nav></header><main id=main class=main><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>笔记本图形界面启动慢问题探索与解决</h1><div class=post-meta><span class=post-time>2018-05-10</span><div class=post-category><a href=/categories/operating_system/>operating_system</a></div></div></header><div class=post-toc id=post-toc><h2 class=post-toc-title>文章目录</h2><div class="post-toc-content always-active"></div></div><div class=post-content><p>问题描述：Y460 i3core m核显+ AMD HD5650，使用较老的硬件切换方式切换显卡。
+新装Debian testing，内核版本4.16，分别为i915和radeon驱动两张显卡。在启动
+后，显示出display manager的登陆界面正确输入用户名和密码后需要几十妙时间
+等待图形界面出现。</p><h1 id=1-问题排查>1. 问题排查</h1><h2 id=11-启动过程分析>1.1 启动过程分析</h2><p>使用systemd-analyze plot 输出系统启动服务耗时情况，使用firefox打开输出的
+svg文件观察</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback>systemd-analyze plot &gt; startup.svg
+firefox startup.svg</code></pre></td></tr></table></div></div><p>发现各个服务的启动时间都比较段，并行启动效果也很好，唯有一个docker.service
+耗费了十几妙来启动。通过<code>systemctl disable docker.service</code>禁止其启动，对图形
+界面出现慢的问题没有影响。后续分析原因，在于docker在后台启动服务其实与图形界面
+的启动没有依赖关系，不会导致几十秒延迟这么严重的后果。</p><h2 id=12-查看log文件>1.2 查看log文件</h2><p>查看<code>.local/share/xorg/Xorg.0.log</code>发现 xserver 的启动就是在系统启动之后几十秒才
+开始，说明问题不是来自于xserver启动及初始化等过程。</p><h2 id=13-display-manager的影响>1.3 display manager的影响</h2><p>怀疑和display manager有关，因为使用的是极简的 ly DM，安装slim，并设为默认DM，发现
+问题仍然存在。停用DM，单纯使用startx启动图形界面，问题依旧, 该因素排除。</p><h2 id=14-查看dmesg>1.4 查看dmesg</h2><p>由于遇到过多次在进入系统后立即登入图形界面，或者立即运行startx启动图形界面后出现
+xserver启动出错，提示no screen found的情况，怀疑问题来自于显卡驱动的初始化。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback>dmesg | grep drm
+dmesg | grep i915
+dmesg | grep radeon</code></pre></td></tr></table></div></div><p>通过上述命令观察驱动初始化情况，发现radeon的drm方面的初始化时间很晚，在开机几十秒后，
+再和xserver启动的log对比，发现成功启动的xserver的log中，其启动时间刚好在drm初始化完成
+后1秒左右。因此判断图形界面在登录后出现慢的根本原因在于驱动初始化上。</p><h1 id=2-尝试解决>2. 尝试解决</h1><h1 id=21-将radeon编译进内核>2.1 将radeon编译进内核</h1><p>这个过程比较简单，熟悉内核编译过程的话很快可以搞定，需要注意的是1. radeon编译进内核，
+那么其需要的firmware也要编译进内核，否则无法加载，原因很直观（想象一下为什么）. 2.
+firmware编译进内核需要制定firmware文件夹，以及firmware文件名，注意firmware文件夹真的
+就是指到‘firmware’这一层次的文件夹，而firmware文件名应该形如radeon/xxxx.bin，具体某型号
+显卡需要包含哪些firmware在gentoo的<a href=https://wiki.gentoo.org/wiki/Radeon#linux-firmware>wiki</a>上写得很明白了。</p><p>但是仍然存在同样的问题，说明这不是radeon模块加载的问题。</p><h1 id=22-问题最终解决>2.2 问题最终解决</h1><p>在<a href=https://www.phoronix.com/forums/forum/linux-graphics-x-org-drivers/open-source-amd-linux/872916-radeon-16s-boot-delay-with-black-screen-why-and-how-to-debug>phoronix论坛</a>上找到了类似的说法，结果是通过radeon.dpm=0，可以提高驱动初始化速度，
+但是仍然很慢，需要十几秒时间。</p><p>最终找到一个freedesktop.org上的<a href="https://bugs.freedesktop.org/show_bug.cgi?id=105968">bug提交</a>，确定这是新版本内核代码更改导致的问题，根本原因
+是radeon驱动的UVD clocking工作不正常导致的，开发
+者表示已经知道这个问题了，但是我们没时间，这些老型号的显卡现在是不可能管的，以后会不会
+管也不知道～。所以直接通过切换到4.9版本的内核避免了这个问题。。。</p></div><div class=post-copyright><p class=copyright-item><span class=item-title>文章作者</span>
+<span class=item-content>Huang Yu</span></p><p class=copyright-item><span class=item-title>上次更新</span>
+<span class=item-content>2018-05-10</span></p></div><footer class=post-footer><div class=post-tags><a href=/tags/desktop-ui/>desktop ui</a>
+<a href=/tags/linux/>linux</a></div><nav class=post-nav><a class=prev href=/post/xmind%E6%89%93%E5%8C%85%E8%84%9A%E6%9C%AC/><i class="iconfont icon-left"></i>
+<span class="prev-text nav-default">XMind打包脚本</span>
+<span class="prev-text nav-mobile">上一篇</span></a>
+<a class=next href=/post/%E5%9B%BE%E7%89%87%E7%9A%84%E5%A4%A7%E5%B0%8F%E4%B8%8E%E5%83%8F%E7%B4%A0/><span class="next-text nav-default">图片的大小与像素——调节TEM图片至统一比例尺</span>
+<span class="next-text nav-mobile">下一篇</span>
+<i class="iconfont icon-right"></i></a></nav></footer></article></div></div></main><footer id=footer class=footer><div class=social-links><a href=https://www.linkedin.com/in/yuhuang-keepmoving class="iconfont icon-linkedin" title=linkedin></a><a href=https://github.com/linuxhenhao class="iconfont icon-github" title=github></a><a href=https://blog.huangyu.me/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a></div><div class=copyright><span class=power-by>由 <a class=hexo-link href=https://gohugo.io>Hugo</a> 强力驱动</span>
+<span class=division>|</span>
+<span class=theme-info>主题 -
+<a class=theme-link href=https://github.com/olOwOlo/hugo-theme-even>Even</a></span>
+<span class=copyright-year>&copy;
+2017 -
+2021<span class=heart><i class="iconfont icon-heart"></i></span><span>Huang Yu</span></span></div></footer><div class=back-to-top id=back-to-top><i class="iconfont icon-up"></i></div></div><script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script><script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script><script src=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin=anonymous></script><script type=text/javascript src=/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js></script><script type=text/javascript>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}}</script><script async src=https://cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js integrity="sha256-HGLuEfFcsUJGhvB8cQ8nr0gai9EucOOaIxFw7qxmd+w=" crossorigin=anonymous></script></body></html>

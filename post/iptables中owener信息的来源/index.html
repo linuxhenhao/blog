@@ -1,0 +1,123 @@
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><title>Iptables中owener信息的来源以及wireguard发包带有owner信息的原因探索 - HuangYu的博客</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=cache-control content="no-transform"><meta http-equiv=cache-control content="no-siteapp"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=author content="Huang Yu"><meta name=description content="在上一篇关于iptables让特定程序走特定网卡的文章中用到了iptables的owner match，有些好奇 到底是如何知道uid、gid信息的。简单看了眼kernel的代码，应该是找到了答案。
+"><meta name=keywords content="iptables,owner match"><meta name=generator content="Hugo 0.84.4 with theme even"><link rel=canonical href=https://blog.huangyu.me/post/iptables%E4%B8%ADowener%E4%BF%A1%E6%81%AF%E7%9A%84%E6%9D%A5%E6%BA%90/><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/manifest.json><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link href=/sass/main.min.b5a744db6de49a86cadafb3b70f555ab443f83c307a483402259e94726b045ff.css rel=stylesheet><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous><meta property="og:title" content="Iptables中owener信息的来源以及wireguard发包带有owner信息的原因探索"><meta property="og:description" content="在上一篇关于iptables让特定程序走特定网卡的文章中用到了iptables的owner match，有些好奇
+到底是如何知道uid、gid信息的。简单看了眼kernel的代码，应该是找到了答案。"><meta property="og:type" content="article"><meta property="og:url" content="https://blog.huangyu.me/post/iptables%E4%B8%ADowener%E4%BF%A1%E6%81%AF%E7%9A%84%E6%9D%A5%E6%BA%90/"><meta property="article:section" content="post"><meta property="article:published_time" content="2017-10-30T19:41:47+08:00"><meta property="article:modified_time" content="2017-10-30T19:41:47+08:00"><meta itemprop=name content="Iptables中owener信息的来源以及wireguard发包带有owner信息的原因探索"><meta itemprop=description content="在上一篇关于iptables让特定程序走特定网卡的文章中用到了iptables的owner match，有些好奇
+到底是如何知道uid、gid信息的。简单看了眼kernel的代码，应该是找到了答案。"><meta itemprop=datePublished content="2017-10-30T19:41:47+08:00"><meta itemprop=dateModified content="2017-10-30T19:41:47+08:00"><meta itemprop=wordCount content="1802"><meta itemprop=keywords content="iptables,owner,"><meta name=twitter:card content="summary"><meta name=twitter:title content="Iptables中owener信息的来源以及wireguard发包带有owner信息的原因探索"><meta name=twitter:description content="在上一篇关于iptables让特定程序走特定网卡的文章中用到了iptables的owner match，有些好奇
+到底是如何知道uid、gid信息的。简单看了眼kernel的代码，应该是找到了答案。"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script><script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>HuangYu的博客</a></div><div class=mobile-navbar-icon><span></span><span></span><span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><a href=/><li class=mobile-menu-item>Home</li></a><a href=/post/><li class=mobile-menu-item>Archives</li></a><a href=/tags/><li class=mobile-menu-item>Tags</li></a><a href=/categories/><li class=mobile-menu-item>Categories</li></a></ul></nav><div class=container id=mobile-panel><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>HuangYu的博客</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/categories/>Categories</a></li></ul></nav></header><main id=main class=main><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>Iptables中owener信息的来源以及wireguard发包带有owner信息的原因探索</h1><div class=post-meta><span class=post-time>2017-10-30</span><div class=post-category><a href=/categories/network/>network</a></div></div></header><div class=post-toc id=post-toc><h2 class=post-toc-title>文章目录</h2><div class="post-toc-content always-active"></div></div><div class=post-content><p>在上一篇关于iptables让特定程序走特定网卡的文章中用到了iptables的owner match，有些好奇
+到底是如何知道<code>uid、gid</code>信息的。简单看了眼kernel的代码，应该是找到了答案。</p><p>google的时候找到了netfilter_queue的代码，其中关于uid、gid获取的部分用的是</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback>struct ntf_data-&gt;sk-&gt;uid、gid</code></pre></td></tr></table></div></div><p>那么socket结构当中是不是本身就包含了<code>uid、gid</code>信息？在内核代码中找到了答案。
+用</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback>find . -exec grep -iE &#39;(uid|gid)&#39; {} \;</code></pre></td></tr></table></div></div><p>在4.13.10内核代码的net文件夹下的socket.c文件中找到了</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback>struct socket *sock_alloc(void)
+{
+    struct inode *inode;
+    struct socket *sock;
+
+    inode = new_inode_pseudo(sock_mnt-&gt;mnt_sb);
+    if (!inode)
+        return NULL;
+
+    sock = SOCKET_I(inode);
+
+    kmemcheck_annotate_bitfield(sock, type);
+    inode-&gt;i_ino = get_next_ino();
+    inode-&gt;i_mode = S_IFSOCK | S_IRWXUGO;
+    inode-&gt;i_uid = current_fsuid();
+    inode-&gt;i_gid = current_fsgid();
+    inode-&gt;i_op = &amp;sockfs_inode_ops;
+
+    this_cpu_add(sockets_in_use, 1);
+    return sock;
+}</code></pre></td></tr></table></div></div><p>该代码用来初始化一个用来通讯的socket，不管是tcp还是udp等，都会调用到这个接口。创建一个虚拟
+的inode，*nix下一切皆文件的思想很明显，这个inode通过current_fsuid()和current_fsgid()获取
+到uid和gid. 然后通过SOCKET_I生成socket用来进行通讯。所有的包都在sk_buff（简称ＳＫＢ）中传输
+，其中从本系统发出的包的SKB中会有一个<code>skb->sock</code>指向这个包的来源。netfilter作为内核组件，
+自然能够得到该sock，从而简单的得到包的<code>uid、gid</code>。</p><h2 id=wireguard相关问题>wireguard相关问题</h2><h3 id=一般虚拟连接的>一般虚拟连接的</h3><p>虚拟连接软件都是创建一个虚拟网卡，然后系统将其当成实际的网卡来使用，从而达到利用虚拟连接软件
+建立的虚拟连接传输包的目的。</p><p>虚拟连接软件的虚拟网卡应该模拟实际网卡的行为。那么我们看wireguard的问题。从系统来说，一个
+包从应用层一直传输到device，从device发出之后的包当然不会再带有本系统发包来源sock信息了，
+这应该只是内核空间能看到的信息。但是wireguard却不是如此，它从头到尾用的都是初始的skb，而
+这个skb带有sock信息，这造成了包发到它创建的虚拟网卡之后，从内核再次发出时仍带有包发到虚拟网卡
+之前的信息，特别是所关注的owner信息。这种非常规的行为会在进行<code>iptables</code>规则设置时产生我所遇到
+的问题。</p><h3 id=源码分析>源码分析</h3><p>在wireguard的device.c当中，<code>xmit</code>为发包函数</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback>static netdev_tx_t xmit(struct sk_buff *skb, struct net_device *dev)</code></pre></td></tr></table></div></div><p>其skb对象就包含了用户软件的<code>sock</code>信息。它通过<code>__skb_queue_tail(&packets, skb)</code>直接将
+该skb添加到了对应route的peer（wireguard的其他结点都是peer，维护了一个peer结构，用来保存
+peer相关信息，它包含一个代发送包列表）待发送队列当中。然后通过调用send.c中的</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback>void packet_send_staged_packets(struct wireguard_peer *peer)</code></pre></td></tr></table></div></div><p>将各个<code>peer</code>对象中队列的包发往相应的网络上的主机。该函数通过调用同一文件内的</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback>static void packet_create_data(struct sk_buff *first)
+queue_enqueue_per_device_and_peer(&amp;wg-&gt;encrypt_queue, &amp;peer-&gt;tx_queue, first,
+   wg-&gt;packet_crypt_wq, &amp;wg-&gt;encrypt_queue.last_cpu);
+# queueing.h中上述enqueue函数的关键点
+queue_work_on(cpu, wq, &amp;per_cpu_ptr(device_queue-&gt;worker, cpu)-&gt;work)    </code></pre></td></tr></table></div></div><p>将要发送的包添加加密队列中。然后首先放到加密worker中进行包的加密，此时skb中的
+sock信息还是那个从软件发出的信息，没有改变。加密通过send.c中的skb_encrypt加密：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback>static inline bool skb_encrypt(struct sk_buff *skb,
+                     struct noise_keypair *keypair, bool have_simd)</code></pre></td></tr></table></div></div><p>查看该函数源码，使用了加密函数加密，变更了skb里面的数据内容，更新checksum，但是，skb->
+sock仍然没有更改，在此之后，包含skb的list就被放入发送队列进行发送了。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback>queue_enqueue_per_peer(&amp;PACKET_PEER(first)-&gt;tx_queue, first, state);</code></pre></td></tr></table></div></div><p>send.c中有tx_queue的work具体实现，通过使用</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback>static void packet_create_data_done(struct sk_buff *first, struct wireguard_peer *peer)
+{
+  ...
+  if (likely(!socket_send_skb_to_peer(peer, skb, PACKET_CB(skb)-&gt;ds) &amp;&amp; !is_keepalive))
+  ...
+}</code></pre></td></tr></table></div></div><p>进行数据包的发送，使用的时socket_send_skb_to_peer，该函数用<code>send4</code>和<code>send6</code>，在<code>sendx</code>
+函数中，对skb的dev、mark进行了设置，但是同样skb->sock没有更改，然后调用</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback>udp_tunnel_xmit_skb(rt, sock, skb, fl.saddr, fl.daddr, ds,
+  ip4_dst_hoplimit(&amp;rt-&gt;dst), 0, fl.fl4_sport, fl.fl4_dport, false, false);
+{
+  ...
+  if (!skb-&gt;sk)
+    skb-&gt;sk = sk;
+  ...
+}</code></pre></td></tr></table></div></div><p><strong>这就是关键，这个判断，skb->sk由于出自本机，是带有sk的，这里作判断，如果有就不做更改，没有，
+将该skb的sk设置成wireguard用来发送的sock</strong>，这个机制应该是不合理的，虚拟连接软件应当做到
+尽可能的与实际网卡相同的行为，从而在配置诸如iptables、ip-rule方面简单方便。网络包到网卡之后
+其发送的sk信息应当被抛弃，所以这个判断应该删除。</p></div><div class=post-copyright><p class=copyright-item><span class=item-title>文章作者</span>
+<span class=item-content>Huang Yu</span></p><p class=copyright-item><span class=item-title>上次更新</span>
+<span class=item-content>2017-10-30</span></p></div><footer class=post-footer><div class=post-tags><a href=/tags/iptables/>iptables</a>
+<a href=/tags/owner/>owner</a></div><nav class=post-nav><a class=prev href=/post/%E5%A4%9A%E5%8A%9F%E8%83%BD%E5%90%AF%E5%8A%A8u%E7%9B%98/><i class="iconfont icon-left"></i>
+<span class="prev-text nav-default">多功能启动U盘</span>
+<span class="prev-text nav-mobile">上一篇</span></a>
+<a class=next href=/post/linux%E4%B8%8B%E8%AE%A9%E6%9F%90%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%89%80%E6%9C%89%E6%95%B0%E6%8D%AE%E5%8C%85%E9%80%9A%E8%BF%87%E6%8C%87%E5%AE%9A%E7%BD%91%E5%8F%A3%E5%8F%91%E5%87%BA/><span class="next-text nav-default">Linux下让某程序的所有数据包通过指定网口发出</span>
+<span class="next-text nav-mobile">下一篇</span>
+<i class="iconfont icon-right"></i></a></nav></footer></article></div></div></main><footer id=footer class=footer><div class=social-links><a href=https://www.linkedin.com/in/yuhuang-keepmoving class="iconfont icon-linkedin" title=linkedin></a><a href=https://github.com/linuxhenhao class="iconfont icon-github" title=github></a><a href=https://blog.huangyu.me/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a></div><div class=copyright><span class=power-by>由 <a class=hexo-link href=https://gohugo.io>Hugo</a> 强力驱动</span>
+<span class=division>|</span>
+<span class=theme-info>主题 -
+<a class=theme-link href=https://github.com/olOwOlo/hugo-theme-even>Even</a></span>
+<span class=copyright-year>&copy;
+2017 -
+2021<span class=heart><i class="iconfont icon-heart"></i></span><span>Huang Yu</span></span></div></footer><div class=back-to-top id=back-to-top><i class="iconfont icon-up"></i></div></div><script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script><script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script><script src=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin=anonymous></script><script type=text/javascript src=/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js></script><script type=text/javascript>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}}</script><script async src=https://cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js integrity="sha256-HGLuEfFcsUJGhvB8cQ8nr0gai9EucOOaIxFw7qxmd+w=" crossorigin=anonymous></script></body></html>

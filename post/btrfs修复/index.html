@@ -1,0 +1,85 @@
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><title>Btrfs修复(伪)及损坏预防 - HuangYu的博客</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=cache-control content="no-transform"><meta http-equiv=cache-control content="no-siteapp"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=author content="Huang Yu"><meta name=description content="可能由于经常使用智能插座直接断电关闭OrangePi，常在河边走哪有不湿鞋，用来存储数据的btrfs 分区挂掉了，当然由于有RAID1的备份，对于数据我是毫不担心，尝试修复以下btrfs。
+"><meta name=keywords content="orangepi,btrfs,repair"><meta name=generator content="Hugo 0.84.4 with theme even"><link rel=canonical href=https://blog.huangyu.me/post/btrfs%E4%BF%AE%E5%A4%8D/><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/manifest.json><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link href=/sass/main.min.b5a744db6de49a86cadafb3b70f555ab443f83c307a483402259e94726b045ff.css rel=stylesheet><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous><meta property="og:title" content="Btrfs修复(伪)及损坏预防"><meta property="og:description" content="可能由于经常使用智能插座直接断电关闭OrangePi，常在河边走哪有不湿鞋，用来存储数据的btrfs
+分区挂掉了，当然由于有RAID1的备份，对于数据我是毫不担心，尝试修复以下btrfs。"><meta property="og:type" content="article"><meta property="og:url" content="https://blog.huangyu.me/post/btrfs%E4%BF%AE%E5%A4%8D/"><meta property="article:section" content="post"><meta property="article:published_time" content="2018-04-15T11:33:13+08:00"><meta property="article:modified_time" content="2018-04-15T11:33:13+08:00"><meta itemprop=name content="Btrfs修复(伪)及损坏预防"><meta itemprop=description content="可能由于经常使用智能插座直接断电关闭OrangePi，常在河边走哪有不湿鞋，用来存储数据的btrfs
+分区挂掉了，当然由于有RAID1的备份，对于数据我是毫不担心，尝试修复以下btrfs。"><meta itemprop=datePublished content="2018-04-15T11:33:13+08:00"><meta itemprop=dateModified content="2018-04-15T11:33:13+08:00"><meta itemprop=wordCount content="1619"><meta itemprop=keywords content="orangepi,btrfs,"><meta name=twitter:card content="summary"><meta name=twitter:title content="Btrfs修复(伪)及损坏预防"><meta name=twitter:description content="可能由于经常使用智能插座直接断电关闭OrangePi，常在河边走哪有不湿鞋，用来存储数据的btrfs
+分区挂掉了，当然由于有RAID1的备份，对于数据我是毫不担心，尝试修复以下btrfs。"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script><script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>HuangYu的博客</a></div><div class=mobile-navbar-icon><span></span><span></span><span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><a href=/><li class=mobile-menu-item>Home</li></a><a href=/post/><li class=mobile-menu-item>Archives</li></a><a href=/tags/><li class=mobile-menu-item>Tags</li></a><a href=/categories/><li class=mobile-menu-item>Categories</li></a></ul></nav><div class=container id=mobile-panel><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>HuangYu的博客</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/categories/>Categories</a></li></ul></nav></header><main id=main class=main><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>Btrfs修复(伪)及损坏预防</h1><div class=post-meta><span class=post-time>2018-04-15</span><div class=post-category><a href=/categories/operating_system/>operating_system</a></div></div></header><div class=post-toc id=post-toc><h2 class=post-toc-title>文章目录</h2><div class="post-toc-content always-active"></div></div><div class=post-content><p>可能由于经常使用智能插座直接断电关闭OrangePi，常在河边走哪有不湿鞋，用来存储数据的btrfs
+分区挂掉了，当然由于有RAID1的备份，对于数据我是毫不担心，尝试修复以下btrfs。</p><p>错误信息：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>btrfsck
+    parent transid verify failed on <span class=m>64585728</span> wanted <span class=m>65318</span> found <span class=m>65317</span>
+    .....
+    Ignoring transid failure
+    leaf parent key incorrect <span class=m>63799296</span>
+    bad block <span class=m>63799296</span>
+    ERROR: errors found in extend allocation tree or chunk allocation
+    Error: could not find extent items <span class=k>for</span> root <span class=m>617</span>
+    ERROR: failed to repair root items: no such file or director</code></pre></td></tr></table></div></div><h2 id=1-备份-metadata>1. 备份 metadata</h2><p>首先要备份 metadata，也就是除了实际数据块之外的其他信息，占用空间小，在折腾后出了问题可以
+方便的恢复折腾前的状态：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback>btrfs-image -t 4 -c 5  # -t 指定线程数， -c 指定压缩级别</code></pre></td></tr></table></div></div><h2 id=2-恢复过程>2. 恢复过程</h2><p>尝试使用 recovery 模式挂载分区</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback>mount -orecovery /dev/sdb2 /mnt</code></pre></td></tr></table></div></div><p>如果失败，使用<code>dmesg</code>查看失败原因，如果是 log-tree 问题，可以使用 <code>btrfs-zero-log</code> 来
+清空 log-tree ，之后就可以正常挂载。但是由于 log-tree 不匹配问题实际还是由于在写入过程发生
+了问题产生的，所以虽然正常挂载了，但是可能存在文件丢失。</p><p>使用 'btrfsck -s 1/2/3 /dev/sdb2' 使用备份的 superblock 进行 fsck，可以指定为 1、2、3
+等，如果没有问题，那么使用备份的 superblock 恢复即可， 使用命令<code>btrfs-select-super</code>。</p><p>在进行具体的修复之前，可以用 <code>btrfs restore</code> 命令将能够找到的文件备份到别的盘上，之后再
+进行下面的尝试。</p><p>如果失败原因和 chunk-tree 相关，就可以使用 <code>btrfs rescue chunk-recover /dev/sdb2</code> 来
+重建 chunk-tree ，这个过程将会根据硬盘大小使用大量的时间，所以除非确定是 chunk-tree 问题，
+不着急使用该方法。</p><p>如果 extent-tree 相关问题存在，还需要使用 <code>btrfsck --repair --init-extent-tree</code> 重建
+extent-tree。 <code>btrfsck --repair</code> 具有破坏性，不要随意使用，不过备份好 metadata 的情况下，
+试试也无妨。</p><h2 id=3-实际恢复>3. 实际恢复</h2><p>实际恢复过程，首先 <code>btrfsck /dev/sdb2</code> 看到了那些错误，然后使用 btrfs-image 备份 metadata
+，然后使用 recovery 选项挂载，发现不可挂载，查看<code>dmesg</code>输出， <code>parent transid verify failed
+on xxxxx wanted xxxx</code>， 这是 log-tree 匹配错误，使用 <code>btrfs-zero-log /dev/sdb2</code> 修复之后，可以直接挂载，
+但是挂载上去是 readonly 的，<code>dmesg</code>查看，发现还是有错误信息：<code>unable to find ref byte nr
+63586304 parent 0 root 7 owner 2 offset 0</code>。</p><p>使用 <code>btrfsck -s 1</code> 如果整个过程没有出现 error，则可以使用备份的 superblock 来恢复
+文件系统，<code>btrfs-select-super -s 1 /dev/sdb2</code>，使用位置 1 的 superblock 覆盖主 superblock
+完成修复。</p><p>很不幸，对于我这个 btrfs， 问题不在 superblock, 在 extent-tree 上， dmesg 可以看到，
+<code>__btrfs_free_extent:7059: errno=-2 No such entry</code> 的提示信息。那么尝试下重建 extent-tree，
+<code>btrfs --repair --init-extent-tree</code>，操作失败，在修复过程中提示<code>errors found in extent allocation
+tree or chunk allocation</code>。</p><p>最后，使用耗时最长的 <code>btrfs rescue chunk-recover /dev/sdb2</code> 来尝试修复。这个操作非常耗时，
+我们知道，硬盘的数据读取速率不仅受硬盘本身限制，也受计算机性能限制，因此这个操作最好直接放到
+PC上作，不要在 OrangePi 上操作。</p><p>!!!!!最终受不了了！！！！几个小时还没完成，根据 2T 这个大小，加上 40MB/s 的读写速度，
+chunk-recover 需要14个小时， 实际上我是有备份的，格式化这个数据分区后用btrfs send receive
+重建就行了，只需要 170GB 数据的传输时间。然后修改对应的挂载 fstab 以及做好 .latest 软链接
+用于下次增量备份就 OK。</p><h2 id=4-吃一堑长一智>4. 吃一堑长一智</h2><p>回想这段时间的操作，这个自建 NAS 是在我上次由于 RAID1 硬盘盒的风扇噪音太大，有过移动整个硬盘
+的操作，不记得是否有提前断电了，但是如果是由于运行时的振动，应该会导致硬盘坏道，而不是某些数据
+不一致。所以，最有可能导致本次事故的原因是直接使用断电关机（智能插座远程断电）导致的。因此，拿
+tornado 写个 Handler，用于关机。通过已经暴露到公网的 nginx 作代理，并且添加简单的 HTTP Auth，
+由于整个通信过程是基于 https的，所以安全性可以保证。</p><p>以后不要再直接暴力断电关机了，同时，什么手段都不如有个备份，三个硬盘同时损坏的概率还是比较低的，
+更可怕的灾难性事故就需要使用异地备份容灾了，可以考虑租一个 vultr/buyvm 的大存储型 vps。但是
+这样就不可避免的存在数据泄漏的风险。如果单单承担 seafile 的备份，seafile 倒是支持本地加密，
+然后只存储加密后的文件在远端。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback>nginx配置
+location /shutdown/ {
+  auth_basic &#34;auth for action&#34;;
+  auth_basic_user_file &#34;/etc/nginx/htpassword&#34;;
+  proxy_pass http://127.0.0.1:8888/shutdown/;
+}
+# tornado 监听在本地 8888 端口，只对 /shutdown/ 作出响应
+# tornado 通过 supervisord 控制，以 root 权限运行，只有通过验证的外部访问才能到达</code></pre></td></tr></table></div></div><p>参考资料：
+Suse mail list</p></div><div class=post-copyright><p class=copyright-item><span class=item-title>文章作者</span>
+<span class=item-content>Huang Yu</span></p><p class=copyright-item><span class=item-title>上次更新</span>
+<span class=item-content>2018-04-15</span></p></div><footer class=post-footer><div class=post-tags><a href=/tags/orangepi/>orangepi</a>
+<a href=/tags/btrfs/>btrfs</a></div><nav class=post-nav><a class=prev href=/post/%E5%9B%BE%E7%89%87%E7%9A%84%E5%A4%A7%E5%B0%8F%E4%B8%8E%E5%83%8F%E7%B4%A0/><i class="iconfont icon-left"></i>
+<span class="prev-text nav-default">图片的大小与像素——调节TEM图片至统一比例尺</span>
+<span class="prev-text nav-mobile">上一篇</span></a>
+<a class=next href=/post/%E5%8D%9A%E5%AE%A2down%E4%BA%8B%E4%BB%B6%E4%B9%8B%E8%BD%AC%E7%A7%BB%E8%87%B3vps+github/><span class="next-text nav-default">博客down事件之转移至vps+github</span>
+<span class="next-text nav-mobile">下一篇</span>
+<i class="iconfont icon-right"></i></a></nav></footer></article></div></div></main><footer id=footer class=footer><div class=social-links><a href=https://www.linkedin.com/in/yuhuang-keepmoving class="iconfont icon-linkedin" title=linkedin></a><a href=https://github.com/linuxhenhao class="iconfont icon-github" title=github></a><a href=https://blog.huangyu.me/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a></div><div class=copyright><span class=power-by>由 <a class=hexo-link href=https://gohugo.io>Hugo</a> 强力驱动</span>
+<span class=division>|</span>
+<span class=theme-info>主题 -
+<a class=theme-link href=https://github.com/olOwOlo/hugo-theme-even>Even</a></span>
+<span class=copyright-year>&copy;
+2017 -
+2021<span class=heart><i class="iconfont icon-heart"></i></span><span>Huang Yu</span></span></div></footer><div class=back-to-top id=back-to-top><i class="iconfont icon-up"></i></div></div><script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script><script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script><script src=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin=anonymous></script><script type=text/javascript src=/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js></script><script type=text/javascript>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}}</script><script async src=https://cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js integrity="sha256-HGLuEfFcsUJGhvB8cQ8nr0gai9EucOOaIxFw7qxmd+w=" crossorigin=anonymous></script></body></html>
