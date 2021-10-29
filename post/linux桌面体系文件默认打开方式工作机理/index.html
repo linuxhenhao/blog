@@ -1,57 +1,267 @@
-<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><title>Linux桌面体系文件默认打开方式工作机理 - ThinkerYu的博客</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=cache-control content="no-transform"><meta http-equiv=cache-control content="no-siteapp"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=author content="thinkeryu"><meta name=description content="缘由 在安装了atom之后, 火狐下载完文件之后点击打开文件位置, 竟然是用atom打开!! 应该用文件管理器才 对. 所以了解了一下linux桌面环境下的文件打开的工作机理---xdg-utils.
-"><meta name=keywords content="文件打开方式,xdg-open,mime"><meta name=generator content="Hugo 0.84.4 with theme even"><link rel=canonical href=https://blog.huangyu.me/post/linux%E6%A1%8C%E9%9D%A2%E4%BD%93%E7%B3%BB%E6%96%87%E4%BB%B6%E9%BB%98%E8%AE%A4%E6%89%93%E5%BC%80%E6%96%B9%E5%BC%8F%E5%B7%A5%E4%BD%9C%E6%9C%BA%E7%90%86/><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/manifest.json><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link href=/sass/main.min.b5a744db6de49a86cadafb3b70f555ab443f83c307a483402259e94726b045ff.css rel=stylesheet><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous><meta property="og:title" content="Linux桌面体系文件默认打开方式工作机理"><meta property="og:description" content="缘由
+<!doctype html><html lang=zh-cn>
+<head>
+<meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
+<title>Linux桌面体系文件默认打开方式工作机理 - ThinkerYu的博客</title>
+<meta name=renderer content="webkit">
+<meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta http-equiv=cache-control content="no-transform">
+<meta http-equiv=cache-control content="no-siteapp">
+<meta name=theme-color content="#f8f5ec">
+<meta name=msapplication-navbutton-color content="#f8f5ec">
+<meta name=apple-mobile-web-app-capable content="yes">
+<meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec">
+<meta name=author content="thinkeryu"><meta name=description content="缘由 在安装了atom之后, 火狐下载完文件之后点击打开文件位置, 竟然是用atom打开!! 应该用文件管理器才 对. 所以了解了一下linux桌面环境下的文件打开的工作机理---xdg-utils.
+"><meta name=keywords content="文件打开方式,xdg-open,mime">
+<meta name=generator content="Hugo 0.88.1 with theme even">
+<link rel=canonical href=https://blog.huangyu.me/post/linux%E6%A1%8C%E9%9D%A2%E4%BD%93%E7%B3%BB%E6%96%87%E4%BB%B6%E9%BB%98%E8%AE%A4%E6%89%93%E5%BC%80%E6%96%B9%E5%BC%8F%E5%B7%A5%E4%BD%9C%E6%9C%BA%E7%90%86/>
+<link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png>
+<link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
+<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png>
+<link rel=manifest href=/manifest.json>
+<link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5>
+<link href=/sass/main.min.b5a744db6de49a86cadafb3b70f555ab443f83c307a483402259e94726b045ff.css rel=stylesheet>
+<link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous>
+<meta property="og:title" content="Linux桌面体系文件默认打开方式工作机理">
+<meta property="og:description" content="缘由
 
 在安装了atom之后, 火狐下载完文件之后点击打开文件位置, 竟然是用atom打开!! 应该用文件管理器才
-对. 所以了解了一下linux桌面环境下的文件打开的工作机理---xdg-utils."><meta property="og:type" content="article"><meta property="og:url" content="https://blog.huangyu.me/post/linux%E6%A1%8C%E9%9D%A2%E4%BD%93%E7%B3%BB%E6%96%87%E4%BB%B6%E9%BB%98%E8%AE%A4%E6%89%93%E5%BC%80%E6%96%B9%E5%BC%8F%E5%B7%A5%E4%BD%9C%E6%9C%BA%E7%90%86/"><meta property="article:section" content="post"><meta property="article:published_time" content="2017-12-08T19:12:46+08:00"><meta property="article:modified_time" content="2017-12-08T19:12:46+08:00"><meta itemprop=name content="Linux桌面体系文件默认打开方式工作机理"><meta itemprop=description content="缘由
+对. 所以了解了一下linux桌面环境下的文件打开的工作机理---xdg-utils.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://blog.huangyu.me/post/linux%E6%A1%8C%E9%9D%A2%E4%BD%93%E7%B3%BB%E6%96%87%E4%BB%B6%E9%BB%98%E8%AE%A4%E6%89%93%E5%BC%80%E6%96%B9%E5%BC%8F%E5%B7%A5%E4%BD%9C%E6%9C%BA%E7%90%86/"><meta property="article:section" content="post">
+<meta property="article:published_time" content="2017-12-08T19:12:46+08:00">
+<meta property="article:modified_time" content="2017-12-08T19:12:46+08:00">
+<meta itemprop=name content="Linux桌面体系文件默认打开方式工作机理">
+<meta itemprop=description content="缘由
 
 在安装了atom之后, 火狐下载完文件之后点击打开文件位置, 竟然是用atom打开!! 应该用文件管理器才
-对. 所以了解了一下linux桌面环境下的文件打开的工作机理---xdg-utils."><meta itemprop=datePublished content="2017-12-08T19:12:46+08:00"><meta itemprop=dateModified content="2017-12-08T19:12:46+08:00"><meta itemprop=wordCount content="1221"><meta itemprop=keywords content="文件打开方式,linux,"><meta name=twitter:card content="summary"><meta name=twitter:title content="Linux桌面体系文件默认打开方式工作机理"><meta name=twitter:description content="缘由
+对. 所以了解了一下linux桌面环境下的文件打开的工作机理---xdg-utils."><meta itemprop=datePublished content="2017-12-08T19:12:46+08:00">
+<meta itemprop=dateModified content="2017-12-08T19:12:46+08:00">
+<meta itemprop=wordCount content="1221">
+<meta itemprop=keywords content="文件打开方式,linux,"><meta name=twitter:card content="summary">
+<meta name=twitter:title content="Linux桌面体系文件默认打开方式工作机理">
+<meta name=twitter:description content="缘由
 
 在安装了atom之后, 火狐下载完文件之后点击打开文件位置, 竟然是用atom打开!! 应该用文件管理器才
-对. 所以了解了一下linux桌面环境下的文件打开的工作机理---xdg-utils."><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script><script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>ThinkerYu的博客</a></div><div class=mobile-navbar-icon><span></span><span></span><span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><a href=/><li class=mobile-menu-item>Home</li></a><a href=/post/><li class=mobile-menu-item>Archives</li></a><a href=/tags/><li class=mobile-menu-item>Tags</li></a><a href=/categories/><li class=mobile-menu-item>Categories</li></a></ul></nav><div class=container id=mobile-panel><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>ThinkerYu的博客</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/categories/>Categories</a></li></ul></nav></header><main id=main class=main><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>Linux桌面体系文件默认打开方式工作机理</h1><div class=post-meta><span class=post-time>2017-12-08</span><div class=post-category><a href=/categories/operating_system/>operating_system</a></div></div></header><div class=post-toc id=post-toc><h2 class=post-toc-title>文章目录</h2><div class="post-toc-content always-active"></div></div><div class=post-content><h2 id=缘由>缘由</h2><p>在安装了atom之后, 火狐下载完文件之后点击打开文件位置, 竟然是用atom打开!! 应该用文件管理器才
-对. 所以了解了一下linux桌面环境下的文件打开的工作机理---xdg-utils.</p><h2 id=xdgutils>xdg-utils</h2><p>官方维基介绍<a href=https://freedesktop.org/wiki/Software/xdg-utils/>freedesktop wiki</a>:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+对. 所以了解了一下linux桌面环境下的文件打开的工作机理---xdg-utils."><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]-->
+</head>
+<body>
+<div id=mobile-navbar class=mobile-navbar>
+<div class=mobile-header-logo>
+<a href=/ class=logo>ThinkerYu的博客</a>
+</div>
+<div class=mobile-navbar-icon>
+<span></span>
+<span></span>
+<span></span>
+</div>
+</div>
+<nav id=mobile-menu class="mobile-menu slideout-menu">
+<ul class=mobile-menu-list>
+<a href=/>
+<li class=mobile-menu-item>Home</li>
+</a><a href=/post/>
+<li class=mobile-menu-item>Archives</li>
+</a><a href=/tags/>
+<li class=mobile-menu-item>Tags</li>
+</a><a href=/categories/>
+<li class=mobile-menu-item>Categories</li>
+</a>
+</ul>
+</nav>
+<div class=container id=mobile-panel>
+<header id=header class=header>
+<div class=logo-wrapper>
+<a href=/ class=logo>ThinkerYu的博客</a>
+</div>
+<nav class=site-navbar>
+<ul id=menu class=menu>
+<li class=menu-item>
+<a class=menu-item-link href=/>Home</a>
+</li><li class=menu-item>
+<a class=menu-item-link href=/post/>Archives</a>
+</li><li class=menu-item>
+<a class=menu-item-link href=/tags/>Tags</a>
+</li><li class=menu-item>
+<a class=menu-item-link href=/categories/>Categories</a>
+</li>
+</ul>
+</nav>
+</header>
+<main id=main class=main>
+<div class=content-wrapper>
+<div id=content class=content>
+<article class=post>
+<header class=post-header>
+<h1 class=post-title>Linux桌面体系文件默认打开方式工作机理</h1>
+<div class=post-meta>
+<span class=post-time> 2017-12-08 </span>
+<div class=post-category>
+<a href=/categories/operating_system/> operating_system </a>
+</div>
+</div>
+</header>
+<div class=post-toc id=post-toc>
+<h2 class=post-toc-title>文章目录</h2>
+<div class="post-toc-content always-active">
+</div>
+</div>
+<div class=post-content>
+<h2 id=缘由>缘由</h2>
+<p>在安装了atom之后, 火狐下载完文件之后点击打开文件位置, 竟然是用atom打开!! 应该用文件管理器才
+对. 所以了解了一下linux桌面环境下的文件打开的工作机理---xdg-utils.</p>
+<h2 id=xdgutils>xdg-utils</h2>
+<p>官方维基介绍<a href=https://freedesktop.org/wiki/Software/xdg-utils/>freedesktop wiki</a>:</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback>xdg-utils is a set of tools that allows applications to easily integrate with
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>xdg-utils is a set of tools that allows applications to easily integrate with
 the desktop environment of the user, regardless of the specific desktop environment
-that the user runs.</code></pre></td></tr></table></div></div><p>linux桌面环境的多样性相信所有使用linux的童鞋们都有所见识, 这种多样性真是让人又爱又恨.
+that the user runs.</code></pre></td></tr></table>
+</div>
+</div>
+<p>linux桌面环境的多样性相信所有使用linux的童鞋们都有所见识, 这种多样性真是让人又爱又恨.
 xdg-utils包含一组工具, 用来提供统一的桌面环境和安装程序交互工作的接口. 我理解来看, 其实
-最重要的就是解决文件打开方式的问题.</p><h2 id=mime>mime</h2><p>面临如今五花八门的文件类型, 系统怎么才能知道什么文件应该用哪个程序打开? 一个统一的运作方式
+最重要的就是解决文件打开方式的问题.</p>
+<h2 id=mime>mime</h2>
+<p>面临如今五花八门的文件类型, 系统怎么才能知道什么文件应该用哪个程序打开? 一个统一的运作方式
 必然需要预置与系统当中. 这点上不论是linux/windows/macOS都是这样的. 新的文件类型通过注册
 mime信息到系统当中, 软件安装时将其能够打开的mime类型也告诉系统(或者说桌面环境?). 当文件被
 打开时, 系统寻找已经注册的能够打开该mime类型的软件打开该文件. 当面临多个可以打开该类型mime
-文件时, 自然会有个所谓的默认程序.</p><p>这种方式实现了文件类型和打开文件软件的解耦, 工作方式也足够简洁明了.</p><h2 id=linux下的细节>linux下的细节</h2><p>在linux当中某个文件被打开时, 一些实现的比较正常的桌面环境或者文件管理器通常就会调用</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback>xdg-open filename</code></pre></td></tr></table></div></div><p>来调用相关的程序打开文件. 那么它是怎么知道应该调用哪个程序的呢? 聪明! 它就是通过首先获取
+文件时, 自然会有个所谓的默认程序.</p>
+<p>这种方式实现了文件类型和打开文件软件的解耦, 工作方式也足够简洁明了.</p>
+<h2 id=linux下的细节>linux下的细节</h2>
+<p>在linux当中某个文件被打开时, 一些实现的比较正常的桌面环境或者文件管理器通常就会调用</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>xdg-open filename</code></pre></td></tr></table>
+</div>
+</div>
+<p>来调用相关的程序打开文件. 那么它是怎么知道应该调用哪个程序的呢? 聪明! 它就是通过首先获取
 文件的mime-type, 然后查询mime-type对应的default xxx.desktop, 用这个xxx.desktop 打开文件.
 具体实现不知道是通过序列调用下述命令还是直接通过库文件编写代码写入程序了. 但是工作机理和下述
-过程一致:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+过程一致:</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback>xdg-mime query filetype 文件名  # 首先查询文件的mime类型
-xdg-mime query default mime-type  # 根据得到的mime-type获取到default程序</code></pre></td></tr></table></div></div><p>既然如此, 现在想要解决系统竟然用<code>atom</code>打开文件夹的行为就简单了, 首先我们看看文件夹的mime-type</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>xdg-mime query filetype 文件名  # 首先查询文件的mime类型
+xdg-mime query default mime-type  # 根据得到的mime-type获取到default程序</code></pre></td></tr></table>
+</div>
+</div>
+<p>既然如此, 现在想要解决系统竟然用<code>atom</code>打开文件夹的行为就简单了, 首先我们看看文件夹的mime-type</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback>$ xdg-mime query .
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>$ xdg-mime query .
 inode/directory
 $ xdg-mime query default inode/directory  # 查查看默认打开方式
-atom.desktop  # 呵呵</code></pre></td></tr></table></div></div><p>解决方法自然就是设置文件管理器为该类型的打开方式, 这里用的是<code>pcmanfm-qt</code></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback>$ xdg-mime default pcmanfm-qt.desktop inode/directory</code></pre></td></tr></table></div></div><p>xxx.desktop只要在freedesktop规定的默认位置当中就行, 只需给出文件名, 不需要绝对地址。
-常见位置如<code>/usr/share/applications/</code>、<code>~/.local/share/applications/</code>。</p><h2 id=ps>PS</h2><p>linux桌面环境的菜单也是由<code>xdg-utils</code>当中的<code>xdg-desktop-menu</code>管理的， 不需要将<code>.desktop</code>
+atom.desktop  # 呵呵</code></pre></td></tr></table>
+</div>
+</div>
+<p>解决方法自然就是设置文件管理器为该类型的打开方式, 这里用的是<code>pcmanfm-qt</code></p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>$ xdg-mime default pcmanfm-qt.desktop inode/directory</code></pre></td></tr></table>
+</div>
+</div>
+<p>xxx.desktop只要在freedesktop规定的默认位置当中就行, 只需给出文件名, 不需要绝对地址。
+常见位置如<code>/usr/share/applications/</code>、<code>~/.local/share/applications/</code>。</p>
+<h2 id=ps>PS</h2>
+<p>linux桌面环境的菜单也是由<code>xdg-utils</code>当中的<code>xdg-desktop-menu</code>管理的， 不需要将<code>.desktop</code>
 放在特定的位置， 而<code>.desktop</code>文件当中的<code>MimeType=xxx</code>指定了软件能够打开的文件类型。在
 使用系统的包管理工具时，会自动的调用<code>xdg-desktop-menu</code>进行相应的处理，添加相应的信息到
 freedesktop.org规定的文件当中。 这样其他遵循规定的桌面环境就可以获取到包含新安装的程序
-的菜单了。</p></div><div class=post-copyright><p class=copyright-item><span class=item-title>文章作者</span>
-<span class=item-content>thinkeryu</span></p><p class=copyright-item><span class=item-title>上次更新</span>
-<span class=item-content>2017-12-08</span></p></div><footer class=post-footer><div class=post-tags><a href=/tags/%E6%96%87%E4%BB%B6%E6%89%93%E5%BC%80%E6%96%B9%E5%BC%8F/>文件打开方式</a>
-<a href=/tags/linux/>linux</a></div><nav class=post-nav><a class=prev href=/post/tcp_congestion_control-bbr-kcp-cdg%E9%9D%9E%E6%8B%A5%E5%A1%9E%E4%B8%A2%E5%8C%85%E6%83%85%E6%99%AF%E5%AF%B9%E6%AF%94/><i class="iconfont icon-left"></i>
+的菜单了。</p>
+</div>
+<div class=post-copyright>
+<p class=copyright-item>
+<span class=item-title>文章作者</span>
+<span class=item-content>thinkeryu</span>
+</p>
+<p class=copyright-item>
+<span class=item-title>上次更新</span>
+<span class=item-content>
+2017-12-08
+</span>
+</p>
+</div>
+<footer class=post-footer>
+<div class=post-tags>
+<a href=/tags/%E6%96%87%E4%BB%B6%E6%89%93%E5%BC%80%E6%96%B9%E5%BC%8F/>文件打开方式</a>
+<a href=/tags/linux/>linux</a>
+</div>
+<nav class=post-nav>
+<a class=prev href=/post/tcp_congestion_control-bbr-kcp-cdg%E9%9D%9E%E6%8B%A5%E5%A1%9E%E4%B8%A2%E5%8C%85%E6%83%85%E6%99%AF%E5%AF%B9%E6%AF%94/>
+<i class="iconfont icon-left"></i>
 <span class="prev-text nav-default">Tcp_congestion_control BBR KCP CDG非拥塞丢包情景对比</span>
-<span class="prev-text nav-mobile">上一篇</span></a>
-<a class=next href=/post/debian%E7%B3%BB%E7%AE%80%E6%98%93%E5%86%85%E6%A0%B8%E6%89%93%E5%8C%85%E8%84%9A%E6%9C%AC/><span class="next-text nav-default">Debian系简易内核打包脚本</span>
+<span class="prev-text nav-mobile">上一篇</span>
+</a>
+<a class=next href=/post/debian%E7%B3%BB%E7%AE%80%E6%98%93%E5%86%85%E6%A0%B8%E6%89%93%E5%8C%85%E8%84%9A%E6%9C%AC/>
+<span class="next-text nav-default">Debian系简易内核打包脚本</span>
 <span class="next-text nav-mobile">下一篇</span>
-<i class="iconfont icon-right"></i></a></nav></footer></article></div><div id=gitalk-container></div><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css crossorigin=anonymous><script src=https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js crossorigin=anonymous></script><script type=text/javascript>var gitalk=new Gitalk({id:'2017-12-08 19:12:46 \u002b0800 \u002b0800',title:'Linux桌面体系文件默认打开方式工作机理',clientID:'e6672c053ad6c6056f71',clientSecret:'c13fdda944329c62818b9bbf0b00a23658614f3e',repo:'blog',owner:'linuxhenhao',admin:['linuxhenhao'],body:decodeURI(location.href)});gitalk.render('gitalk-container')</script><noscript>Please enable JavaScript to view the <a href=https://github.com/gitalk/gitalk>comments powered by gitalk.</a></noscript></div></main><footer id=footer class=footer><div class=social-links><a href=https://www.linkedin.com/in/yuhuang-keepmoving class="iconfont icon-linkedin" title=linkedin></a><a href=https://github.com/linuxhenhao class="iconfont icon-github" title=github></a><a href=https://blog.huangyu.me/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a></div><div class=copyright><span class=power-by>由 <a class=hexo-link href=https://gohugo.io>Hugo</a> 强力驱动</span>
+<i class="iconfont icon-right"></i>
+</a>
+</nav>
+</footer>
+</article>
+</div>
+<div id=gitalk-container></div>
+<link rel=stylesheet href=https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css crossorigin=anonymous>
+<script src=https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js crossorigin=anonymous></script>
+<script type=text/javascript>var gitalk=new Gitalk({id:'2017-12-08 19:12:46 \u002b0800 \u002b0800',title:'Linux桌面体系文件默认打开方式工作机理',clientID:'e6672c053ad6c6056f71',clientSecret:'c13fdda944329c62818b9bbf0b00a23658614f3e',repo:'blog',owner:'linuxhenhao',admin:['linuxhenhao'],body:decodeURI(location.href)});gitalk.render('gitalk-container')</script>
+<noscript>Please enable JavaScript to view the <a href=https://github.com/gitalk/gitalk>comments powered by gitalk.</a></noscript>
+</div>
+</main>
+<footer id=footer class=footer>
+<div class=social-links>
+<a href=https://www.linkedin.com/in/yuhuang-keepmoving class="iconfont icon-linkedin" title=linkedin></a>
+<a href=https://github.com/linuxhenhao class="iconfont icon-github" title=github></a>
+<a href=https://blog.huangyu.me/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a>
+</div>
+<div class=copyright>
+<span class=power-by>
+由 <a class=hexo-link href=https://gohugo.io>Hugo</a> 强力驱动
+</span>
 <span class=division>|</span>
-<span class=theme-info>主题 -
-<a class=theme-link href=https://github.com/olOwOlo/hugo-theme-even>Even</a></span>
-<span class=copyright-year>&copy;
+<span class=theme-info>
+主题 -
+<a class=theme-link href=https://github.com/olOwOlo/hugo-theme-even>Even</a>
+</span>
+<span class=copyright-year>
+&copy;
 2017 -
-2021<span class=heart><i class="iconfont icon-heart"></i></span><span>thinkeryu</span></span></div></footer><div class=back-to-top id=back-to-top><i class="iconfont icon-up"></i></div></div><script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script><script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script><script src=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin=anonymous></script><script type=text/javascript src=/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js></script><script type=text/javascript>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}}</script><script async src=https://cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js integrity="sha256-HGLuEfFcsUJGhvB8cQ8nr0gai9EucOOaIxFw7qxmd+w=" crossorigin=anonymous></script></body></html>
+2021<span class=heart><i class="iconfont icon-heart"></i></span><span>thinkeryu</span>
+</span>
+</div>
+</footer>
+<div class=back-to-top id=back-to-top>
+<i class="iconfont icon-up"></i>
+</div>
+</div>
+<script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin=anonymous></script>
+<script type=text/javascript src=/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js></script>
+<script type=text/javascript>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}}</script>
+<script async src=https://cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js integrity="sha256-HGLuEfFcsUJGhvB8cQ8nr0gai9EucOOaIxFw7qxmd+w=" crossorigin=anonymous></script>
+</body>
+</html>

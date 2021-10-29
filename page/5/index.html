@@ -1,22 +1,237 @@
-<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><title>ThinkerYu的博客</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=cache-control content="no-transform"><meta http-equiv=cache-control content="no-siteapp"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=author content="thinkeryu"><meta name=generator content="Hugo 0.84.4 with theme even"><link rel=canonical href=https://blog.huangyu.me/><link href=https://blog.huangyu.me/index.xml rel=alternate type=application/rss+xml title=ThinkerYu的博客><link href=https://blog.huangyu.me/index.xml rel=feed type=application/rss+xml title=ThinkerYu的博客><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/manifest.json><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link href=/sass/main.min.b5a744db6de49a86cadafb3b70f555ab443f83c307a483402259e94726b045ff.css rel=stylesheet><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous><meta property="og:title" content><meta property="og:description" content><meta property="og:type" content="website"><meta property="og:url" content="https://blog.huangyu.me/"><meta itemprop=name content><meta itemprop=description content><meta name=twitter:card content="summary"><meta name=twitter:title content><meta name=twitter:description content><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script><script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>ThinkerYu的博客</a></div><div class=mobile-navbar-icon><span></span><span></span><span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><a href=/><li class=mobile-menu-item>Home</li></a><a href=/post/><li class=mobile-menu-item>Archives</li></a><a href=/tags/><li class=mobile-menu-item>Tags</li></a><a href=/categories/><li class=mobile-menu-item>Categories</li></a></ul></nav><div class=container id=mobile-panel><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>ThinkerYu的博客</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/categories/>Categories</a></li></ul></nav></header><main id=main class=main><div class=content-wrapper><div id=content class=content><section id=posts class=posts><article class=post><header class=post-header><h1 class=post-title><a class=post-link href=/post/%E8%AE%B0wireguard%E7%9A%84ip-rule%E9%85%8D%E7%BD%AE%E9%97%AE%E9%A2%98/>记wireguard的ip Rule配置问题</a></h1><div class=post-meta><span class=post-time>2017-10-28</span><div class=post-category><a href=/categories/network/>network</a></div></div></header><div class=post-content><div class=post-summary><p>虽然学过计算机网络, 但是实践却并不多, 这里以wireguard建立的连接为例, 实践了一下路由配置,
-更详细的了解了linux系统下路由的体系.</p></div><div class=read-more><a href=/post/%E8%AE%B0wireguard%E7%9A%84ip-rule%E9%85%8D%E7%BD%AE%E9%97%AE%E9%A2%98/ class=read-more-link>阅读更多</a></div></div></article><article class=post><header class=post-header><h1 class=post-title><a class=post-link href=/post/google-scholar%E5%A4%87%E5%BF%98/>google scholar 备忘</a></h1><div class=post-meta><span class=post-time>2017-10-27</span><div class=post-category><a href=/categories/others/>others</a></div></div></header><div class=post-content><div class=post-summary><p>1. 由于各大数据库提供商本身提供的搜索功能只能搜索他们自己的数据库.
-2. 由于各vps供应商所在的ip网段有太多的对google的搜索请求</p><p>==></p><p>1. google scholar可以在文献查找上提供极大的便利
-2. 而各vps供应商所在的ip网段请求太多,基本都已经被google个block掉了.</p></div><div class=read-more><a href=/post/google-scholar%E5%A4%87%E5%BF%98/ class=read-more-link>阅读更多</a></div></div></article><article class=post><header class=post-header><h1 class=post-title><a class=post-link href=/post/%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85python3.4.7forxp/>编译安装python3.4.7 For XP</a></h1><div class=post-meta><span class=post-time>2017-09-20</span><div class=post-category><a href=/categories/programming/>programming</a></div></div></header><div class=post-content><div class=post-summary><h2 id=前言>前言</h2><p>因为项目要求，必须支持XP系统。偶尔翻<a href=https://www.python.org>python官网</a>支持Xp的最新的
+<!doctype html><html lang=zh-cn>
+<head>
+<meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
+<title>ThinkerYu的博客</title>
+<meta name=renderer content="webkit">
+<meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta http-equiv=cache-control content="no-transform">
+<meta http-equiv=cache-control content="no-siteapp">
+<meta name=theme-color content="#f8f5ec">
+<meta name=msapplication-navbutton-color content="#f8f5ec">
+<meta name=apple-mobile-web-app-capable content="yes">
+<meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec">
+<meta name=author content="thinkeryu">
+<meta name=generator content="Hugo 0.88.1 with theme even">
+<link rel=canonical href=https://blog.huangyu.me/>
+<link href=https://blog.huangyu.me/index.xml rel=alternate type=application/rss+xml title=ThinkerYu的博客>
+<link href=https://blog.huangyu.me/index.xml rel=feed type=application/rss+xml title=ThinkerYu的博客>
+<link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png>
+<link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
+<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png>
+<link rel=manifest href=/manifest.json>
+<link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5>
+<link href=/sass/main.min.b5a744db6de49a86cadafb3b70f555ab443f83c307a483402259e94726b045ff.css rel=stylesheet>
+<link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous>
+<meta property="og:title" content>
+<meta property="og:description" content>
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://blog.huangyu.me/">
+<meta itemprop=name content>
+<meta itemprop=description content><meta name=twitter:card content="summary">
+<meta name=twitter:title content>
+<meta name=twitter:description content><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]-->
+</head>
+<body>
+<div id=mobile-navbar class=mobile-navbar>
+<div class=mobile-header-logo>
+<a href=/ class=logo>ThinkerYu的博客</a>
+</div>
+<div class=mobile-navbar-icon>
+<span></span>
+<span></span>
+<span></span>
+</div>
+</div>
+<nav id=mobile-menu class="mobile-menu slideout-menu">
+<ul class=mobile-menu-list>
+<a href=/>
+<li class=mobile-menu-item>Home</li>
+</a><a href=/post/>
+<li class=mobile-menu-item>Archives</li>
+</a><a href=/tags/>
+<li class=mobile-menu-item>Tags</li>
+</a><a href=/categories/>
+<li class=mobile-menu-item>Categories</li>
+</a>
+</ul>
+</nav>
+<div class=container id=mobile-panel>
+<header id=header class=header>
+<div class=logo-wrapper>
+<a href=/ class=logo>ThinkerYu的博客</a>
+</div>
+<nav class=site-navbar>
+<ul id=menu class=menu>
+<li class=menu-item>
+<a class=menu-item-link href=/>Home</a>
+</li><li class=menu-item>
+<a class=menu-item-link href=/post/>Archives</a>
+</li><li class=menu-item>
+<a class=menu-item-link href=/tags/>Tags</a>
+</li><li class=menu-item>
+<a class=menu-item-link href=/categories/>Categories</a>
+</li>
+</ul>
+</nav>
+</header>
+<main id=main class=main>
+<div class=content-wrapper>
+<div id=content class=content>
+<section id=posts class=posts>
+<article class=post>
+<header class=post-header>
+<h1 class=post-title><a class=post-link href=/post/iptables%E4%B8%ADowener%E4%BF%A1%E6%81%AF%E7%9A%84%E6%9D%A5%E6%BA%90/>Iptables中owener信息的来源以及wireguard发包带有owner信息的原因探索</a></h1>
+<div class=post-meta>
+<span class=post-time> 2017-10-30 </span>
+<div class=post-category>
+<a href=/categories/network/> network </a>
+</div>
+</div>
+</header>
+<div class=post-content>
+<div class=post-summary>
+<p>在上一篇关于iptables让特定程序走特定网卡的文章中用到了iptables的owner match，有些好奇
+到底是如何知道<code>uid、gid</code>信息的。简单看了眼kernel的代码，应该是找到了答案。</p>
+</div>
+<div class=read-more>
+<a href=/post/iptables%E4%B8%ADowener%E4%BF%A1%E6%81%AF%E7%9A%84%E6%9D%A5%E6%BA%90/ class=read-more-link>阅读更多</a>
+</div>
+</div>
+</article>
+<article class=post>
+<header class=post-header>
+<h1 class=post-title><a class=post-link href=/post/linux%E4%B8%8B%E8%AE%A9%E6%9F%90%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%89%80%E6%9C%89%E6%95%B0%E6%8D%AE%E5%8C%85%E9%80%9A%E8%BF%87%E6%8C%87%E5%AE%9A%E7%BD%91%E5%8F%A3%E5%8F%91%E5%87%BA/>Linux下让某程序的所有数据包通过指定网口发出</a></h1>
+<div class=post-meta>
+<span class=post-time> 2017-10-29 </span>
+<div class=post-category>
+<a href=/categories/network/> network </a>
+</div>
+</div>
+</header>
+<div class=post-content>
+<div class=post-summary>
+<p>让某程序的所有数据通过指定网口发出。这是结合上一篇搭建的虚拟连接实现的特定功能，达到一些
+目的——比如让没有WAN地址的服务通过vps具备的WAN地址提供交互（可以了解一下<a href=https://github.com/fatedier/frp>frp</a>）。</p>
+</div>
+<div class=read-more>
+<a href=/post/linux%E4%B8%8B%E8%AE%A9%E6%9F%90%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%89%80%E6%9C%89%E6%95%B0%E6%8D%AE%E5%8C%85%E9%80%9A%E8%BF%87%E6%8C%87%E5%AE%9A%E7%BD%91%E5%8F%A3%E5%8F%91%E5%87%BA/ class=read-more-link>阅读更多</a>
+</div>
+</div>
+</article>
+<article class=post>
+<header class=post-header>
+<h1 class=post-title><a class=post-link href=/post/%E8%AE%B0wireguard%E7%9A%84ip-rule%E9%85%8D%E7%BD%AE%E9%97%AE%E9%A2%98/>记wireguard的ip Rule配置问题</a></h1>
+<div class=post-meta>
+<span class=post-time> 2017-10-28 </span>
+<div class=post-category>
+<a href=/categories/network/> network </a>
+</div>
+</div>
+</header>
+<div class=post-content>
+<div class=post-summary>
+<p>虽然学过计算机网络, 但是实践却并不多, 这里以wireguard建立的连接为例, 实践了一下路由配置,
+更详细的了解了linux系统下路由的体系.</p>
+</div>
+<div class=read-more>
+<a href=/post/%E8%AE%B0wireguard%E7%9A%84ip-rule%E9%85%8D%E7%BD%AE%E9%97%AE%E9%A2%98/ class=read-more-link>阅读更多</a>
+</div>
+</div>
+</article>
+<article class=post>
+<header class=post-header>
+<h1 class=post-title><a class=post-link href=/post/google-scholar%E5%A4%87%E5%BF%98/>google scholar 备忘</a></h1>
+<div class=post-meta>
+<span class=post-time> 2017-10-27 </span>
+<div class=post-category>
+<a href=/categories/others/> others </a>
+</div>
+</div>
+</header>
+<div class=post-content>
+<div class=post-summary>
+<p>1. 由于各大数据库提供商本身提供的搜索功能只能搜索他们自己的数据库.
+2. 由于各vps供应商所在的ip网段有太多的对google的搜索请求</p>
+<p>==></p>
+<p>1. google scholar可以在文献查找上提供极大的便利
+2. 而各vps供应商所在的ip网段请求太多,基本都已经被google个block掉了.</p>
+</div>
+<div class=read-more>
+<a href=/post/google-scholar%E5%A4%87%E5%BF%98/ class=read-more-link>阅读更多</a>
+</div>
+</div>
+</article>
+<article class=post>
+<header class=post-header>
+<h1 class=post-title><a class=post-link href=/post/%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85python3.4.7forxp/>编译安装python3.4.7 For XP</a></h1>
+<div class=post-meta>
+<span class=post-time> 2017-09-20 </span>
+<div class=post-category>
+<a href=/categories/programming/> programming </a>
+</div>
+</div>
+</header>
+<div class=post-content>
+<div class=post-summary>
+<h2 id=前言>前言</h2>
+<p>因为项目要求，必须支持XP系统。偶尔翻<a href=https://www.python.org>python官网</a>支持Xp的最新的
 python版本已经到了3.4.7，都是一些安全性的更新。但是官方如今不再提供直接可以安装的binary
 文件下载，需要自己编译安装，因此做个记录。参考<a href=https://wiki.python.org/moin/VS2010>官方wiki</a>
 和<a href=https://docs.python.org/devguide/setup.html#windows-compiling>python-doc</a>
-<a href=https://wiki.openssl.org/index.php/Compilation_and_Installation>openssl wiki</a></p></div><div class=read-more><a href=/post/%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85python3.4.7forxp/ class=read-more-link>阅读更多</a></div></div></article><article class=post><header class=post-header><h1 class=post-title><a class=post-link href=/post/%E6%8A%BD%E8%B1%A1%E5%88%86%E5%B1%82%E4%BB%A5twisted%E4%B8%BA%E4%BE%8B/>抽象分层-以twisted为例</a></h1><div class=post-meta><span class=post-time>2017-09-16</span><div class=post-category><a href=/categories/programming/>programming</a></div></div></header><div class=post-content><div class=post-summary><h2 id=缘由>缘由</h2><p>最近在项目中有一个需求，将其进行前后端分离。其中一个重点是后端，也就是server端，需要不停
-的向前端client发送数据。考虑到将来跨平台的简便性，基于浏览器广泛支持的websocket是非常好的
-选择。<br>但是一个额外的强制要求限制了该需求的实现，那就是对XP系统的支持，没错2017年对XP系统的支持。
-软件界面使用的是PySide+python3.4实现的。而PySide中并没有对Websocket的支持，在PyQt5或者
-PySide2中已经包含了webosocket的实现，但是无法在XP系统中运行。</p></div><div class=read-more><a href=/post/%E6%8A%BD%E8%B1%A1%E5%88%86%E5%B1%82%E4%BB%A5twisted%E4%B8%BA%E4%BE%8B/ class=read-more-link>阅读更多</a></div></div></article><article class=post><header class=post-header><h1 class=post-title><a class=post-link href=/post/%E5%AE%9E%E6%9C%BA%E5%AE%89%E8%A3%85%E9%BB%91%E8%8B%B9%E6%9E%9Csierra/>实机安装黑苹果Sierra</a></h1><div class=post-meta><span class=post-time>2017-06-15</span><div class=post-category><a href=/categories/operating_system/>operating_system</a></div></div></header><div class=post-content><div class=post-summary><p>虚拟机里面不论是kvm还是virtualbox都安装过Sierra了，即使是在SSD上使用，其流畅性和舒适度还是无法和实机安装相比的，
-因此最终还是安装了黑苹果，用起来很舒服。</p><h3 id=首先是主机参数>首先是主机参数：</h3><p>cpu: i5 4590<br>主板: B85M-d2v<br>显卡: hd4600集显，AMD R9 285<br>声卡: RealTek ACL 887<br>网卡: rtl8111</p></div><div class=read-more><a href=/post/%E5%AE%9E%E6%9C%BA%E5%AE%89%E8%A3%85%E9%BB%91%E8%8B%B9%E6%9E%9Csierra/ class=read-more-link>阅读更多</a></div></div></article></section><nav class=pagination><a class=prev href=/page/4/><i class="iconfont icon-left"></i>
-<span class=prev-text>上一页</span></a>
-<a class=next href=/page/6/><span class=next-text>下一页</span>
-<i class="iconfont icon-right"></i></a></nav></div></div></main><footer id=footer class=footer><div class=social-links><a href=https://www.linkedin.com/in/yuhuang-keepmoving class="iconfont icon-linkedin" title=linkedin></a><a href=https://github.com/linuxhenhao class="iconfont icon-github" title=github></a><a href=https://blog.huangyu.me/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a></div><div class=copyright><span class=power-by>由 <a class=hexo-link href=https://gohugo.io>Hugo</a> 强力驱动</span>
+<a href=https://wiki.openssl.org/index.php/Compilation_and_Installation>openssl wiki</a></p>
+</div>
+<div class=read-more>
+<a href=/post/%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85python3.4.7forxp/ class=read-more-link>阅读更多</a>
+</div>
+</div>
+</article>
+</section>
+<nav class=pagination>
+<a class=prev href=/page/4/>
+<i class="iconfont icon-left"></i>
+<span class=prev-text>上一页</span>
+</a>
+<a class=next href=/page/6/>
+<span class=next-text>下一页</span>
+<i class="iconfont icon-right"></i>
+</a>
+</nav>
+</div>
+</div>
+</main>
+<footer id=footer class=footer>
+<div class=social-links>
+<a href=https://www.linkedin.com/in/yuhuang-keepmoving class="iconfont icon-linkedin" title=linkedin></a>
+<a href=https://github.com/linuxhenhao class="iconfont icon-github" title=github></a>
+<a href=https://blog.huangyu.me/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a>
+</div>
+<div class=copyright>
+<span class=power-by>
+由 <a class=hexo-link href=https://gohugo.io>Hugo</a> 强力驱动
+</span>
 <span class=division>|</span>
-<span class=theme-info>主题 -
-<a class=theme-link href=https://github.com/olOwOlo/hugo-theme-even>Even</a></span>
-<span class=copyright-year>&copy;
+<span class=theme-info>
+主题 -
+<a class=theme-link href=https://github.com/olOwOlo/hugo-theme-even>Even</a>
+</span>
+<span class=copyright-year>
+&copy;
 2017 -
-2021<span class=heart><i class="iconfont icon-heart"></i></span><span>thinkeryu</span></span></div></footer><div class=back-to-top id=back-to-top><i class="iconfont icon-up"></i></div></div><script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script><script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script><script src=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin=anonymous></script><script type=text/javascript src=/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js></script><script type=text/javascript>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}}</script><script async src=https://cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js integrity="sha256-HGLuEfFcsUJGhvB8cQ8nr0gai9EucOOaIxFw7qxmd+w=" crossorigin=anonymous></script></body></html>
+2021<span class=heart><i class="iconfont icon-heart"></i></span><span>thinkeryu</span>
+</span>
+</div>
+</footer>
+<div class=back-to-top id=back-to-top>
+<i class="iconfont icon-up"></i>
+</div>
+</div>
+<script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin=anonymous></script>
+<script type=text/javascript src=/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js></script>
+<script type=text/javascript>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}}</script>
+<script async src=https://cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js integrity="sha256-HGLuEfFcsUJGhvB8cQ8nr0gai9EucOOaIxFw7qxmd+w=" crossorigin=anonymous></script>
+</body>
+</html>

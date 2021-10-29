@@ -1,34 +1,147 @@
-<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><title>编译安装python3.4.7 For XP - ThinkerYu的博客</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=cache-control content="no-transform"><meta http-equiv=cache-control content="no-siteapp"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=author content="thinkeryu"><meta name=description content="前言 因为项目要求，必须支持XP系统。偶尔翻python官网支持Xp的最新的 python版本已经到了3.4.7，都是一些安全性的更新。但是官方如今不再提供直接可以安装的binary 文件下载，需要自己编译安装，因此做个记录。参考官方wiki 和python-doc openssl wiki
-"><meta name=keywords content="python"><meta name=generator content="Hugo 0.84.4 with theme even"><link rel=canonical href=https://blog.huangyu.me/post/%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85python3.4.7forxp/><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/manifest.json><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link href=/sass/main.min.b5a744db6de49a86cadafb3b70f555ab443f83c307a483402259e94726b045ff.css rel=stylesheet><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous><meta property="og:title" content="编译安装python3.4.7 For XP"><meta property="og:description" content="前言
+<!doctype html><html lang=zh-cn>
+<head>
+<meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
+<title>编译安装python3.4.7 For XP - ThinkerYu的博客</title>
+<meta name=renderer content="webkit">
+<meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta http-equiv=cache-control content="no-transform">
+<meta http-equiv=cache-control content="no-siteapp">
+<meta name=theme-color content="#f8f5ec">
+<meta name=msapplication-navbutton-color content="#f8f5ec">
+<meta name=apple-mobile-web-app-capable content="yes">
+<meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec">
+<meta name=author content="thinkeryu"><meta name=description content="前言 因为项目要求，必须支持XP系统。偶尔翻python官网支持Xp的最新的 python版本已经到了3.4.7，都是一些安全性的更新。但是官方如今不再提供直接可以安装的binary 文件下载，需要自己编译安装，因此做个记录。参考官方wiki 和python-doc openssl wiki
+"><meta name=keywords content="python">
+<meta name=generator content="Hugo 0.88.1 with theme even">
+<link rel=canonical href=https://blog.huangyu.me/post/%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85python3.4.7forxp/>
+<link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png>
+<link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
+<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png>
+<link rel=manifest href=/manifest.json>
+<link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5>
+<link href=/sass/main.min.b5a744db6de49a86cadafb3b70f555ab443f83c307a483402259e94726b045ff.css rel=stylesheet>
+<link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous>
+<meta property="og:title" content="编译安装python3.4.7 For XP">
+<meta property="og:description" content="前言
 
 因为项目要求，必须支持XP系统。偶尔翻python官网支持Xp的最新的
 python版本已经到了3.4.7，都是一些安全性的更新。但是官方如今不再提供直接可以安装的binary
 文件下载，需要自己编译安装，因此做个记录。参考官方wiki
 和python-doc
-openssl wiki"><meta property="og:type" content="article"><meta property="og:url" content="https://blog.huangyu.me/post/%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85python3.4.7forxp/"><meta property="article:section" content="post"><meta property="article:published_time" content="2017-09-20T21:47:34+08:00"><meta property="article:modified_time" content="2017-09-20T21:47:34+08:00"><meta itemprop=name content="编译安装python3.4.7 For XP"><meta itemprop=description content="前言
+openssl wiki">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://blog.huangyu.me/post/%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85python3.4.7forxp/"><meta property="article:section" content="post">
+<meta property="article:published_time" content="2017-09-20T21:47:34+08:00">
+<meta property="article:modified_time" content="2017-09-20T21:47:34+08:00">
+<meta itemprop=name content="编译安装python3.4.7 For XP">
+<meta itemprop=description content="前言
 
 因为项目要求，必须支持XP系统。偶尔翻python官网支持Xp的最新的
 python版本已经到了3.4.7，都是一些安全性的更新。但是官方如今不再提供直接可以安装的binary
 文件下载，需要自己编译安装，因此做个记录。参考官方wiki
 和python-doc
-openssl wiki"><meta itemprop=datePublished content="2017-09-20T21:47:34+08:00"><meta itemprop=dateModified content="2017-09-20T21:47:34+08:00"><meta itemprop=wordCount content="1701"><meta itemprop=keywords content><meta name=twitter:card content="summary"><meta name=twitter:title content="编译安装python3.4.7 For XP"><meta name=twitter:description content="前言
+openssl wiki"><meta itemprop=datePublished content="2017-09-20T21:47:34+08:00">
+<meta itemprop=dateModified content="2017-09-20T21:47:34+08:00">
+<meta itemprop=wordCount content="1701">
+<meta itemprop=keywords content><meta name=twitter:card content="summary">
+<meta name=twitter:title content="编译安装python3.4.7 For XP">
+<meta name=twitter:description content="前言
 
 因为项目要求，必须支持XP系统。偶尔翻python官网支持Xp的最新的
 python版本已经到了3.4.7，都是一些安全性的更新。但是官方如今不再提供直接可以安装的binary
 文件下载，需要自己编译安装，因此做个记录。参考官方wiki
 和python-doc
-openssl wiki"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script><script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>ThinkerYu的博客</a></div><div class=mobile-navbar-icon><span></span><span></span><span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><a href=/><li class=mobile-menu-item>Home</li></a><a href=/post/><li class=mobile-menu-item>Archives</li></a><a href=/tags/><li class=mobile-menu-item>Tags</li></a><a href=/categories/><li class=mobile-menu-item>Categories</li></a></ul></nav><div class=container id=mobile-panel><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>ThinkerYu的博客</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/categories/>Categories</a></li></ul></nav></header><main id=main class=main><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>编译安装python3.4.7 For XP</h1><div class=post-meta><span class=post-time>2017-09-20</span><div class=post-category><a href=/categories/programming/>programming</a></div></div></header><div class=post-toc id=post-toc><h2 class=post-toc-title>文章目录</h2><div class="post-toc-content always-active"></div></div><div class=post-content><h2 id=前言>前言</h2><p>因为项目要求，必须支持XP系统。偶尔翻<a href=https://www.python.org>python官网</a>支持Xp的最新的
+openssl wiki"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]-->
+</head>
+<body>
+<div id=mobile-navbar class=mobile-navbar>
+<div class=mobile-header-logo>
+<a href=/ class=logo>ThinkerYu的博客</a>
+</div>
+<div class=mobile-navbar-icon>
+<span></span>
+<span></span>
+<span></span>
+</div>
+</div>
+<nav id=mobile-menu class="mobile-menu slideout-menu">
+<ul class=mobile-menu-list>
+<a href=/>
+<li class=mobile-menu-item>Home</li>
+</a><a href=/post/>
+<li class=mobile-menu-item>Archives</li>
+</a><a href=/tags/>
+<li class=mobile-menu-item>Tags</li>
+</a><a href=/categories/>
+<li class=mobile-menu-item>Categories</li>
+</a>
+</ul>
+</nav>
+<div class=container id=mobile-panel>
+<header id=header class=header>
+<div class=logo-wrapper>
+<a href=/ class=logo>ThinkerYu的博客</a>
+</div>
+<nav class=site-navbar>
+<ul id=menu class=menu>
+<li class=menu-item>
+<a class=menu-item-link href=/>Home</a>
+</li><li class=menu-item>
+<a class=menu-item-link href=/post/>Archives</a>
+</li><li class=menu-item>
+<a class=menu-item-link href=/tags/>Tags</a>
+</li><li class=menu-item>
+<a class=menu-item-link href=/categories/>Categories</a>
+</li>
+</ul>
+</nav>
+</header>
+<main id=main class=main>
+<div class=content-wrapper>
+<div id=content class=content>
+<article class=post>
+<header class=post-header>
+<h1 class=post-title>编译安装python3.4.7 For XP</h1>
+<div class=post-meta>
+<span class=post-time> 2017-09-20 </span>
+<div class=post-category>
+<a href=/categories/programming/> programming </a>
+</div>
+</div>
+</header>
+<div class=post-toc id=post-toc>
+<h2 class=post-toc-title>文章目录</h2>
+<div class="post-toc-content always-active">
+</div>
+</div>
+<div class=post-content>
+<h2 id=前言>前言</h2>
+<p>因为项目要求，必须支持XP系统。偶尔翻<a href=https://www.python.org>python官网</a>支持Xp的最新的
 python版本已经到了3.4.7，都是一些安全性的更新。但是官方如今不再提供直接可以安装的binary
 文件下载，需要自己编译安装，因此做个记录。参考<a href=https://wiki.python.org/moin/VS2010>官方wiki</a>
 和<a href=https://docs.python.org/devguide/setup.html#windows-compiling>python-doc</a>
-<a href=https://wiki.openssl.org/index.php/Compilation_and_Installation>openssl wiki</a></p><h2 id=准备>准备</h2><h3 id=visual-studio-2010-pro>Visual Studio 2010 pro</h3><p>可以在XP上运行的最高版本的vs，并且支持使用PCbuild中的方式，也就是新的python编译安装脚
+<a href=https://wiki.openssl.org/index.php/Compilation_and_Installation>openssl wiki</a></p>
+<h2 id=准备>准备</h2>
+<h3 id=visual-studio-2010-pro>Visual Studio 2010 pro</h3>
+<p>可以在XP上运行的最高版本的vs，并且支持使用PCbuild中的方式，也就是新的python编译安装脚
 本运行，因此首先需要下载安装此编译环境。安装的过程中，安装VC++即可，其他的诸如F#、C#、
 office、SQL的相关东西可以自定义安装的时候取消勾选。从<a href=https://msdn.itellyou.cn>MSDN itellyou</a>下载会比官网快。
 安装完成后需要将vs stuido安装文件夹中的<code>VC\bin</code>添加到环境变量当中。使我们可以直接在cmd
-中运行nmake之类的命令。</p><h3 id=tortoisesvn1><a href=https://www.tortoisesvn.net/downloads.html>tortoiseSVN</a></h3><p>需要通过svn下载一些external source，脚本里面推荐使用的就是这个。注意，1.9以及之后的版
-本不支持XP，因此需要下载<a href=https://sourceforge.net/projects/tortoisesvn/files/1.8.12/Application/>1.8版本</a></p><h3 id=perl4><a href=http://strawberryperl.com/>perl</a></h3><p>编译openssl时需要perl，这里下载的是Strawberry perl。</p><h2 id=编译>编译</h2><ol><li>所有的编译，都应该在上述软件安装完成后，重新打开cmd，以获得新的PATH。python的源码文件夹所在
-的路径不能包含空格，否则会在编译tcl时失败。</li><li>运行<code>PCbuild\build.bat -e</code>，加的参数会调用<code>get_externals.bat</code>并且编译外部依赖，包含tk、tcl、
-openssl等库，完成之后在PCbuild文件夹下得到一个可以运行的python.exe</li><li><p>打包，在编译完成之后希望能够打包成官方发布的msi形式的安装包，用于在其他电脑上安装。但是找了较长
+中运行nmake之类的命令。</p>
+<h3 id=tortoisesvn1><a href=https://www.tortoisesvn.net/downloads.html>tortoiseSVN</a></h3>
+<p>需要通过svn下载一些external source，脚本里面推荐使用的就是这个。注意，1.9以及之后的版
+本不支持XP，因此需要下载<a href=https://sourceforge.net/projects/tortoisesvn/files/1.8.12/Application/>1.8版本</a></p>
+<h3 id=perl4><a href=http://strawberryperl.com/>perl</a></h3>
+<p>编译openssl时需要perl，这里下载的是Strawberry perl。</p>
+<h2 id=编译>编译</h2>
+<ol>
+<li>所有的编译，都应该在上述软件安装完成后，重新打开cmd，以获得新的PATH。python的源码文件夹所在
+的路径不能包含空格，否则会在编译tcl时失败。</li>
+<li>运行<code>PCbuild\build.bat -e</code>，加的参数会调用<code>get_externals.bat</code>并且编译外部依赖，包含tk、tcl、
+openssl等库，完成之后在PCbuild文件夹下得到一个可以运行的python.exe</li>
+<li><p>打包，在编译完成之后希望能够打包成官方发布的msi形式的安装包，用于在其他电脑上安装。但是找了较长
 时间，找到一些过时的文档，但是找到了<code>tools\msi\msi.py</code>这么个脚本，可是这里面的内容还是用python2
 写的，所以为了打包编译出来的python3.4.7，又安装了一遍python2.7
 2.1 安装python2.7
@@ -40,24 +153,94 @@ openssl等库，完成之后在PCbuild文件夹下得到一个可以运行的pyt
 的开发已经迁移到了git，下载过来的源码包里面并不包含一个<code>.hg</code>文件夹，<code>hg manifest</code>是无法运行成功的。这
 里写了一个脚本，实现了<code>msi.py</code>中返回文件列表dict的功能，修改一下msi.py中的<code>hgmanifest</code>函数，import此
 脚本，返回<code>myHgmanifest.hgmanifest(srcdir)</code>的结果，即可实现目的。点击<a href=/uploads/myHgmanifest.zip>下载脚本</a>，
-用压缩包中的脚本替换掉<code>Tools\msi</code>中相应的脚本即可。</p></li><li><p>编译文档。在第2步完成后，用python27运行msi.py，发现缺少文档，打包失败，因此需要生成打包所需的文档。
+用压缩包中的脚本替换掉<code>Tools\msi</code>中相应的脚本即可。</p></li>
+<li><p>编译文档。在第2步完成后，用python27运行msi.py，发现缺少文档，打包失败，因此需要生成打包所需的文档。
 3.1 将python27安装目录中的<code>python.exe</code>复制重命名为<code>py.exe</code>，因为编译文档的bat文件中用了此命令，实际就是运行<code>python.exe</code>
 3.2 pip install sphinx，安装生成文档所需的模块。
-3.3 到Python3.4.7源码目录中的<code>\Doc\</code>文件夹下运行<code>make.bat htmlhelp</code>命令，生成帮助文档。</p></li><li><p>生成msi安装包。运行<code>python msi.py</code>，最终，在<code>Tools\msi</code>文件夹下会生成python3.4.7.xxxx.msi的安装包，可以拿到别的电脑上安装去啦！</p></li></ol><h2 id=总结>总结</h2><p>可以发现，给自己编译的困难主要源于未被维护的msi.py打包脚本了，后续发布的python安装包都是通过另外的
+3.3 到Python3.4.7源码目录中的<code>\Doc\</code>文件夹下运行<code>make.bat htmlhelp</code>命令，生成帮助文档。</p></li>
+<li><p>生成msi安装包。运行<code>python msi.py</code>，最终，在<code>Tools\msi</code>文件夹下会生成python3.4.7.xxxx.msi的安装包，可以拿到别的电脑上安装去啦！</p></li>
+</ol>
+<h2 id=总结>总结</h2>
+<p>可以发现，给自己编译的困难主要源于未被维护的msi.py打包脚本了，后续发布的python安装包都是通过另外的
 方式打包的，所以需要做一些修复工作，主要是python源码包里已经没有.hg文件夹了，需要用另外的方式生成制作
 打包文件所需的文件dict。总而言之，并不复杂，主要是一个逐渐发现问题、解决问题、发现新问题、再解决的过程。
-所幸，最终得到了所需的安装包。</p><p>更新记录：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback>2018.1.22 修复了msdn itell you的链接</code></pre></td></tr></table></div></div></div><div class=post-copyright><p class=copyright-item><span class=item-title>文章作者</span>
-<span class=item-content>thinkeryu</span></p><p class=copyright-item><span class=item-title>上次更新</span>
-<span class=item-content>2017-09-20</span></p></div><footer class=post-footer><nav class=post-nav><a class=prev href=/post/google-scholar%E5%A4%87%E5%BF%98/><i class="iconfont icon-left"></i>
+所幸，最终得到了所需的安装包。</p>
+<p>更新记录：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>2018.1.22 修复了msdn itell you的链接</code></pre></td></tr></table>
+</div>
+</div>
+</div>
+<div class=post-copyright>
+<p class=copyright-item>
+<span class=item-title>文章作者</span>
+<span class=item-content>thinkeryu</span>
+</p>
+<p class=copyright-item>
+<span class=item-title>上次更新</span>
+<span class=item-content>
+2017-09-20
+</span>
+</p>
+</div>
+<footer class=post-footer>
+<nav class=post-nav>
+<a class=prev href=/post/google-scholar%E5%A4%87%E5%BF%98/>
+<i class="iconfont icon-left"></i>
 <span class="prev-text nav-default">google scholar 备忘</span>
-<span class="prev-text nav-mobile">上一篇</span></a>
-<a class=next href=/post/%E6%8A%BD%E8%B1%A1%E5%88%86%E5%B1%82%E4%BB%A5twisted%E4%B8%BA%E4%BE%8B/><span class="next-text nav-default">抽象分层-以twisted为例</span>
+<span class="prev-text nav-mobile">上一篇</span>
+</a>
+<a class=next href=/post/%E6%8A%BD%E8%B1%A1%E5%88%86%E5%B1%82%E4%BB%A5twisted%E4%B8%BA%E4%BE%8B/>
+<span class="next-text nav-default">抽象分层-以twisted为例</span>
 <span class="next-text nav-mobile">下一篇</span>
-<i class="iconfont icon-right"></i></a></nav></footer></article></div><div id=gitalk-container></div><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css crossorigin=anonymous><script src=https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js crossorigin=anonymous></script><script type=text/javascript>var gitalk=new Gitalk({id:'2017-09-20 21:47:34 \u002b0800 \u002b0800',title:'编译安装python3.4.7 For XP',clientID:'e6672c053ad6c6056f71',clientSecret:'c13fdda944329c62818b9bbf0b00a23658614f3e',repo:'blog',owner:'linuxhenhao',admin:['linuxhenhao'],body:decodeURI(location.href)});gitalk.render('gitalk-container')</script><noscript>Please enable JavaScript to view the <a href=https://github.com/gitalk/gitalk>comments powered by gitalk.</a></noscript></div></main><footer id=footer class=footer><div class=social-links><a href=https://www.linkedin.com/in/yuhuang-keepmoving class="iconfont icon-linkedin" title=linkedin></a><a href=https://github.com/linuxhenhao class="iconfont icon-github" title=github></a><a href=https://blog.huangyu.me/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a></div><div class=copyright><span class=power-by>由 <a class=hexo-link href=https://gohugo.io>Hugo</a> 强力驱动</span>
+<i class="iconfont icon-right"></i>
+</a>
+</nav>
+</footer>
+</article>
+</div>
+<div id=gitalk-container></div>
+<link rel=stylesheet href=https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css crossorigin=anonymous>
+<script src=https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js crossorigin=anonymous></script>
+<script type=text/javascript>var gitalk=new Gitalk({id:'2017-09-20 21:47:34 \u002b0800 \u002b0800',title:'编译安装python3.4.7 For XP',clientID:'e6672c053ad6c6056f71',clientSecret:'c13fdda944329c62818b9bbf0b00a23658614f3e',repo:'blog',owner:'linuxhenhao',admin:['linuxhenhao'],body:decodeURI(location.href)});gitalk.render('gitalk-container')</script>
+<noscript>Please enable JavaScript to view the <a href=https://github.com/gitalk/gitalk>comments powered by gitalk.</a></noscript>
+</div>
+</main>
+<footer id=footer class=footer>
+<div class=social-links>
+<a href=https://www.linkedin.com/in/yuhuang-keepmoving class="iconfont icon-linkedin" title=linkedin></a>
+<a href=https://github.com/linuxhenhao class="iconfont icon-github" title=github></a>
+<a href=https://blog.huangyu.me/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a>
+</div>
+<div class=copyright>
+<span class=power-by>
+由 <a class=hexo-link href=https://gohugo.io>Hugo</a> 强力驱动
+</span>
 <span class=division>|</span>
-<span class=theme-info>主题 -
-<a class=theme-link href=https://github.com/olOwOlo/hugo-theme-even>Even</a></span>
-<span class=copyright-year>&copy;
+<span class=theme-info>
+主题 -
+<a class=theme-link href=https://github.com/olOwOlo/hugo-theme-even>Even</a>
+</span>
+<span class=copyright-year>
+&copy;
 2017 -
-2021<span class=heart><i class="iconfont icon-heart"></i></span><span>thinkeryu</span></span></div></footer><div class=back-to-top id=back-to-top><i class="iconfont icon-up"></i></div></div><script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script><script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script><script src=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin=anonymous></script><script type=text/javascript src=/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js></script><script type=text/javascript>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}}</script><script async src=https://cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js integrity="sha256-HGLuEfFcsUJGhvB8cQ8nr0gai9EucOOaIxFw7qxmd+w=" crossorigin=anonymous></script></body></html>
+2021<span class=heart><i class="iconfont icon-heart"></i></span><span>thinkeryu</span>
+</span>
+</div>
+</footer>
+<div class=back-to-top id=back-to-top>
+<i class="iconfont icon-up"></i>
+</div>
+</div>
+<script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin=anonymous></script>
+<script type=text/javascript src=/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js></script>
+<script type=text/javascript>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}}</script>
+<script async src=https://cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js integrity="sha256-HGLuEfFcsUJGhvB8cQ8nr0gai9EucOOaIxFw7qxmd+w=" crossorigin=anonymous></script>
+</body>
+</html>

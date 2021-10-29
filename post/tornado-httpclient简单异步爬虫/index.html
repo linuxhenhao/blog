@@ -1,40 +1,169 @@
-<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><title>Tornado Httpclient简单异步爬虫 - ThinkerYu的博客</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=cache-control content="no-transform"><meta http-equiv=cache-control content="no-siteapp"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=author content="thinkeryu"><meta name=description content="最近要写篇论文，需要给abstract画个图。在同学那里看到他画的一张图感觉很不错，一问原来是用3Ds marks 画的。他还给推荐了一个微信公众号，专为科研3D绘图发布教程。为了方便随时随地能够看教程，就生出了 爬下来的想法。
-"><meta name=keywords content="tornado,爬虫,asyncio"><meta name=generator content="Hugo 0.84.4 with theme even"><link rel=canonical href=https://blog.huangyu.me/post/tornado-httpclient%E7%AE%80%E5%8D%95%E5%BC%82%E6%AD%A5%E7%88%AC%E8%99%AB/><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/manifest.json><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link href=/sass/main.min.b5a744db6de49a86cadafb3b70f555ab443f83c307a483402259e94726b045ff.css rel=stylesheet><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous><meta property="og:title" content="Tornado Httpclient简单异步爬虫"><meta property="og:description" content="最近要写篇论文，需要给abstract画个图。在同学那里看到他画的一张图感觉很不错，一问原来是用3Ds marks
+<!doctype html><html lang=zh-cn>
+<head>
+<meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
+<title>Tornado Httpclient简单异步爬虫 - ThinkerYu的博客</title>
+<meta name=renderer content="webkit">
+<meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta http-equiv=cache-control content="no-transform">
+<meta http-equiv=cache-control content="no-siteapp">
+<meta name=theme-color content="#f8f5ec">
+<meta name=msapplication-navbutton-color content="#f8f5ec">
+<meta name=apple-mobile-web-app-capable content="yes">
+<meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec">
+<meta name=author content="thinkeryu"><meta name=description content="最近要写篇论文，需要给abstract画个图。在同学那里看到他画的一张图感觉很不错，一问原来是用3Ds marks 画的。他还给推荐了一个微信公众号，专为科研3D绘图发布教程。为了方便随时随地能够看教程，就生出了 爬下来的想法。
+"><meta name=keywords content="tornado,爬虫,asyncio">
+<meta name=generator content="Hugo 0.88.1 with theme even">
+<link rel=canonical href=https://blog.huangyu.me/post/tornado-httpclient%E7%AE%80%E5%8D%95%E5%BC%82%E6%AD%A5%E7%88%AC%E8%99%AB/>
+<link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png>
+<link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
+<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png>
+<link rel=manifest href=/manifest.json>
+<link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5>
+<link href=/sass/main.min.b5a744db6de49a86cadafb3b70f555ab443f83c307a483402259e94726b045ff.css rel=stylesheet>
+<link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous>
+<meta property="og:title" content="Tornado Httpclient简单异步爬虫">
+<meta property="og:description" content="最近要写篇论文，需要给abstract画个图。在同学那里看到他画的一张图感觉很不错，一问原来是用3Ds marks
 画的。他还给推荐了一个微信公众号，专为科研3D绘图发布教程。为了方便随时随地能够看教程，就生出了
-爬下来的想法。"><meta property="og:type" content="article"><meta property="og:url" content="https://blog.huangyu.me/post/tornado-httpclient%E7%AE%80%E5%8D%95%E5%BC%82%E6%AD%A5%E7%88%AC%E8%99%AB/"><meta property="article:section" content="post"><meta property="article:published_time" content="2018-02-21T10:26:49+08:00"><meta property="article:modified_time" content="2018-02-21T10:26:49+08:00"><meta itemprop=name content="Tornado Httpclient简单异步爬虫"><meta itemprop=description content="最近要写篇论文，需要给abstract画个图。在同学那里看到他画的一张图感觉很不错，一问原来是用3Ds marks
+爬下来的想法。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://blog.huangyu.me/post/tornado-httpclient%E7%AE%80%E5%8D%95%E5%BC%82%E6%AD%A5%E7%88%AC%E8%99%AB/"><meta property="article:section" content="post">
+<meta property="article:published_time" content="2018-02-21T10:26:49+08:00">
+<meta property="article:modified_time" content="2018-02-21T10:26:49+08:00">
+<meta itemprop=name content="Tornado Httpclient简单异步爬虫">
+<meta itemprop=description content="最近要写篇论文，需要给abstract画个图。在同学那里看到他画的一张图感觉很不错，一问原来是用3Ds marks
 画的。他还给推荐了一个微信公众号，专为科研3D绘图发布教程。为了方便随时随地能够看教程，就生出了
-爬下来的想法。"><meta itemprop=datePublished content="2018-02-21T10:26:49+08:00"><meta itemprop=dateModified content="2018-02-21T10:26:49+08:00"><meta itemprop=wordCount content="1941"><meta itemprop=keywords content="tornado,爬虫,"><meta name=twitter:card content="summary"><meta name=twitter:title content="Tornado Httpclient简单异步爬虫"><meta name=twitter:description content="最近要写篇论文，需要给abstract画个图。在同学那里看到他画的一张图感觉很不错，一问原来是用3Ds marks
+爬下来的想法。"><meta itemprop=datePublished content="2018-02-21T10:26:49+08:00">
+<meta itemprop=dateModified content="2018-02-21T10:26:49+08:00">
+<meta itemprop=wordCount content="1941">
+<meta itemprop=keywords content="tornado,爬虫,"><meta name=twitter:card content="summary">
+<meta name=twitter:title content="Tornado Httpclient简单异步爬虫">
+<meta name=twitter:description content="最近要写篇论文，需要给abstract画个图。在同学那里看到他画的一张图感觉很不错，一问原来是用3Ds marks
 画的。他还给推荐了一个微信公众号，专为科研3D绘图发布教程。为了方便随时随地能够看教程，就生出了
-爬下来的想法。"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script><script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>ThinkerYu的博客</a></div><div class=mobile-navbar-icon><span></span><span></span><span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><a href=/><li class=mobile-menu-item>Home</li></a><a href=/post/><li class=mobile-menu-item>Archives</li></a><a href=/tags/><li class=mobile-menu-item>Tags</li></a><a href=/categories/><li class=mobile-menu-item>Categories</li></a></ul></nav><div class=container id=mobile-panel><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>ThinkerYu的博客</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/categories/>Categories</a></li></ul></nav></header><main id=main class=main><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>Tornado Httpclient简单异步爬虫</h1><div class=post-meta><span class=post-time>2018-02-21</span><div class=post-category><a href=/categories/web/>web</a></div></div></header><div class=post-toc id=post-toc><h2 class=post-toc-title>文章目录</h2><div class="post-toc-content always-active"></div></div><div class=post-content><p>最近要写篇论文，需要给abstract画个图。在同学那里看到他画的一张图感觉很不错，一问原来是用3Ds marks
+爬下来的想法。"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]-->
+</head>
+<body>
+<div id=mobile-navbar class=mobile-navbar>
+<div class=mobile-header-logo>
+<a href=/ class=logo>ThinkerYu的博客</a>
+</div>
+<div class=mobile-navbar-icon>
+<span></span>
+<span></span>
+<span></span>
+</div>
+</div>
+<nav id=mobile-menu class="mobile-menu slideout-menu">
+<ul class=mobile-menu-list>
+<a href=/>
+<li class=mobile-menu-item>Home</li>
+</a><a href=/post/>
+<li class=mobile-menu-item>Archives</li>
+</a><a href=/tags/>
+<li class=mobile-menu-item>Tags</li>
+</a><a href=/categories/>
+<li class=mobile-menu-item>Categories</li>
+</a>
+</ul>
+</nav>
+<div class=container id=mobile-panel>
+<header id=header class=header>
+<div class=logo-wrapper>
+<a href=/ class=logo>ThinkerYu的博客</a>
+</div>
+<nav class=site-navbar>
+<ul id=menu class=menu>
+<li class=menu-item>
+<a class=menu-item-link href=/>Home</a>
+</li><li class=menu-item>
+<a class=menu-item-link href=/post/>Archives</a>
+</li><li class=menu-item>
+<a class=menu-item-link href=/tags/>Tags</a>
+</li><li class=menu-item>
+<a class=menu-item-link href=/categories/>Categories</a>
+</li>
+</ul>
+</nav>
+</header>
+<main id=main class=main>
+<div class=content-wrapper>
+<div id=content class=content>
+<article class=post>
+<header class=post-header>
+<h1 class=post-title>Tornado Httpclient简单异步爬虫</h1>
+<div class=post-meta>
+<span class=post-time> 2018-02-21 </span>
+<div class=post-category>
+<a href=/categories/web/> web </a>
+</div>
+</div>
+</header>
+<div class=post-toc id=post-toc>
+<h2 class=post-toc-title>文章目录</h2>
+<div class="post-toc-content always-active">
+</div>
+</div>
+<div class=post-content>
+<p>最近要写篇论文，需要给abstract画个图。在同学那里看到他画的一张图感觉很不错，一问原来是用3Ds marks
 画的。他还给推荐了一个微信公众号，专为科研3D绘图发布教程。为了方便随时随地能够看教程，就生出了
-爬下来的想法。</p><p>也用 python 几年时间了， python 做爬虫似乎比较流行，实际就 python 的特性来看，python 对于爬虫方面
+爬下来的想法。</p>
+<p>也用 python 几年时间了， python 做爬虫似乎比较流行，实际就 python 的特性来看，python 对于爬虫方面
 的应用确实适用：丰富的库可以减少大量重复工作，可以用较少的代码实现功能，网络爬虫的性能瓶颈往往
-在于网络IO而非 python代码的执行速度。</p><p>用浏览器打开该公众号的网址，发现可以直接查看，说明该公众号内容并未做验证，不需要cookie，不需要
-通过微信，直接用tornado的httpclient就可以爬取，是一个最基础的爬取过程。</p><p>爬虫爬取内容的过程：
-获取网页内容->理解网页内容->获取需要的内容</p><h3 id=1-获取网页内容>1. 获取网页内容</h3><p>就是通过url获取入口页面的html内容。</p><h3 id=2-理解网页内容>2. 理解网页内容</h3><p>这里就各显神通了，对于内容简单的 html 内容，可以直接手工处理。对于稍微复杂一点，不涉及太多或者复杂
+在于网络IO而非 python代码的执行速度。</p>
+<p>用浏览器打开该公众号的网址，发现可以直接查看，说明该公众号内容并未做验证，不需要cookie，不需要
+通过微信，直接用tornado的httpclient就可以爬取，是一个最基础的爬取过程。</p>
+<p>爬虫爬取内容的过程：
+获取网页内容->理解网页内容->获取需要的内容</p>
+<h3 id=1-获取网页内容>1. 获取网页内容</h3>
+<p>就是通过url获取入口页面的html内容。</p>
+<h3 id=2-理解网页内容>2. 理解网页内容</h3>
+<p>这里就各显神通了，对于内容简单的 html 内容，可以直接手工处理。对于稍微复杂一点，不涉及太多或者复杂
 js 运行的 html 网页，可以用能够理解 html 各标签的库处理，比如本文使用的 beautifulsoup4。对于
 更复杂的网页，可以使用 selenium 或者类似的手段，直接通过 headless 的浏览器对网页内容进行处理。
-然后就可以通过 API 调用高效的进行后续的处理。</p><h3 id=3-获取所需的内容>3. 获取所需的内容</h3><p>根据<code>2</code>中的处理后的对象，可以轻易获取想要的内容。比如<code>img</code>标签的<code>src</code>，<code>a</code>标签的<code>href</code>。然后
-获取相应内容即可。</p><h2 id=公众号教程页面爬取>公众号教程页面爬取</h2><h3 id=1-公众号内容组织>1. 公众号内容组织</h3><p>该公众号的内容组织十分简单，一个总览页，罗列了绝大部分的（最新的可能没有）教程，每个教程用一个代表
-最终成果的图片，点击图片可以跳转到相应的教程页面。</p><h3 id=2-需要的处理>2. 需要的处理</h3><p>爬这个教程需要将首页及图片爬过来，然后将每个图片中的<code>a</code>标签的对应的详细教程页面爬取过来。将<code>a</code>
+然后就可以通过 API 调用高效的进行后续的处理。</p>
+<h3 id=3-获取所需的内容>3. 获取所需的内容</h3>
+<p>根据<code>2</code>中的处理后的对象，可以轻易获取想要的内容。比如<code>img</code>标签的<code>src</code>，<code>a</code>标签的<code>href</code>。然后
+获取相应内容即可。</p>
+<h2 id=公众号教程页面爬取>公众号教程页面爬取</h2>
+<h3 id=1-公众号内容组织>1. 公众号内容组织</h3>
+<p>该公众号的内容组织十分简单，一个总览页，罗列了绝大部分的（最新的可能没有）教程，每个教程用一个代表
+最终成果的图片，点击图片可以跳转到相应的教程页面。</p>
+<h3 id=2-需要的处理>2. 需要的处理</h3>
+<p>爬这个教程需要将首页及图片爬过来，然后将每个图片中的<code>a</code>标签的对应的详细教程页面爬取过来。将<code>a</code>
 标签的<code>href</code>替换为本地的网址，以保存文件夹作为根目录。将所有的图片保存到本地的<code>images</code>文件夹
 中，将所有对应的<code>img</code>标签的<code>src</code>替换程本地以根目录作为网站根的地址。对于教程详细页面的文件名，
 需要将<code>titile</code>提取出来作为文件名保存，以<code>.html</code>作为后缀。所有的图片也进行重命名，将<code>url</code>的
-地址进行<code>base32</code>编码。</p><h3 id=3-tornadohttpclient--asyncio异步获取内容>3. tornado-httpclient + asyncio异步获取内容</h3><p>tornado中包含有一个AsyncHTTPClient实现，可以使用它非常方面的实现内容的异步非阻塞获取，加快内
+地址进行<code>base32</code>编码。</p>
+<h3 id=3-tornadohttpclient--asyncio异步获取内容>3. tornado-httpclient + asyncio异步获取内容</h3>
+<p>tornado中包含有一个AsyncHTTPClient实现，可以使用它非常方面的实现内容的异步非阻塞获取，加快内
 容获取。tornado 包含对asyncio的支持，在所有的tornado相关代码运行之前，需要将asyncio的loop
 设置为tornado的loop，并且编写代码时，需要注意到tornado的<code>future</code>和asyncio的<code>future</code>不同，
 可以使用<code>tornado.platform.asyncio</code>中的<code>to_asyncio_future</code>和<code>to_tornado_future</code>相互
-转换。下面是一个简单示例：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+转换。下面是一个简单示例：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback>from tornado.platform.asyncio import AsyncIOMainLoop, to_asyncio_future
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>from tornado.platform.asyncio import AsyncIOMainLoop, to_asyncio_future
 
 AsyncIOMainLoop().install()  # 使用asyncio的loop作为tornaod的loop
-to_asyncio_future(TORNADO_FUTURE)  # 将tornado的future转化为asyncio的future</code></pre></td></tr></table></div></div><p>可以用asyncio.gather将多个tornado的<code>AsyncHTTPClient.fetch</code>的<code>future</code>对象集合到一起，
-并行获取，如果采用<code>循环 + await</code>的方式，则是序列化运行的，无法起到加速的目的。</p><p>该公众号的<code>img</code>标签和<code>a</code>标签的<code>src</code>或者<code>href</code>都是藏在其他属性当中，通过页面加载过程中的<code>js</code>
+to_asyncio_future(TORNADO_FUTURE)  # 将tornado的future转化为asyncio的future</code></pre></td></tr></table>
+</div>
+</div>
+<p>可以用asyncio.gather将多个tornado的<code>AsyncHTTPClient.fetch</code>的<code>future</code>对象集合到一起，
+并行获取，如果采用<code>循环 + await</code>的方式，则是序列化运行的，无法起到加速的目的。</p>
+<p>该公众号的<code>img</code>标签和<code>a</code>标签的<code>src</code>或者<code>href</code>都是藏在其他属性当中，通过页面加载过程中的<code>js</code>
 代码将其设置的，因此代码中需要作相应的处理。这是非常简单的<code>获取 + 设置</code>属性的过程，直接用beautifulsoup4
-载入html内容并修改就是，无需使用浏览器加载或<code>js</code>代码运行器。</p><p>具体代码：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>  1
+载入html内容并修改就是，无需使用浏览器加载或<code>js</code>代码运行器。</p>
+<p>具体代码：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>  1
 </span><span class=lnt>  2
 </span><span class=lnt>  3
 </span><span class=lnt>  4
@@ -147,7 +276,9 @@ to_asyncio_future(TORNADO_FUTURE)  # 将tornado的future转化为asyncio的futur
 </span><span class=lnt>111
 </span><span class=lnt>112
 </span><span class=lnt>113
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-python data-lang=python>    <span class=kn>import</span> <span class=nn>re</span>
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-python data-lang=python>    <span class=kn>import</span> <span class=nn>re</span>
     <span class=kn>from</span> <span class=nn>hashlib</span> <span class=kn>import</span> <span class=n>md5</span>
 
 
@@ -259,19 +390,89 @@ to_asyncio_future(TORNADO_FUTURE)  # 将tornado的future转化为asyncio的futur
     <span class=k>if</span> <span class=vm>__name__</span> <span class=o>==</span> <span class=s1>&#39;__main__&#39;</span><span class=p>:</span>
         <span class=n>AsyncIOMainLoop</span><span class=p>()</span><span class=o>.</span><span class=n>install</span><span class=p>()</span>
         <span class=n>loop</span> <span class=o>=</span> <span class=n>asyncio</span><span class=o>.</span><span class=n>get_event_loop</span><span class=p>()</span>
-        <span class=n>loop</span><span class=o>.</span><span class=n>run_until_complete</span><span class=p>(</span><span class=n>getUrls</span><span class=p>())</span></code></pre></td></tr></table></div></div><p>更新记录：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-fallback data-lang=fallback>2018-02-23： 添加代码</code></pre></td></tr></table></div></div></div><div class=post-copyright><p class=copyright-item><span class=item-title>文章作者</span>
-<span class=item-content>thinkeryu</span></p><p class=copyright-item><span class=item-title>上次更新</span>
-<span class=item-content>2018-02-21</span></p></div><footer class=post-footer><div class=post-tags><a href=/tags/tornado/>tornado</a>
-<a href=/tags/%E7%88%AC%E8%99%AB/>爬虫</a></div><nav class=post-nav><a class=prev href=/post/pyqtgraph%E5%AE%9E%E6%97%B6%E7%94%BB%E5%9B%BE%E5%8D%A1%E9%A1%BF%E9%97%AE%E9%A2%98%E5%8F%91%E7%8E%B0%E5%8F%8A%E8%A7%A3%E5%86%B3/><i class="iconfont icon-left"></i>
+        <span class=n>loop</span><span class=o>.</span><span class=n>run_until_complete</span><span class=p>(</span><span class=n>getUrls</span><span class=p>())</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>更新记录：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>2018-02-23： 添加代码</code></pre></td></tr></table>
+</div>
+</div>
+</div>
+<div class=post-copyright>
+<p class=copyright-item>
+<span class=item-title>文章作者</span>
+<span class=item-content>thinkeryu</span>
+</p>
+<p class=copyright-item>
+<span class=item-title>上次更新</span>
+<span class=item-content>
+2018-02-21
+</span>
+</p>
+</div>
+<footer class=post-footer>
+<div class=post-tags>
+<a href=/tags/tornado/>tornado</a>
+<a href=/tags/%E7%88%AC%E8%99%AB/>爬虫</a>
+</div>
+<nav class=post-nav>
+<a class=prev href=/post/pyqtgraph%E5%AE%9E%E6%97%B6%E7%94%BB%E5%9B%BE%E5%8D%A1%E9%A1%BF%E9%97%AE%E9%A2%98%E5%8F%91%E7%8E%B0%E5%8F%8A%E8%A7%A3%E5%86%B3/>
+<i class="iconfont icon-left"></i>
 <span class="prev-text nav-default">pyqtgraph实时画图卡顿问题发现及解决</span>
-<span class="prev-text nav-mobile">上一篇</span></a>
-<a class=next href=/post/ly%E6%9E%81%E7%AE%80display-manager%E4%BB%A5%E5%8F%8Alinux%E6%A1%8C%E9%9D%A2%E5%90%AF%E5%8A%A8%E6%B5%85%E6%9E%90/><span class="next-text nav-default">Ly极简display Manager以及linux桌面启动浅析</span>
+<span class="prev-text nav-mobile">上一篇</span>
+</a>
+<a class=next href=/post/ly%E6%9E%81%E7%AE%80display-manager%E4%BB%A5%E5%8F%8Alinux%E6%A1%8C%E9%9D%A2%E5%90%AF%E5%8A%A8%E6%B5%85%E6%9E%90/>
+<span class="next-text nav-default">Ly极简display Manager以及linux桌面启动浅析</span>
 <span class="next-text nav-mobile">下一篇</span>
-<i class="iconfont icon-right"></i></a></nav></footer></article></div><div id=gitalk-container></div><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css crossorigin=anonymous><script src=https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js crossorigin=anonymous></script><script type=text/javascript>var gitalk=new Gitalk({id:'2018-02-21 10:26:49 \u002b0800 \u002b0800',title:'Tornado Httpclient简单异步爬虫',clientID:'e6672c053ad6c6056f71',clientSecret:'c13fdda944329c62818b9bbf0b00a23658614f3e',repo:'blog',owner:'linuxhenhao',admin:['linuxhenhao'],body:decodeURI(location.href)});gitalk.render('gitalk-container')</script><noscript>Please enable JavaScript to view the <a href=https://github.com/gitalk/gitalk>comments powered by gitalk.</a></noscript></div></main><footer id=footer class=footer><div class=social-links><a href=https://www.linkedin.com/in/yuhuang-keepmoving class="iconfont icon-linkedin" title=linkedin></a><a href=https://github.com/linuxhenhao class="iconfont icon-github" title=github></a><a href=https://blog.huangyu.me/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a></div><div class=copyright><span class=power-by>由 <a class=hexo-link href=https://gohugo.io>Hugo</a> 强力驱动</span>
+<i class="iconfont icon-right"></i>
+</a>
+</nav>
+</footer>
+</article>
+</div>
+<div id=gitalk-container></div>
+<link rel=stylesheet href=https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css crossorigin=anonymous>
+<script src=https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js crossorigin=anonymous></script>
+<script type=text/javascript>var gitalk=new Gitalk({id:'2018-02-21 10:26:49 \u002b0800 \u002b0800',title:'Tornado Httpclient简单异步爬虫',clientID:'e6672c053ad6c6056f71',clientSecret:'c13fdda944329c62818b9bbf0b00a23658614f3e',repo:'blog',owner:'linuxhenhao',admin:['linuxhenhao'],body:decodeURI(location.href)});gitalk.render('gitalk-container')</script>
+<noscript>Please enable JavaScript to view the <a href=https://github.com/gitalk/gitalk>comments powered by gitalk.</a></noscript>
+</div>
+</main>
+<footer id=footer class=footer>
+<div class=social-links>
+<a href=https://www.linkedin.com/in/yuhuang-keepmoving class="iconfont icon-linkedin" title=linkedin></a>
+<a href=https://github.com/linuxhenhao class="iconfont icon-github" title=github></a>
+<a href=https://blog.huangyu.me/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a>
+</div>
+<div class=copyright>
+<span class=power-by>
+由 <a class=hexo-link href=https://gohugo.io>Hugo</a> 强力驱动
+</span>
 <span class=division>|</span>
-<span class=theme-info>主题 -
-<a class=theme-link href=https://github.com/olOwOlo/hugo-theme-even>Even</a></span>
-<span class=copyright-year>&copy;
+<span class=theme-info>
+主题 -
+<a class=theme-link href=https://github.com/olOwOlo/hugo-theme-even>Even</a>
+</span>
+<span class=copyright-year>
+&copy;
 2017 -
-2021<span class=heart><i class="iconfont icon-heart"></i></span><span>thinkeryu</span></span></div></footer><div class=back-to-top id=back-to-top><i class="iconfont icon-up"></i></div></div><script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script><script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script><script src=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin=anonymous></script><script type=text/javascript src=/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js></script><script type=text/javascript>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}}</script><script async src=https://cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js integrity="sha256-HGLuEfFcsUJGhvB8cQ8nr0gai9EucOOaIxFw7qxmd+w=" crossorigin=anonymous></script></body></html>
+2021<span class=heart><i class="iconfont icon-heart"></i></span><span>thinkeryu</span>
+</span>
+</div>
+</footer>
+<div class=back-to-top id=back-to-top>
+<i class="iconfont icon-up"></i>
+</div>
+</div>
+<script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin=anonymous></script>
+<script type=text/javascript src=/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js></script>
+<script type=text/javascript>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}}</script>
+<script async src=https://cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js integrity="sha256-HGLuEfFcsUJGhvB8cQ8nr0gai9EucOOaIxFw7qxmd+w=" crossorigin=anonymous></script>
+</body>
+</html>
