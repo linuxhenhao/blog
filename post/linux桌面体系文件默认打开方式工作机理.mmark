@@ -1,0 +1,59 @@
++++
+title = "Linux桌面体系文件默认打开方式工作机理"
+date = 2017-12-08T19:12:46+08:00
+tags = ["文件打开方式", "linux"]
+categories = ['operating_system']
+keywords = ['文件打开方式', 'xdg-open', 'mime']
++++
+## 缘由
+在安装了atom之后, 火狐下载完文件之后点击打开文件位置, 竟然是用atom打开!! 应该用文件管理器才
+对. 所以了解了一下linux桌面环境下的文件打开的工作机理---xdg-utils.
+<!--more-->
+## xdg-utils
+官方维基介绍[freedesktop wiki](https://freedesktop.org/wiki/Software/xdg-utils/):
+
+    xdg-utils is a set of tools that allows applications to easily integrate with
+    the desktop environment of the user, regardless of the specific desktop environment
+    that the user runs.
+linux桌面环境的多样性相信所有使用linux的童鞋们都有所见识, 这种多样性真是让人又爱又恨.
+xdg-utils包含一组工具, 用来提供统一的桌面环境和安装程序交互工作的接口. 我理解来看, 其实
+最重要的就是解决文件打开方式的问题.
+
+## mime
+面临如今五花八门的文件类型, 系统怎么才能知道什么文件应该用哪个程序打开? 一个统一的运作方式
+必然需要预置与系统当中. 这点上不论是linux/windows/macOS都是这样的. 新的文件类型通过注册
+mime信息到系统当中, 软件安装时将其能够打开的mime类型也告诉系统(或者说桌面环境?). 当文件被
+打开时, 系统寻找已经注册的能够打开该mime类型的软件打开该文件. 当面临多个可以打开该类型mime
+文件时, 自然会有个所谓的默认程序.
+
+这种方式实现了文件类型和打开文件软件的解耦, 工作方式也足够简洁明了.
+
+## linux下的细节
+在linux当中某个文件被打开时, 一些实现的比较正常的桌面环境或者文件管理器通常就会调用
+
+    xdg-open filename
+来调用相关的程序打开文件. 那么它是怎么知道应该调用哪个程序的呢? 聪明! 它就是通过首先获取
+文件的mime-type, 然后查询mime-type对应的default xxx.desktop, 用这个xxx.desktop 打开文件.
+具体实现不知道是通过序列调用下述命令还是直接通过库文件编写代码写入程序了. 但是工作机理和下述
+过程一致:
+
+    xdg-mime query filetype 文件名  # 首先查询文件的mime类型
+    xdg-mime query default mime-type  # 根据得到的mime-type获取到default程序
+既然如此, 现在想要解决系统竟然用`atom`打开文件夹的行为就简单了, 首先我们看看文件夹的mime-type
+
+    $ xdg-mime query .
+    inode/directory
+    $ xdg-mime query default inode/directory  # 查查看默认打开方式
+    atom.desktop  # 呵呵
+解决方法自然就是设置文件管理器为该类型的打开方式, 这里用的是`pcmanfm-qt`
+
+    $ xdg-mime default pcmanfm-qt.desktop inode/directory
+xxx.desktop只要在freedesktop规定的默认位置当中就行, 只需给出文件名, 不需要绝对地址。
+常见位置如`/usr/share/applications/`、`~/.local/share/applications/`。
+
+## PS
+linux桌面环境的菜单也是由`xdg-utils`当中的`xdg-desktop-menu`管理的， 不需要将`.desktop`
+放在特定的位置， 而`.desktop`文件当中的`MimeType=xxx`指定了软件能够打开的文件类型。在
+使用系统的包管理工具时，会自动的调用`xdg-desktop-menu`进行相应的处理，添加相应的信息到
+freedesktop.org规定的文件当中。 这样其他遵循规定的桌面环境就可以获取到包含新安装的程序
+的菜单了。

@@ -1,201 +1,45 @@
-<!doctype html><html lang=zh-cn>
-<head>
-<meta charset=utf-8>
-<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
-<title>基于OrangePi+seafile的NAS - ThinkerYu的博客</title>
-<meta name=renderer content="webkit">
-<meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1">
-<meta http-equiv=cache-control content="no-transform">
-<meta http-equiv=cache-control content="no-siteapp">
-<meta name=theme-color content="#f8f5ec">
-<meta name=msapplication-navbutton-color content="#f8f5ec">
-<meta name=apple-mobile-web-app-capable content="yes">
-<meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec">
-<meta name=author content="thinkeryu"><meta name=description content="现在网上的公有云很多，比如百度网盘，以及之前的360网盘等。但是陆续关闭的公有云，百度网盘 的限速问题，隐私问题等，是许多人使用网盘的痛点。自己搭建自用的私有云成了很多人的一个选择， 但是直接购买比较大型的NAS设备一方面占地方，另一方面也是确实用不上。这里用seafile+OrangePi Plus2 搭建了一个物美价廉的私有云盘，通过小米智能插座还可以远程控制开关，十分好用。
-"><meta name=keywords content="orangepi,seafile,NAS">
-<meta name=generator content="Hugo 0.88.1 with theme even">
-<link rel=canonical href=https://blog.huangyu.me/post/%E5%9F%BA%E4%BA%8Eorangepi+seafile%E7%9A%84nas/>
-<link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png>
-<link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
-<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png>
-<link rel=manifest href=/manifest.json>
-<link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5>
-<link href=/sass/main.min.b5a744db6de49a86cadafb3b70f555ab443f83c307a483402259e94726b045ff.css rel=stylesheet>
-<link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous>
-<meta property="og:title" content="基于OrangePi+seafile的NAS">
-<meta property="og:description" content="现在网上的公有云很多，比如百度网盘，以及之前的360网盘等。但是陆续关闭的公有云，百度网盘
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><title>基于OrangePi+seafile的NAS - ThinkerYu的博客</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=cache-control content="no-transform"><meta http-equiv=cache-control content="no-siteapp"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=author content="thinkeryu"><meta name=description content="现在网上的公有云很多，比如百度网盘，以及之前的360网盘等。但是陆续关闭的公有云，百度网盘 的限速问题，隐私问题等，是许多人使用网盘的痛点。自己搭建自用的私有云成了很多人的一个选择， 但是直接购买比较大型的NAS设备一方面占地方，另一方面也是确实用不上。这里用seafile+OrangePi Plus2 搭建了一个物美价廉的私有云盘，通过小米智能插座还可以远程控制开关，十分好用。
+"><meta name=keywords content="orangepi,seafile,NAS"><meta name=generator content="Hugo 0.96.0 with theme even"><link rel=canonical href=https://blog.huangyu.me/post/%E5%9F%BA%E4%BA%8Eorangepi+seafile%E7%9A%84nas/><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/manifest.json><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link href=/sass/main.min.b5a744db6de49a86cadafb3b70f555ab443f83c307a483402259e94726b045ff.css rel=stylesheet><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous><meta property="og:title" content="基于OrangePi+seafile的NAS"><meta property="og:description" content="现在网上的公有云很多，比如百度网盘，以及之前的360网盘等。但是陆续关闭的公有云，百度网盘
 的限速问题，隐私问题等，是许多人使用网盘的痛点。自己搭建自用的私有云成了很多人的一个选择，
 但是直接购买比较大型的NAS设备一方面占地方，另一方面也是确实用不上。这里用seafile+OrangePi Plus2
-搭建了一个物美价廉的私有云盘，通过小米智能插座还可以远程控制开关，十分好用。">
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://blog.huangyu.me/post/%E5%9F%BA%E4%BA%8Eorangepi+seafile%E7%9A%84nas/"><meta property="article:section" content="post">
-<meta property="article:published_time" content="2018-03-30T14:12:25+08:00">
-<meta property="article:modified_time" content="2018-03-30T14:12:25+08:00">
-<meta itemprop=name content="基于OrangePi+seafile的NAS">
-<meta itemprop=description content="现在网上的公有云很多，比如百度网盘，以及之前的360网盘等。但是陆续关闭的公有云，百度网盘
+搭建了一个物美价廉的私有云盘，通过小米智能插座还可以远程控制开关，十分好用。"><meta property="og:type" content="article"><meta property="og:url" content="https://blog.huangyu.me/post/%E5%9F%BA%E4%BA%8Eorangepi+seafile%E7%9A%84nas/"><meta property="article:section" content="post"><meta property="article:published_time" content="2018-03-30T14:12:25+08:00"><meta property="article:modified_time" content="2018-03-30T14:12:25+08:00"><meta itemprop=name content="基于OrangePi+seafile的NAS"><meta itemprop=description content="现在网上的公有云很多，比如百度网盘，以及之前的360网盘等。但是陆续关闭的公有云，百度网盘
 的限速问题，隐私问题等，是许多人使用网盘的痛点。自己搭建自用的私有云成了很多人的一个选择，
 但是直接购买比较大型的NAS设备一方面占地方，另一方面也是确实用不上。这里用seafile+OrangePi Plus2
-搭建了一个物美价廉的私有云盘，通过小米智能插座还可以远程控制开关，十分好用。"><meta itemprop=datePublished content="2018-03-30T14:12:25+08:00">
-<meta itemprop=dateModified content="2018-03-30T14:12:25+08:00">
-<meta itemprop=wordCount content="3584">
-<meta itemprop=keywords content="armhf,linux,"><meta name=twitter:card content="summary">
-<meta name=twitter:title content="基于OrangePi+seafile的NAS">
-<meta name=twitter:description content="现在网上的公有云很多，比如百度网盘，以及之前的360网盘等。但是陆续关闭的公有云，百度网盘
+搭建了一个物美价廉的私有云盘，通过小米智能插座还可以远程控制开关，十分好用。"><meta itemprop=datePublished content="2018-03-30T14:12:25+08:00"><meta itemprop=dateModified content="2018-03-30T14:12:25+08:00"><meta itemprop=wordCount content="3568"><meta itemprop=keywords content="armhf,linux,"><meta name=twitter:card content="summary"><meta name=twitter:title content="基于OrangePi+seafile的NAS"><meta name=twitter:description content="现在网上的公有云很多，比如百度网盘，以及之前的360网盘等。但是陆续关闭的公有云，百度网盘
 的限速问题，隐私问题等，是许多人使用网盘的痛点。自己搭建自用的私有云成了很多人的一个选择，
 但是直接购买比较大型的NAS设备一方面占地方，另一方面也是确实用不上。这里用seafile+OrangePi Plus2
 搭建了一个物美价廉的私有云盘，通过小米智能插座还可以远程控制开关，十分好用。"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
-<script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]-->
-</head>
-<body>
-<div id=mobile-navbar class=mobile-navbar>
-<div class=mobile-header-logo>
-<a href=/ class=logo>ThinkerYu的博客</a>
-</div>
-<div class=mobile-navbar-icon>
+<script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>ThinkerYu的博客</a></div><div class=mobile-navbar-icon><span></span>
 <span></span>
-<span></span>
-<span></span>
-</div>
-</div>
-<nav id=mobile-menu class="mobile-menu slideout-menu">
-<ul class=mobile-menu-list>
-<a href=/>
-<li class=mobile-menu-item>Home</li>
-</a><a href=/post/>
-<li class=mobile-menu-item>Archives</li>
-</a><a href=/tags/>
-<li class=mobile-menu-item>Tags</li>
-</a><a href=/categories/>
-<li class=mobile-menu-item>Categories</li>
-</a>
-</ul>
-</nav>
-<div class=container id=mobile-panel>
-<header id=header class=header>
-<div class=logo-wrapper>
-<a href=/ class=logo>ThinkerYu的博客</a>
-</div>
-<nav class=site-navbar>
-<ul id=menu class=menu>
-<li class=menu-item>
-<a class=menu-item-link href=/>Home</a>
-</li><li class=menu-item>
-<a class=menu-item-link href=/post/>Archives</a>
-</li><li class=menu-item>
-<a class=menu-item-link href=/tags/>Tags</a>
-</li><li class=menu-item>
-<a class=menu-item-link href=/categories/>Categories</a>
-</li>
-</ul>
-</nav>
-</header>
-<main id=main class=main>
-<div class=content-wrapper>
-<div id=content class=content>
-<article class=post>
-<header class=post-header>
-<h1 class=post-title>基于OrangePi+seafile的NAS</h1>
-<div class=post-meta>
-<span class=post-time> 2018-03-30 </span>
-<div class=post-category>
-<a href=/categories/storage/> storage </a>
-</div>
-</div>
-</header>
-<div class=post-toc id=post-toc>
-<h2 class=post-toc-title>文章目录</h2>
-<div class="post-toc-content always-active">
-</div>
-</div>
-<div class=post-content>
-<p>现在网上的公有云很多，比如百度网盘，以及之前的360网盘等。但是陆续关闭的公有云，百度网盘
+<span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><a href=/><li class=mobile-menu-item>Home</li></a><a href=/post/><li class=mobile-menu-item>Archives</li></a><a href=/tags/><li class=mobile-menu-item>Tags</li></a><a href=/categories/><li class=mobile-menu-item>Categories</li></a></ul></nav><div class=container id=mobile-panel><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>ThinkerYu的博客</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/categories/>Categories</a></li></ul></nav></header><main id=main class=main><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>基于OrangePi+seafile的NAS</h1><div class=post-meta><span class=post-time>2018-03-30</span><div class=post-category><a href=/categories/storage/>storage</a></div></div></header><div class=post-toc id=post-toc><h2 class=post-toc-title>文章目录</h2><div class="post-toc-content always-active"><nav id=TableOfContents><ul><li><ul><li><a href=#1-硬件>1. 硬件</a></li><li><a href=#2-软件>2. 软件</a><ul><li><a href=#21-制作可启动-sd-卡>2.1 制作可启动 SD 卡</a></li><li><a href=#22-准备硬盘>2.2 准备硬盘</a></li><li><a href=#23-将镜像写入板载-emmc-存储>2.3 将镜像写入板载 emmc 存储</a></li><li><a href=#24-修改配置从主硬盘启动>2.4 修改配置，从主硬盘启动</a></li><li><a href=#25-安装seafile配置samba等>2.5 安装seafile、配置samba等</a></li><li><a href=#26-定时备份到-raid1-冗余>2.6 定时备份到 RAID1 冗余</a></li></ul></li></ul></li></ul></nav></div></div><div class=post-content><p>现在网上的公有云很多，比如百度网盘，以及之前的360网盘等。但是陆续关闭的公有云，百度网盘
 的限速问题，隐私问题等，是许多人使用网盘的痛点。自己搭建自用的私有云成了很多人的一个选择，
 但是直接购买比较大型的NAS设备一方面占地方，另一方面也是确实用不上。这里用seafile+OrangePi Plus2
-搭建了一个物美价廉的私有云盘，通过小米智能插座还可以远程控制开关，十分好用。</p>
-<h2 id=1-硬件>1. 硬件</h2>
-<p>OrangePi Plus2：<a href=http://www.orangepi.cn/orangepiplus2/index_cn.html>官网链接</a>，类似于树梅派的板子，性能强劲，2G内存，10/100/1000 M 自适应网卡，
-带板载emmc存储。</p>
-<p>当然也可以选其它品牌的板子，比如直接选最新的树莓派，或者是国内的香蕉派、cubieboard 等。需要注意
+搭建了一个物美价廉的私有云盘，通过小米智能插座还可以远程控制开关，十分好用。</p><h2 id=1-硬件>1. 硬件</h2><p>OrangePi Plus2：<a href=http://www.orangepi.cn/orangepiplus2/index_cn.html>官网链接</a>，类似于树梅派的板子，性能强劲，2G内存，10/100/1000 M 自适应网卡，
+带板载emmc存储。</p><p>当然也可以选其它品牌的板子，比如直接选最新的树莓派，或者是国内的香蕉派、cubieboard 等。需要注意
 的除了网卡最好支持千兆以保证在家使用的速度之外，还有板子在 mainline kernel 上的支持程度。国内
 的板子一般都使用全志的soc芯片，可以在购买之前上全志的<a href=https://linux-sunxi.org/H3>wiki</a>上查看下该芯片和板子是否被 mainline
 kernel 支持。目前H3的芯片已经支持得很好了，所以购买 OrangePi Plus2 是稳妥之举，如果不在 mainline
 支持列表内，那么很可能面临的就是仍然使用 3.xx 版本的内核，无法使用最新的 systemd ，无法体验 docker，
 总之会产生一些麻烦。有 mainline kernel 支持，就可以更新到各个包含 armhf 或者 arm64 架构支持的发行版，
-比如 Ubuntu、Debian 的最新版本，并且可以一直更新。</p>
-<p>SD 卡一张：4G或者以上的SD卡一张。这张卡用来启动系统，将自编译的内核、Uboot、Uboot 配置脚本写入板载 emmc。
+比如 Ubuntu、Debian 的最新版本，并且可以一直更新。</p><p>SD 卡一张：4G或者以上的SD卡一张。这张卡用来启动系统，将自编译的内核、Uboot、Uboot 配置脚本写入板载 emmc。
 之后就不需要了。如果购买的板子版本无板载存储，那么就需要将SD卡一直插在卡槽上，用来引导系统启动。
 需要注意的是， SD 卡在用作系统分区时被频繁读写是十分容易损坏的（之前坏过两张），所以只从它上面读取内容
-启动，其余的根文件系统都放置在磁盘上（ SSD 太贵，而且没有必要）。</p>
-<p>HD硬盘+硬盘座：根文件系统以及保存个人文件的分区都放在这个硬盘上。由于是拿来作NAS的，直接买2.5寸的
-台式机硬盘就行，加上一个USB接口的硬盘座用来和 OrangePi 连接。</p>
-<p>RAID1 冗余存储[可选]： 虽然HD硬盘的寿命都还可以，但是万一哪天突然坏了，这上面放的都是比较有纪念意义
+启动，其余的根文件系统都放置在磁盘上（ SSD 太贵，而且没有必要）。</p><p>HD硬盘+硬盘座：根文件系统以及保存个人文件的分区都放在这个硬盘上。由于是拿来作NAS的，直接买2.5寸的
+台式机硬盘就行，加上一个USB接口的硬盘座用来和 OrangePi 连接。</p><p>RAID1 冗余存储[可选]： 虽然HD硬盘的寿命都还可以，但是万一哪天突然坏了，这上面放的都是比较有纪念意义
 的东西，丢了实在可惜，所以可以再买两个大小一样的HD硬盘（我使用的是 1 T 大小的），然后加上 RAID1 的硬盘
 盒，组建一个 RAID1 冗余。这里推荐一款物美价廉的 RAID1 硬盘盒——<a href="https://detail.tmall.com/item.htm?spm=a230r.1.14.13.b31051815IU1QZ&id=35338661217&ns=1&abbucket=4">GODO</a>，买的时候注意和商家说明，需要
 买断电后接通电直接处于打开状态的盒子。这个主要源于使用智能插座远程控制的需求。默认情况下，无论之前该
 盒子是打开还是关闭状态，断电之后再接通，该盒子都处于关闭状态。这样是没有办法实现以插座作为开关控制
 整个系统启动的。幸运的是，该盒子已经有断电再通电保持开启状态的版本，购买时和客服沟通即可。特别感谢
-一下他们的技术支持，指导我把原先买的盒子用焊锡改造成保持开启版本。</p>
-<h2 id=2-软件>2. 软件</h2>
-<h3 id=21-制作可启动-sd-卡>2.1 制作可启动 SD 卡</h3>
-<p>需要 OrangePi plus2 的镜像，写入 SD 卡用来写入<del>编译的内核文件、Uboot 等到 emmc 存储</del>镜像。OrangePi plus2 的硬件配置
-和 OrangePi plus 的一样，只有内存大小不一样，因此这两者的镜像通用。</p>
-<p>本来是需要自己编译内核的，但是打开 armbian 网站一看，已经有 mainline 内核的系统镜像了！！！省了很多事情。
+一下他们的技术支持，指导我把原先买的盒子用焊锡改造成保持开启版本。</p><h2 id=2-软件>2. 软件</h2><h3 id=21-制作可启动-sd-卡>2.1 制作可启动 SD 卡</h3><p>需要 OrangePi plus2 的镜像，写入 SD 卡用来写入<del>编译的内核文件、Uboot 等到 emmc 存储</del>镜像。OrangePi plus2 的硬件配置
+和 OrangePi plus 的一样，只有内存大小不一样，因此这两者的镜像通用。</p><p>本来是需要自己编译内核的，但是打开 armbian 网站一看，已经有 mainline 内核的系统镜像了！！！省了很多事情。
 从<a href=https://www.armbian.com/orange-pi-plus-2/>下载地址</a>下载镜像文件，将 SD 卡用读卡器接入电脑。Windows 下用 Win32diskimager，linux下用dd，
 将下载来的 7z 压缩包解压后得到 img 后缀的镜像文件，在 linux 下用以下命令写入 SD 卡， 卡上原有内容
-将被全部覆盖。</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>dd if=./Armbian_5.38_Orangepiplus_Debian_stretch_next_4.14.14.img of=/dev/sdx</code></pre></td></tr></table>
-</div>
-</div>
-<h3 id=22-准备硬盘>2.2 准备硬盘</h3>
-<p>采用 2 T 单硬盘 + 2个 1 T 硬盘组的RAID1 的存储方案，分区方案：</p>
-<table>
-<thead>
-<tr>
-<th>硬盘</th>
-<th>分区类型</th>
-<th>分区大小</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>2 T 硬盘</td>
-<td>ext4</td>
-<td>10 G</td>
-</tr>
-<tr>
-<td>2 T 硬盘</td>
-<td>btrfs</td>
-<td>剩余所有空间</td>
-</tr>
-<tr>
-<td>------</td>
-<td>---------</td>
-<td>--------</td>
-</tr>
-<tr>
-<td>1 T RAID</td>
-<td>btrfs</td>
-<td>所有空间</td>
-</tr>
-</tbody>
-</table>
-<p><em>以下称 2 T 硬盘为主硬盘， RAID1 硬盘组为备份盘，其中 2 T 硬盘包含根分区和数据分区</em>。</p>
-<p>将数据存储区单独使用 btrfs 独立分区， RAID1 硬盘组完全采用 btrfs 分区，这样就可以使用
+将被全部覆盖。</p><pre><code>dd if=./Armbian_5.38_Orangepiplus_Debian_stretch_next_4.14.14.img of=/dev/sdx
+</code></pre><h3 id=22-准备硬盘>2.2 准备硬盘</h3><p>采用 2 T 单硬盘 + 2个 1 T 硬盘组的RAID1 的存储方案，分区方案：</p><table><thead><tr><th>硬盘</th><th>分区类型</th><th>分区大小</th></tr></thead><tbody><tr><td>2 T 硬盘</td><td>ext4</td><td>10 G</td></tr><tr><td>2 T 硬盘</td><td>btrfs</td><td>剩余所有空间</td></tr><tr><td>&mdash;&mdash;</td><td>&mdash;&mdash;&mdash;</td><td>&mdash;&mdash;&ndash;</td></tr><tr><td>1 T RAID</td><td>btrfs</td><td>所有空间</td></tr></tbody></table><p><em>以下称 2 T 硬盘为主硬盘， RAID1 硬盘组为备份盘，其中 2 T 硬盘包含根分区和数据分区</em>。</p><p>将数据存储区单独使用 btrfs 独立分区， RAID1 硬盘组完全采用 btrfs 分区，这样就可以使用
 btrfs 的 snapshot 功能创建快照，并使用 btrfs send | btrfs recieve 将快照增量备份至
 RAID1 实现冗余备份。可以使用 fdisk/parted/gparted 完成上述分区，当然需要在 Linux 下完成。
-gparted图形界面比较简单直观。</p>
-<ul>
-<li>复制镜像根分区到 2 T 硬盘根分区<br>
-然后，需要将 Armbian 镜像中的根分区复制到主硬盘的根分区：</li>
-</ul>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+gparted图形界面比较简单直观。</p><ul><li>复制镜像根分区到 2 T 硬盘根分区<br>然后，需要将 Armbian 镜像中的根分区复制到主硬盘的根分区：</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -211,101 +55,53 @@ gparted图形界面比较简单直观。</p>
 </span><span class=lnt>14
 </span><span class=lnt>15
 </span><span class=lnt>16
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-bash data-lang=bash>    &gt;sudo parted Armbian_xxx.img  <span class=c1># 使用parted查看镜像中的分区情况</span>
-    &gt;<span class=o>(</span>parted<span class=o>)</span> unit B  <span class=c1># 将parted的显示单位设置为byte</span>
-    &gt;<span class=o>(</span>parted<span class=o>)</span> print
-    Model:  <span class=o>(</span>file<span class=o>)</span>
-    Disk /home/huangyu/Downloads/Armbian_5.38_Orangepiplus_Debian_stretch_next_4.14.14.img: 1396703232B
-    Sector size <span class=o>(</span>logical/physical<span class=o>)</span>: 512B/512B
-    Partition Table: msdos
-    Disk Flags:
-
-    Number  Start     End          Size         Type     File system  Flags
-     <span class=m>1</span>      4194304B  1396703231B  1392508928B  primary  ext4
-
-    <span class=c1># 可以看到img文件内包含一个ext4的分区，起始位置是4194304B</span>
-    &gt;sudo mount -t ext4 -o <span class=nv>offset</span><span class=o>=</span><span class=m>4194304</span> Armbian_xxx.img /mnt
-    &gt;sudo mount /dev/sdx1 /media/root  <span class=c1># 将主硬盘的根分区也就是10G的ext4分区挂载</span>
-    &gt;sudo cp -Rp /mnt/* /media/root  <span class=c1># 将Armbian镜像根分区中的内容复制到主硬盘根分区</span></code></pre></td></tr></table>
-</div>
-</div>
-<p>将镜像 Armbian_xxx.img 整个放到主硬盘根分区中，用于后续将其写入 emmc 存储。</p>
-<h3 id=23-将镜像写入板载-emmc-存储>2.3 将镜像写入板载 emmc 存储</h3>
-<p>将 SD 卡插入 OrangePi plus2 的插槽，2 T 硬盘USB接入USB插孔，插上网线然后接通电源（似乎这个板子的电源开关按钮不
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>    &gt;sudo parted Armbian_xxx.img  <span class=c1># 使用parted查看镜像中的分区情况</span>
+</span></span><span class=line><span class=cl>    &gt;<span class=o>(</span>parted<span class=o>)</span> unit B  <span class=c1># 将parted的显示单位设置为byte</span>
+</span></span><span class=line><span class=cl>    &gt;<span class=o>(</span>parted<span class=o>)</span> print
+</span></span><span class=line><span class=cl>    Model:  <span class=o>(</span>file<span class=o>)</span>
+</span></span><span class=line><span class=cl>    Disk /home/huangyu/Downloads/Armbian_5.38_Orangepiplus_Debian_stretch_next_4.14.14.img: 1396703232B
+</span></span><span class=line><span class=cl>    Sector size <span class=o>(</span>logical/physical<span class=o>)</span>: 512B/512B
+</span></span><span class=line><span class=cl>    Partition Table: msdos
+</span></span><span class=line><span class=cl>    Disk Flags:
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    Number  Start     End          Size         Type     File system  Flags
+</span></span><span class=line><span class=cl>     <span class=m>1</span>      4194304B  1396703231B  1392508928B  primary  ext4
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1># 可以看到img文件内包含一个ext4的分区，起始位置是4194304B</span>
+</span></span><span class=line><span class=cl>    &gt;sudo mount -t ext4 -o <span class=nv>offset</span><span class=o>=</span><span class=m>4194304</span> Armbian_xxx.img /mnt
+</span></span><span class=line><span class=cl>    &gt;sudo mount /dev/sdx1 /media/root  <span class=c1># 将主硬盘的根分区也就是10G的ext4分区挂载</span>
+</span></span><span class=line><span class=cl>    &gt;sudo cp -Rp /mnt/* /media/root  <span class=c1># 将Armbian镜像根分区中的内容复制到主硬盘根分区</span>
+</span></span></code></pre></td></tr></table></div></div><p>将镜像 Armbian_xxx.img 整个放到主硬盘根分区中，用于后续将其写入 emmc 存储。</p><h3 id=23-将镜像写入板载-emmc-存储>2.3 将镜像写入板载 emmc 存储</h3><p>将 SD 卡插入 OrangePi plus2 的插槽，2 T 硬盘USB接入USB插孔，插上网线然后接通电源（似乎这个板子的电源开关按钮不
 起作用，只能通过通电或者断电控制开关）。启动后等一段时间，会自动通过 dhcp 获取 IP 地址，
-通过路由器查看板子的 IP 地址，然后从电脑上 ssh 过去，默认的用户名是 root 密码是 1234。</p>
-<p>挂载 2 T 硬盘，然后用 dd 命令将主硬盘中的 Armbian 镜像 dd 到 /dev/mmcblk2p1， 不用理会
-/dev/mmcblk2boot0 和 /dev/mmcblk2boot1 分区。</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
-</span><span class=lnt>2
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback># mount /dev/sdx /mnt
-# dd if=/mnt/Armbian_xxx.img of=/dev/mmcblk2p1</code></pre></td></tr></table>
-</div>
-</div>
-<h3 id=24-修改配置从主硬盘启动>2.4 修改配置，从主硬盘启动</h3>
-<p>采用 Armbian 有个好处，不用自己编译 uboot 和 uboot 配置脚本了，修改配置只需要修改 /boot/armbianEnv.txt
-即可， 载入该文本的动作的 uboot 脚本已经被配置好了。</p>
-<p>2.3 中在 dd 完成之后，就可以 mount /dev/mmcblk2p1 了，其下内容就是 Armbian 镜像的内容，
+通过路由器查看板子的 IP 地址，然后从电脑上 ssh 过去，默认的用户名是 root 密码是 1234。</p><p>挂载 2 T 硬盘，然后用 dd 命令将主硬盘中的 Armbian 镜像 dd 到 /dev/mmcblk2p1， 不用理会
+/dev/mmcblk2boot0 和 /dev/mmcblk2boot1 分区。</p><pre><code># mount /dev/sdx /mnt
+# dd if=/mnt/Armbian_xxx.img of=/dev/mmcblk2p1
+</code></pre><h3 id=24-修改配置从主硬盘启动>2.4 修改配置，从主硬盘启动</h3><p>采用 Armbian 有个好处，不用自己编译 uboot 和 uboot 配置脚本了，修改配置只需要修改 /boot/armbianEnv.txt
+即可， 载入该文本的动作的 uboot 脚本已经被配置好了。</p><p>2.3 中在 dd 完成之后，就可以 mount /dev/mmcblk2p1 了，其下内容就是 Armbian 镜像的内容，
 除了 boot 文件夹包含启动配置文件、内核文件等不能删除外，其他文件夹要是不喜欢都可以删除，
 因为我们仅仅需要从板载 emmc 启动，根分区放在了 2 T 硬盘上。在修改 boot/armbianEnv.txt
-改为如下内容：</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
-</span><span class=lnt>2
-</span><span class=lnt>3
-</span><span class=lnt>4
-</span><span class=lnt>5
-</span><span class=lnt>6
-</span><span class=lnt>7
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>verbosity=1
+改为如下内容：</p><pre><code>verbosity=1
 logo=disabled
 console=both
 disp_mode=1920x1080p60
 overlay_prefix=sun8i-h3
 rootdev=UUID=主硬盘根分区的uuid
-rootfstype=主硬盘根分区的类型</code></pre></td></tr></table>
-</div>
-</div>
-<p>通过<code>blkid</code>命令查看主硬盘根分区的uuid，将其放在对应位置，分区的类型这里就是ext4，这样
+rootfstype=主硬盘根分区的类型
+</code></pre><p>通过<code>blkid</code>命令查看主硬盘根分区的uuid，将其放在对应位置，分区的类型这里就是ext4，这样
 指定之后，如果拔掉 SD 卡， 插上 2 T硬盘 USB 启动系统，那么就会从 emmc 分区读取uboot，
 uboot 读取 boot/armbianEnv.txt 的内容，从而找到 USB 连接的硬盘上 UUID 对应的分区，
-以 rootfstype 挂载为根分区，从而实现从外部 HD硬盘启动，以增长整个板子的使用寿命。</p>
-<p>需要更改 2 T 硬盘根分区中的 /etc/fstab 以适应此更改。如果不改fstab，内核载入开始运行后，
+以 rootfstype 挂载为根分区，从而实现从外部 HD硬盘启动，以增长整个板子的使用寿命。</p><p>需要更改 2 T 硬盘根分区中的 /etc/fstab 以适应此更改。如果不改fstab，内核载入开始运行后，
 读取 2 T 硬盘根分区中的内容，读取 /etc/fstab 进行挂载就会出错，从而导致系统无法启动。
-完整的包含 RAID1 冗余盘挂载项的 fstab 如下：</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
-</span><span class=lnt>2
-</span><span class=lnt>3
-</span><span class=lnt>4
-</span><span class=lnt>5
-</span><span class=lnt>6
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>LABEL=pi-root /    ext4 defaults,noatime,commit=60 0 0
+完整的包含 RAID1 冗余盘挂载项的 fstab 如下：</p><pre><code>LABEL=pi-root /    ext4 defaults,noatime,commit=60 0 0
 LABEL=swap swap swap  default 0 0
 LABEL=data-raid1 /media/raid1 btrfs defaults,noatime,compress=lzo,autodefrag 0 0
 LABEL=pi-data /media/normal btrfs defaults,noatime,compress=lzo,autodefrag,subvol=normal-subvol 0 0
 LABEL=pi-data /media/u-sda1 btrfs defaults,noatime,compress=lzo,autodefrag,subvol=important-subvol 0 0
-LABEL=pi-data /var/lib/docker btrfs defaults,noatime,compress=lzo,autodefrag,subvol=docker-subvol 0 0</code></pre></td></tr></table>
-</div>
-</div>
-<p>用 LABEL 指定挂载点能少写点字，label 也是之前在接入电脑进行分区时设置的。其中最后一行是为了
+LABEL=pi-data /var/lib/docker btrfs defaults,noatime,compress=lzo,autodefrag,subvol=docker-subvol 0 0
+</code></pre><p>用 LABEL 指定挂载点能少写点字，label 也是之前在接入电脑进行分区时设置的。其中最后一行是为了
 方便玩 docker 用的，因为使用了 ext4 作为根分区，所以要专门挂载一个 subvolume 到 /var/lib/docker用于
 docker的 btrfs storage backend。挂载点的文件夹可以随意，但是需要确保其存在，否则fstab挂载失败
-会导致系统启动过程卡死。</p>
-<h3 id=25-安装seafile配置samba等>2.5 安装seafile、配置samba等</h3>
-<p>上面的步骤完成之后，就实现了接通电源后，从 emmc 读取内核，以 2 T 硬盘中的根分区为 root，
+会导致系统启动过程卡死。</p><h3 id=25-安装seafile配置samba等>2.5 安装seafile、配置samba等</h3><p>上面的步骤完成之后，就实现了接通电源后，从 emmc 读取内核，以 2 T 硬盘中的根分区为 root，
 并且挂载好数据分区、RAID1 冗余分区到指定的挂载点了。之后就可以安装seafile、安装samba
 用于局域网共享视频什么的，可以节约手机、平板的空间。更可以安装个Aria2c，使用AriaNG前端，
 用作远程下载，下载后直接回去可以通过 samba 贡献在各种设备上观看。 如果没有公网 IP 还可以
@@ -314,92 +110,33 @@ docker的 btrfs storage backend。挂载点的文件夹可以随意，但是需�
 AriaNG 这种，就需要自己写 Python 脚本或者是 systemd 的 service 文件来实现启动了，我采用
 的是 supervisord 来控制。
 还可以有更多的玩法，比如加个音响定时报个天气预报什么的，只有想不到没有做不到啊。具体的配置
-等天再说：）</p>
-<h3 id=26-定时备份到-raid1-冗余>2.6 定时备份到 RAID1 冗余</h3>
-<p>btrfs 除了方便的 snapshot 之外， send 和 receive 功能也是非常的好用。由于所有的数据都
+等天再说：）</p><h3 id=26-定时备份到-raid1-冗余>2.6 定时备份到 RAID1 冗余</h3><p>btrfs 除了方便的 snapshot 之外， send 和 receive 功能也是非常的好用。由于所有的数据都
 放在数据分区，定时对数据分区作 snapshot， 然后 send receive 到 RAID1 分区就实现了增量
-备份。</p>
-<p>使用三个文件实现<a href=https://raw.githubusercontent.com/linuxhenhao/config-files/master/orangepi/cron.py>cron.py</a>,<a href=https://raw.githubusercontent.com/linuxhenhao/config-files/master/orangepi/bakseafile.sh>bakseafile.sh</a>,<a href=https://raw.githubusercontent.com/linuxhenhao/config-files/master/orangepi/btrfs-backup.py>btrfs-backup.py</a>。</p>
-<p>其中cron.py 执行定时任务，执行成功之后会写入 /var/log/ 文件夹作记录，实现一个相对 Linux
+备份。</p><p>使用三个文件实现<a href=https://raw.githubusercontent.com/linuxhenhao/config-files/master/orangepi/cron.py>cron.py</a>,<a href=https://raw.githubusercontent.com/linuxhenhao/config-files/master/orangepi/bakseafile.sh>bakseafile.sh</a>,<a href=https://raw.githubusercontent.com/linuxhenhao/config-files/master/orangepi/btrfs-backup.py>btrfs-backup.py</a>。</p><p>其中cron.py 执行定时任务，执行成功之后会写入 /var/log/ 文件夹作记录，实现一个相对 Linux
 自带 cron 有一定区别的功能。 Linux 自带的 cron， 定期执行任务，是用时间点作为判据的，
 比如每天7点执行一次， 如果这一天7点刚好没开机，八点开机，那么这一天就不会执行这个任务。
 cron.py 使用时间间隔作为判据， 每次成功执行写log记录执行的时间，在启动时检查，如果距离
-上次执行成功间隔大于要求的间隔，则执行任务。</p>
-<p>bakseafile.sh是一个写好btrfs-backup.py执行所需参数的简单bash脚本。btrfs-backup.py是
-在 github 上找到的一个别人写的可以保留固定数量的 snapshot 的 btrfs 备份脚本。</p>
-<p>通过 supervisord 执行 cron.py, cron.py 中配置好定时执行 bakseafile.sh, 在 bakseafile.sh
-中修改保留备份的数量、备份的源文件夹， snapshot相对源文件夹的位置， 目标文件夹。</p>
-</div>
-<div class=post-copyright>
-<p class=copyright-item>
-<span class=item-title>文章作者</span>
-<span class=item-content>thinkeryu</span>
-</p>
-<p class=copyright-item>
-<span class=item-title>上次更新</span>
-<span class=item-content>
-2018-03-30
-</span>
-</p>
-</div>
-<footer class=post-footer>
-<div class=post-tags>
-<a href=/tags/armhf/>armhf</a>
-<a href=/tags/linux/>linux</a>
-</div>
-<nav class=post-nav>
-<a class=prev href=/post/%E5%8D%9A%E5%AE%A2down%E4%BA%8B%E4%BB%B6%E4%B9%8B%E8%BD%AC%E7%A7%BB%E8%87%B3vps+github/>
-<i class="iconfont icon-left"></i>
+上次执行成功间隔大于要求的间隔，则执行任务。</p><p>bakseafile.sh是一个写好btrfs-backup.py执行所需参数的简单bash脚本。btrfs-backup.py是
+在 github 上找到的一个别人写的可以保留固定数量的 snapshot 的 btrfs 备份脚本。</p><p>通过 supervisord 执行 cron.py, cron.py 中配置好定时执行 bakseafile.sh, 在 bakseafile.sh
+中修改保留备份的数量、备份的源文件夹， snapshot相对源文件夹的位置， 目标文件夹。</p></div><div class=post-copyright><p class=copyright-item><span class=item-title>文章作者</span>
+<span class=item-content>thinkeryu</span></p><p class=copyright-item><span class=item-title>上次更新</span>
+<span class=item-content>2018-03-30</span></p></div><footer class=post-footer><div class=post-tags><a href=/tags/armhf/>armhf</a>
+<a href=/tags/linux/>linux</a></div><nav class=post-nav><a class=prev href=/post/%E5%8D%9A%E5%AE%A2down%E4%BA%8B%E4%BB%B6%E4%B9%8B%E8%BD%AC%E7%A7%BB%E8%87%B3vps+github/><i class="iconfont icon-left"></i>
 <span class="prev-text nav-default">博客down事件之转移至vps+github</span>
-<span class="prev-text nav-mobile">上一篇</span>
-</a>
-<a class=next href=/post/pyqtgraph%E5%AE%9E%E6%97%B6%E7%94%BB%E5%9B%BE%E5%8D%A1%E9%A1%BF%E9%97%AE%E9%A2%98%E5%8F%91%E7%8E%B0%E5%8F%8A%E8%A7%A3%E5%86%B3/>
-<span class="next-text nav-default">pyqtgraph实时画图卡顿问题发现及解决</span>
+<span class="prev-text nav-mobile">上一篇</span></a>
+<a class=next href=/post/pyqtgraph%E5%AE%9E%E6%97%B6%E7%94%BB%E5%9B%BE%E5%8D%A1%E9%A1%BF%E9%97%AE%E9%A2%98%E5%8F%91%E7%8E%B0%E5%8F%8A%E8%A7%A3%E5%86%B3/><span class="next-text nav-default">pyqtgraph实时画图卡顿问题发现及解决</span>
 <span class="next-text nav-mobile">下一篇</span>
-<i class="iconfont icon-right"></i>
-</a>
-</nav>
-</footer>
-</article>
-</div>
-<div id=gitalk-container></div>
-<link rel=stylesheet href=https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css crossorigin=anonymous>
-<script src=https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js crossorigin=anonymous></script>
-<script type=text/javascript>var gitalk=new Gitalk({id:'2018-03-30 14:12:25 \u002b0800 \u002b0800',title:'基于OrangePi\u002bseafile的NAS',clientID:'e6672c053ad6c6056f71',clientSecret:'c13fdda944329c62818b9bbf0b00a23658614f3e',repo:'blog',owner:'linuxhenhao',admin:['linuxhenhao'],body:decodeURI(location.href)});gitalk.render('gitalk-container')</script>
-<noscript>Please enable JavaScript to view the <a href=https://github.com/gitalk/gitalk>comments powered by gitalk.</a></noscript>
-</div>
-</main>
-<footer id=footer class=footer>
-<div class=social-links>
-<a href=https://www.linkedin.com/in/yuhuang-keepmoving class="iconfont icon-linkedin" title=linkedin></a>
+<i class="iconfont icon-right"></i></a></nav></footer></article></div><div id=gitalk-container></div><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css crossorigin=anonymous><script src=https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js crossorigin=anonymous></script>
+<script type=text/javascript>var gitalk=new Gitalk({id:"2018-03-30 14:12:25 \u002b0800 \u002b0800",title:"基于OrangePi\u002bseafile的NAS",clientID:"e6672c053ad6c6056f71",clientSecret:"c13fdda944329c62818b9bbf0b00a23658614f3e",repo:"blog",owner:"linuxhenhao",admin:["linuxhenhao"],body:decodeURI(location.href)});gitalk.render("gitalk-container")</script><noscript>Please enable JavaScript to view the <a href=https://github.com/gitalk/gitalk>comments powered by gitalk.</a></noscript></div></main><footer id=footer class=footer><div class=social-links><a href=https://www.linkedin.com/in/yuhuang-keepmoving class="iconfont icon-linkedin" title=linkedin></a>
 <a href=https://github.com/linuxhenhao class="iconfont icon-github" title=github></a>
-<a href=https://blog.huangyu.me/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a>
-</div>
-<div class=copyright>
-<span class=power-by>
-由 <a class=hexo-link href=https://gohugo.io>Hugo</a> 强力驱动
-</span>
+<a href=https://blog.huangyu.me/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a></div><div class=copyright><span class=power-by>由 <a class=hexo-link href=https://gohugo.io>Hugo</a> 强力驱动</span>
 <span class=division>|</span>
-<span class=theme-info>
-主题 -
-<a class=theme-link href=https://github.com/olOwOlo/hugo-theme-even>Even</a>
-</span>
-<span class=copyright-year>
-&copy;
+<span class=theme-info>主题 -
+<a class=theme-link href=https://github.com/olOwOlo/hugo-theme-even>Even</a></span>
+<span class=copyright-year>&copy;
 2017 -
-2021<span class=heart><i class="iconfont icon-heart"></i></span><span>thinkeryu</span>
-</span>
-</div>
-</footer>
-<div class=back-to-top id=back-to-top>
-<i class="iconfont icon-up"></i>
-</div>
-</div>
-<script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script>
+2022<span class=heart><i class="iconfont icon-heart"></i></span><span>thinkeryu</span></span></div></footer><div class=back-to-top id=back-to-top><i class="iconfont icon-up"></i></div></div><script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script>
 <script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script>
 <script src=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin=anonymous></script>
-<script type=text/javascript src=/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js></script>
-<script type=text/javascript>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}}</script>
-<script async src=https://cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js integrity="sha256-HGLuEfFcsUJGhvB8cQ8nr0gai9EucOOaIxFw7qxmd+w=" crossorigin=anonymous></script>
-</body>
-</html>
+<script type=text/javascript src=/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js></script>
+<script type=text/javascript>window.MathJax={tex:{inlineMath:[["$","$"],["\\(","\\)"]]}}</script><script async src=https://cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js integrity="sha256-HGLuEfFcsUJGhvB8cQ8nr0gai9EucOOaIxFw7qxmd+w=" crossorigin=anonymous></script></body></html>

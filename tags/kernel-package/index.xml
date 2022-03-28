@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>kernel package on ThinkerYu的博客</title><link>https://blog.huangyu.me/tags/kernel-package/</link><description>Recent content in kernel package on ThinkerYu的博客</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Mon, 27 Nov 2017 20:29:02 +0800</lastBuildDate><atom:link href="https://blog.huangyu.me/tags/kernel-package/index.xml" rel="self" type="application/rss+xml"/><item><title>Debian系简易内核打包脚本</title><link>https://blog.huangyu.me/post/debian%E7%B3%BB%E7%AE%80%E6%98%93%E5%86%85%E6%A0%B8%E6%89%93%E5%8C%85%E8%84%9A%E6%9C%AC/</link><pubDate>Mon, 27 Nov 2017 20:29:02 +0800</pubDate><guid>https://blog.huangyu.me/post/debian%E7%B3%BB%E7%AE%80%E6%98%93%E5%86%85%E6%A0%B8%E6%89%93%E5%8C%85%E8%84%9A%E6%9C%AC/</guid><description>&lt;p>作为一个尝鲜党，经常会关注内核的新特性，喜欢在自己的电脑上装上最新的内核。维护了一个
-较为精简的适用于自用笔记本和台式机的内核配置文件&lt;a href="https://github.com/linuxhenhao/config-files">github&lt;/a>。&lt;/p>
-&lt;p>既然经常追新，那么就免不了经常更新内核，使用系统本身的包管理系统是一个非常方便的选择。
-但是又不喜欢安装太多的打包的&lt;code>dpkg-package&lt;/code>工具，也没有时间去了解debian打包官方模式。
-简单的使用&lt;code>dpkg -b&lt;/code>打包文件为deb成了我的常用打包方式。配套的，为&lt;code>arm|x86_64&lt;/code>两个架构
-创建了打包脚本。 &lt;em>误：发现内核自带了打包脚本，详情见具体文章内容&lt;/em>&lt;/p></description></item></channel></rss>

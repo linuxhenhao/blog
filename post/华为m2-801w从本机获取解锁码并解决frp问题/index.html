@@ -1,174 +1,28 @@
-<!doctype html><html lang=zh-cn>
-<head>
-<meta charset=utf-8>
-<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
-<title>华为m2 801w从本机获取解锁码并解决frp问题 - ThinkerYu的博客</title>
-<meta name=renderer content="webkit">
-<meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1">
-<meta http-equiv=cache-control content="no-transform">
-<meta http-equiv=cache-control content="no-siteapp">
-<meta name=theme-color content="#f8f5ec">
-<meta name=msapplication-navbutton-color content="#f8f5ec">
-<meta name=apple-mobile-web-app-capable content="yes">
-<meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec">
-<meta name=author content="thinkeryu"><meta name=description content="使用kingroot可以临时root华为m2-801w，但是重启之后root消失。利用这个临时的root获取nvme， 从而获取到解锁码.
-"><meta name=keywords content="免申请解锁,android">
-<meta name=generator content="Hugo 0.88.1 with theme even">
-<link rel=canonical href=https://blog.huangyu.me/post/%E5%8D%8E%E4%B8%BAm2-801w%E4%BB%8E%E6%9C%AC%E6%9C%BA%E8%8E%B7%E5%8F%96%E8%A7%A3%E9%94%81%E7%A0%81%E5%B9%B6%E8%A7%A3%E5%86%B3frp%E9%97%AE%E9%A2%98/>
-<link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png>
-<link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
-<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png>
-<link rel=manifest href=/manifest.json>
-<link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5>
-<link href=/sass/main.min.b5a744db6de49a86cadafb3b70f555ab443f83c307a483402259e94726b045ff.css rel=stylesheet>
-<link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous>
-<meta property="og:title" content="华为m2 801w从本机获取解锁码并解决frp问题">
-<meta property="og:description" content="使用kingroot可以临时root华为m2-801w，但是重启之后root消失。利用这个临时的root获取nvme，
-从而获取到解锁码.">
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://blog.huangyu.me/post/%E5%8D%8E%E4%B8%BAm2-801w%E4%BB%8E%E6%9C%AC%E6%9C%BA%E8%8E%B7%E5%8F%96%E8%A7%A3%E9%94%81%E7%A0%81%E5%B9%B6%E8%A7%A3%E5%86%B3frp%E9%97%AE%E9%A2%98/"><meta property="article:section" content="post">
-<meta property="article:published_time" content="2017-12-14T00:32:13+08:00">
-<meta property="article:modified_time" content="2017-12-14T00:32:13+08:00">
-<meta itemprop=name content="华为m2 801w从本机获取解锁码并解决frp问题">
-<meta itemprop=description content="使用kingroot可以临时root华为m2-801w，但是重启之后root消失。利用这个临时的root获取nvme，
-从而获取到解锁码."><meta itemprop=datePublished content="2017-12-14T00:32:13+08:00">
-<meta itemprop=dateModified content="2017-12-14T00:32:13+08:00">
-<meta itemprop=wordCount content="2256">
-<meta itemprop=keywords content="android,linux,"><meta name=twitter:card content="summary">
-<meta name=twitter:title content="华为m2 801w从本机获取解锁码并解决frp问题">
-<meta name=twitter:description content="使用kingroot可以临时root华为m2-801w，但是重启之后root消失。利用这个临时的root获取nvme，
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><title>华为m2 801w从本机获取解锁码并解决frp问题 - ThinkerYu的博客</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=cache-control content="no-transform"><meta http-equiv=cache-control content="no-siteapp"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=author content="thinkeryu"><meta name=description content="使用kingroot可以临时root华为m2-801w，但是重启之后root消失。利用这个临时的root获取nvme， 从而获取到解锁码.
+"><meta name=keywords content="免申请解锁,android"><meta name=generator content="Hugo 0.96.0 with theme even"><link rel=canonical href=https://blog.huangyu.me/post/%E5%8D%8E%E4%B8%BAm2-801w%E4%BB%8E%E6%9C%AC%E6%9C%BA%E8%8E%B7%E5%8F%96%E8%A7%A3%E9%94%81%E7%A0%81%E5%B9%B6%E8%A7%A3%E5%86%B3frp%E9%97%AE%E9%A2%98/><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/manifest.json><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link href=/sass/main.min.b5a744db6de49a86cadafb3b70f555ab443f83c307a483402259e94726b045ff.css rel=stylesheet><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous><meta property="og:title" content="华为m2 801w从本机获取解锁码并解决frp问题"><meta property="og:description" content="使用kingroot可以临时root华为m2-801w，但是重启之后root消失。利用这个临时的root获取nvme，
+从而获取到解锁码."><meta property="og:type" content="article"><meta property="og:url" content="https://blog.huangyu.me/post/%E5%8D%8E%E4%B8%BAm2-801w%E4%BB%8E%E6%9C%AC%E6%9C%BA%E8%8E%B7%E5%8F%96%E8%A7%A3%E9%94%81%E7%A0%81%E5%B9%B6%E8%A7%A3%E5%86%B3frp%E9%97%AE%E9%A2%98/"><meta property="article:section" content="post"><meta property="article:published_time" content="2017-12-14T00:32:13+08:00"><meta property="article:modified_time" content="2017-12-14T00:32:13+08:00"><meta itemprop=name content="华为m2 801w从本机获取解锁码并解决frp问题"><meta itemprop=description content="使用kingroot可以临时root华为m2-801w，但是重启之后root消失。利用这个临时的root获取nvme，
+从而获取到解锁码."><meta itemprop=datePublished content="2017-12-14T00:32:13+08:00"><meta itemprop=dateModified content="2017-12-14T00:32:13+08:00"><meta itemprop=wordCount content="2238"><meta itemprop=keywords content="android,linux,"><meta name=twitter:card content="summary"><meta name=twitter:title content="华为m2 801w从本机获取解锁码并解决frp问题"><meta name=twitter:description content="使用kingroot可以临时root华为m2-801w，但是重启之后root消失。利用这个临时的root获取nvme，
 从而获取到解锁码."><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
-<script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]-->
-</head>
-<body>
-<div id=mobile-navbar class=mobile-navbar>
-<div class=mobile-header-logo>
-<a href=/ class=logo>ThinkerYu的博客</a>
-</div>
-<div class=mobile-navbar-icon>
+<script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>ThinkerYu的博客</a></div><div class=mobile-navbar-icon><span></span>
 <span></span>
-<span></span>
-<span></span>
-</div>
-</div>
-<nav id=mobile-menu class="mobile-menu slideout-menu">
-<ul class=mobile-menu-list>
-<a href=/>
-<li class=mobile-menu-item>Home</li>
-</a><a href=/post/>
-<li class=mobile-menu-item>Archives</li>
-</a><a href=/tags/>
-<li class=mobile-menu-item>Tags</li>
-</a><a href=/categories/>
-<li class=mobile-menu-item>Categories</li>
-</a>
-</ul>
-</nav>
-<div class=container id=mobile-panel>
-<header id=header class=header>
-<div class=logo-wrapper>
-<a href=/ class=logo>ThinkerYu的博客</a>
-</div>
-<nav class=site-navbar>
-<ul id=menu class=menu>
-<li class=menu-item>
-<a class=menu-item-link href=/>Home</a>
-</li><li class=menu-item>
-<a class=menu-item-link href=/post/>Archives</a>
-</li><li class=menu-item>
-<a class=menu-item-link href=/tags/>Tags</a>
-</li><li class=menu-item>
-<a class=menu-item-link href=/categories/>Categories</a>
-</li>
-</ul>
-</nav>
-</header>
-<main id=main class=main>
-<div class=content-wrapper>
-<div id=content class=content>
-<article class=post>
-<header class=post-header>
-<h1 class=post-title>华为m2 801w从本机获取解锁码并解决frp问题</h1>
-<div class=post-meta>
-<span class=post-time> 2017-12-14 </span>
-<div class=post-category>
-<a href=/categories/others/> others </a>
-</div>
-</div>
-</header>
-<div class=post-toc id=post-toc>
-<h2 class=post-toc-title>文章目录</h2>
-<div class="post-toc-content always-active">
-</div>
-</div>
-<div class=post-content>
-<p>使用kingroot可以临时root华为m2-801w，但是重启之后root消失。利用这个临时的root获取nvme，
-从而获取到解锁码.</p>
-<h2 id=获取解锁码>获取解锁码</h2>
-<p>从csdn博客上看到的方法，首先需要使用kingroot或者其他root工具root系统</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
-</span><span class=lnt>2
-</span><span class=lnt>3
-</span><span class=lnt>4
-</span><span class=lnt>5
-</span><span class=lnt>6
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>$&gt;adb shell  # 主机上
+<span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><a href=/><li class=mobile-menu-item>Home</li></a><a href=/post/><li class=mobile-menu-item>Archives</li></a><a href=/tags/><li class=mobile-menu-item>Tags</li></a><a href=/categories/><li class=mobile-menu-item>Categories</li></a></ul></nav><div class=container id=mobile-panel><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>ThinkerYu的博客</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/categories/>Categories</a></li></ul></nav></header><main id=main class=main><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>华为m2 801w从本机获取解锁码并解决frp问题</h1><div class=post-meta><span class=post-time>2017-12-14</span><div class=post-category><a href=/categories/others/>others</a></div></div></header><div class=post-toc id=post-toc><h2 class=post-toc-title>文章目录</h2><div class="post-toc-content always-active"><nav id=TableOfContents><ul><li><ul><li><a href=#获取解锁码>获取解锁码</a></li><li><a href=#搜索到的解决办法>搜索到的解决办法：</a></li><li><a href=#具体过程>具体过程：</a></li><li><a href=#从官方updateapp中提取recoveryimg>从官方UPDATE.APP中提取recovery.img</a></li></ul></li></ul></nav></div></div><div class=post-content><p>使用kingroot可以临时root华为m2-801w，但是重启之后root消失。利用这个临时的root获取nvme，
+从而获取到解锁码.</p><h2 id=获取解锁码>获取解锁码</h2><p>从csdn博客上看到的方法，首先需要使用kingroot或者其他root工具root系统</p><pre><code>$&gt;adb shell  # 主机上
 $su
 # cd /sdcard
 # cat if=/dev/block/platform/hi_mci.0/by-name/nvme of=nvme
 $&gt;adb pull /sdcard/nvme # 主机上，带&gt;都表示主机
-$&gt;strings nvme | grep WVDEVID -B 1  # 得到16位纯数字解锁码</code></pre></td></tr></table>
-</div>
-</div>
-<p>拔掉usb线，关机，按住音量减，插入usb线，由于供电，回启动，从而进入fastboot模式。
-一般情况，此时在电脑端运行</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>fastboot oem unlock &lt;解锁码&gt;</code></pre></td></tr></table>
-</div>
-</div>
-<p>就可以解决问题了。但是遇到了FRP locked问题，需要先解锁FRP锁才能解锁bootloader。</p>
-<p>FRP全称Factory Reset Protection的目的是解决丢失手机轻易被别人用的问题，直接刷机就可以当新手机用了。
-但是有FRP锁，就不能直接刷机使用。更具体的情况未详细了解。</p>
-<p>但是这个平板就是全新的系统，推测原因是国外和国内版本的rom混刷导致的。</p>
-<h2 id=搜索到的解决办法>搜索到的解决办法：</h2>
-<p>1. 网上常见方法， 连续点击7次buildnumber或者叫序列号之后，开启开发者模式，然后找到</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>oem unlock enable，开启，之后就可以了。</code></pre></td></tr></table>
-</div>
-</div>
-<p>2. 但是我在该平板的开发者选项里找不到这个选项。需要首先</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
-</span><span class=lnt>2
-</span><span class=lnt>3
-</span><span class=lnt>4
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>2\.1 进入recovery， 格式化cache，format factory，然后重启。
-2\.2 初始化设置，不要开启远程保护&#39;remote protection&#39;(实际我没看到这个选项)
-2\.3 进入设置-》账号-》google，登陆
-2\.4 进入开发者选项，应该就oem unlock选项了。</code></pre></td></tr></table>
-</div>
-</div>
-<p>上述方法均对我的情况无效。由于猜测是混刷国内外rom导致的，由于购买的是海外版，所以决定刷回
+$&gt;strings nvme | grep WVDEVID -B 1  # 得到16位纯数字解锁码
+</code></pre><p>拔掉usb线，关机，按住音量减，插入usb线，由于供电，回启动，从而进入fastboot模式。
+一般情况，此时在电脑端运行</p><pre><code>fastboot oem unlock &lt;解锁码&gt;
+</code></pre><p>就可以解决问题了。但是遇到了FRP locked问题，需要先解锁FRP锁才能解锁bootloader。</p><p>FRP全称Factory Reset Protection的目的是解决丢失手机轻易被别人用的问题，直接刷机就可以当新手机用了。
+但是有FRP锁，就不能直接刷机使用。更具体的情况未详细了解。</p><p>但是这个平板就是全新的系统，推测原因是国外和国内版本的rom混刷导致的。</p><h2 id=搜索到的解决办法>搜索到的解决办法：</h2><p>1. 网上常见方法， 连续点击7次buildnumber或者叫序列号之后，开启开发者模式，然后找到
+oem unlock enable，开启，之后就可以了。</p><p>2. 但是我在该平板的开发者选项里找不到这个选项。需要首先
+2.1 进入recovery， 格式化cache，format factory，然后重启。
+2.2 初始化设置，不要开启远程保护&rsquo;remote protection&rsquo;(实际我没看到这个选项)
+2.3 进入设置-》账号-》google，登陆
+2.4 进入开发者选项，应该就oem unlock选项了。</p><p>上述方法均对我的情况无效。由于猜测是混刷国内外rom导致的，由于购买的是海外版，所以决定刷回
 海外版。但是EMUI4.0之后，无法在设置->系统更新中选取本地更新包更新。只能用同时按住音量+-键
-的同时开机的三键强刷方式更新系统。</p>
-<p>值得注意的是，竟然不能在连着usb线的同时强刷，否则会卡在5%正在安装。</p>
-<h2 id=具体过程>具体过程：</h2>
-<p>1、刷B213退回B019中间包（花粉论坛上有）:由于是欧版刷的国内包B213，发现直接刷欧版或者国际版
+的同时开机的三键强刷方式更新系统。</p><p>值得注意的是，竟然不能在连着usb线的同时强刷，否则会卡在5%正在安装。</p><h2 id=具体过程>具体过程：</h2><p>1、刷B213退回B019中间包（花粉论坛上有）:由于是欧版刷的国内包B213，发现直接刷欧版或者国际版
 的B213失败（<a href=https://boycracked.com/2017/05/05/official-huawei-mediapad-m2-8-0-m2-801w-stock-rom-firmware/>国外固件系列地址</a>）
 ，所以刷回中文B019然后强刷国际版B213。
 2、安装google play，登陆账户，然后不论是系统设置还是google设置都关闭“找回”功能。
@@ -178,132 +32,48 @@ $&gt;strings nvme | grep WVDEVID -B 1  # 得到16位纯数字解锁码</code></p
 还是存在，所以没法用fastboot flash方式刷机。不过bootloader已经解了。
 4、在正常系统中B019, 通过kingroot root成功， 然后使用adb shell，直接将twrp写入recovery分区，
 然后由于bootloader锁没有了，就可以随意刷了。当然也就可以刷入欧版的recovery回复到我海外版
-的mediapad的官方固件。</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
-</span><span class=lnt>2
-</span><span class=lnt>3
-</span><span class=lnt>4
-</span><span class=lnt>5
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>host$&gt;adb push twrp.img /data/local/tmp/recovery.img
+的mediapad的官方固件。</p><pre><code>host$&gt;adb push twrp.img /data/local/tmp/recovery.img
 host$&gt;adb shell
 android&gt;$ su # 记得在界面中确认允许权限申请
 android&gt;# dd if=/data/loca/tmp/recovery.img \
-             of=/dev/block/platform/hi_mci.0/by-name/recovery</code></pre></td></tr></table>
-</div>
-</div>
-<h2 id=从官方updateapp中提取recoveryimg>从官方UPDATE.APP中提取recovery.img</h2>
-<p>xda论坛上有个splitupdate.pl的脚本，也有huawei-extractor.exe的可安装软件，都可以方便的
-将UPDATE.APP中的文件提取出来。通过perl脚本，提取到了RECOVERY.img。</p>
-<p>使用file命令查看该RECOVER.img发现类型是<code>data</code>，而对于twrp或者从别的地方拿到的recovery
+             of=/dev/block/platform/hi_mci.0/by-name/recovery
+</code></pre><h2 id=从官方updateapp中提取recoveryimg>从官方UPDATE.APP中提取recovery.img</h2><p>xda论坛上有个splitupdate.pl的脚本，也有huawei-extractor.exe的可安装软件，都可以方便的
+将UPDATE.APP中的文件提取出来。通过perl脚本，提取到了RECOVERY.img。</p><p>使用file命令查看该RECOVER.img发现类型是<code>data</code>，而对于twrp或者从别的地方拿到的recovery
 的类型却是<code>Android bootimg</code>，采用vim分别打开两种类型的recover，用<code>%!xxd</code>转化为16进制，
 发现从UPDATE.APP中提取出来的recovery.img有一个偏移之后，和类型为<code>Android bootimg</code>的
 recovery就一模一样了，具体的偏移量需要用vim打开16进制后观察得到。使用dd得到同为<code>android bootimg</code>
-类型的recovery</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
-</span><span class=lnt>2
-</span><span class=lnt>3
-</span><span class=lnt>4
-</span><span class=lnt>5
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>dd if=./RECOVERY.img of=./androidbootimg-recovery.img bs=16 skip=256
+类型的recovery</p><pre><code>dd if=./RECOVERY.img of=./androidbootimg-recovery.img bs=16 skip=256
 # 小技巧，vim 用xxd转换的16进制模式，每行是16字节，看行号就能知道要跳过多少内容
 # 完成之后用file命令查看一下
 $file androidbootimg-recovery.img
-androidbootimg-recovery.img: Android bootimg xxxx # 成功</code></pre></td></tr></table>
-</div>
-</div>
-<p>PS:</p>
-<p>进入工程模式方法：在计算器中，横屏模式下，输入()()2846579()()=，可以进行“工厂级恢复恢复出厂设置”，
-或者说“低级格式化”。</p>
-<p><code>fastboot oem frp-unlock FRPKEY</code>可以解锁frp，但是需要这个key，不想买所以没弄。</p>
-<p>PPS:</p>
-<p>果然是瞎折腾，由于混刷国内外rom导致的FRP，想刷回国外版，但是在recovery界面提示“版本信息校验失败”，
+androidbootimg-recovery.img: Android bootimg xxxx # 成功
+</code></pre><p>PS:</p><p>进入工程模式方法：在计算器中，横屏模式下，输入()()2846579()()=，可以进行“工厂级恢复恢复出厂设置”，
+或者说“低级格式化”。</p><p><code>fastboot oem frp-unlock FRPKEY</code>可以解锁frp，但是需要这个key，不想买所以没弄。</p><p>PPS:</p><p>果然是瞎折腾，由于混刷国内外rom导致的FRP，想刷回国外版，但是在recovery界面提示“版本信息校验失败”，
 无法完成。由于刷回了b019, 所以可以root并重启后root仍然存在。其实到这里，折腾这件事的初衷就可以达到了，
 通过adb shell进入系统，用dd写入想要刷如的第三方recovery，并且重启也确实可以进入了。那么就可以
-刷入gapps和xposed以及supersu这些东西了。</p>
-<p>但是不作不死，看着fastboot界面的FRP lock就不爽，于是想直接用dd将UPDATE.app里解出来的分区一个个
+刷入gapps和xposed以及supersu这些东西了。</p><p>但是不作不死，看着fastboot界面的FRP lock就不爽，于是想直接用dd将UPDATE.app里解出来的分区一个个
 的写进去。但是忘了极为重要的事情——解出来的分区并不是最终写入的内容，前面有一定长度的头文件，就像
 上面说的recovery.img的处理部分所说的。结果就是写入的各个分区镜像都是错误内容， 然后开不了机变砖了。
 电源键按了毫无反应，也没法强刷，很可能是uboot（类似）或者主板新片坏了。网上查换主板1400, 加上屏幕
-原来就摔裂了，干脆扔掉了。。。。</p>
-</div>
-<div class=post-copyright>
-<p class=copyright-item>
-<span class=item-title>文章作者</span>
-<span class=item-content>thinkeryu</span>
-</p>
-<p class=copyright-item>
-<span class=item-title>上次更新</span>
-<span class=item-content>
-2017-12-14
-</span>
-</p>
-</div>
-<footer class=post-footer>
-<div class=post-tags>
-<a href=/tags/android/>android</a>
-<a href=/tags/linux/>linux</a>
-</div>
-<nav class=post-nav>
-<a class=prev href=/post/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98ari2c%E5%8A%A0%E9%80%9F%E4%B8%8B%E8%BD%BD/>
-<i class="iconfont icon-left"></i>
+原来就摔裂了，干脆扔掉了。。。。</p></div><div class=post-copyright><p class=copyright-item><span class=item-title>文章作者</span>
+<span class=item-content>thinkeryu</span></p><p class=copyright-item><span class=item-title>上次更新</span>
+<span class=item-content>2017-12-14</span></p></div><footer class=post-footer><div class=post-tags><a href=/tags/android/>android</a>
+<a href=/tags/linux/>linux</a></div><nav class=post-nav><a class=prev href=/post/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98ari2c%E5%8A%A0%E9%80%9F%E4%B8%8B%E8%BD%BD/><i class="iconfont icon-left"></i>
 <span class="prev-text nav-default">百度网盘ari2c加速下载</span>
-<span class="prev-text nav-mobile">上一篇</span>
-</a>
-<a class=next href=/post/hugo-katex-support/>
-<span class="next-text nav-default">Hugo Katex Support</span>
+<span class="prev-text nav-mobile">上一篇</span></a>
+<a class=next href=/post/hugo-katex-support/><span class="next-text nav-default">Hugo Katex Support</span>
 <span class="next-text nav-mobile">下一篇</span>
-<i class="iconfont icon-right"></i>
-</a>
-</nav>
-</footer>
-</article>
-</div>
-<div id=gitalk-container></div>
-<link rel=stylesheet href=https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css crossorigin=anonymous>
-<script src=https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js crossorigin=anonymous></script>
-<script type=text/javascript>var gitalk=new Gitalk({id:'2017-12-14 00:32:13 \u002b0800 \u002b0800',title:'华为m2 801w从本机获取解锁码并解决frp问题',clientID:'e6672c053ad6c6056f71',clientSecret:'c13fdda944329c62818b9bbf0b00a23658614f3e',repo:'blog',owner:'linuxhenhao',admin:['linuxhenhao'],body:decodeURI(location.href)});gitalk.render('gitalk-container')</script>
-<noscript>Please enable JavaScript to view the <a href=https://github.com/gitalk/gitalk>comments powered by gitalk.</a></noscript>
-</div>
-</main>
-<footer id=footer class=footer>
-<div class=social-links>
-<a href=https://www.linkedin.com/in/yuhuang-keepmoving class="iconfont icon-linkedin" title=linkedin></a>
+<i class="iconfont icon-right"></i></a></nav></footer></article></div><div id=gitalk-container></div><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css crossorigin=anonymous><script src=https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js crossorigin=anonymous></script>
+<script type=text/javascript>var gitalk=new Gitalk({id:"2017-12-14 00:32:13 \u002b0800 \u002b0800",title:"华为m2 801w从本机获取解锁码并解决frp问题",clientID:"e6672c053ad6c6056f71",clientSecret:"c13fdda944329c62818b9bbf0b00a23658614f3e",repo:"blog",owner:"linuxhenhao",admin:["linuxhenhao"],body:decodeURI(location.href)});gitalk.render("gitalk-container")</script><noscript>Please enable JavaScript to view the <a href=https://github.com/gitalk/gitalk>comments powered by gitalk.</a></noscript></div></main><footer id=footer class=footer><div class=social-links><a href=https://www.linkedin.com/in/yuhuang-keepmoving class="iconfont icon-linkedin" title=linkedin></a>
 <a href=https://github.com/linuxhenhao class="iconfont icon-github" title=github></a>
-<a href=https://blog.huangyu.me/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a>
-</div>
-<div class=copyright>
-<span class=power-by>
-由 <a class=hexo-link href=https://gohugo.io>Hugo</a> 强力驱动
-</span>
+<a href=https://blog.huangyu.me/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a></div><div class=copyright><span class=power-by>由 <a class=hexo-link href=https://gohugo.io>Hugo</a> 强力驱动</span>
 <span class=division>|</span>
-<span class=theme-info>
-主题 -
-<a class=theme-link href=https://github.com/olOwOlo/hugo-theme-even>Even</a>
-</span>
-<span class=copyright-year>
-&copy;
+<span class=theme-info>主题 -
+<a class=theme-link href=https://github.com/olOwOlo/hugo-theme-even>Even</a></span>
+<span class=copyright-year>&copy;
 2017 -
-2021<span class=heart><i class="iconfont icon-heart"></i></span><span>thinkeryu</span>
-</span>
-</div>
-</footer>
-<div class=back-to-top id=back-to-top>
-<i class="iconfont icon-up"></i>
-</div>
-</div>
-<script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script>
+2022<span class=heart><i class="iconfont icon-heart"></i></span><span>thinkeryu</span></span></div></footer><div class=back-to-top id=back-to-top><i class="iconfont icon-up"></i></div></div><script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script>
 <script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script>
 <script src=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin=anonymous></script>
-<script type=text/javascript src=/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js></script>
-<script type=text/javascript>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}}</script>
-<script async src=https://cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js integrity="sha256-HGLuEfFcsUJGhvB8cQ8nr0gai9EucOOaIxFw7qxmd+w=" crossorigin=anonymous></script>
-</body>
-</html>
+<script type=text/javascript src=/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js></script>
+<script type=text/javascript>window.MathJax={tex:{inlineMath:[["$","$"],["\\(","\\)"]]}}</script><script async src=https://cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js integrity="sha256-HGLuEfFcsUJGhvB8cQ8nr0gai9EucOOaIxFw7qxmd+w=" crossorigin=anonymous></script></body></html>

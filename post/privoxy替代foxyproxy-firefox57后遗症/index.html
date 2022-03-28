@@ -1,236 +1,56 @@
-<!doctype html><html lang=zh-cn>
-<head>
-<meta charset=utf-8>
-<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
-<title>Privoxy替代foxyproxy Firefox57后遗症 - ThinkerYu的博客</title>
-<meta name=renderer content="webkit">
-<meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1">
-<meta http-equiv=cache-control content="no-transform">
-<meta http-equiv=cache-control content="no-siteapp">
-<meta name=theme-color content="#f8f5ec">
-<meta name=msapplication-navbutton-color content="#f8f5ec">
-<meta name=apple-mobile-web-app-capable content="yes">
-<meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec">
-<meta name=author content="thinkeryu"><meta name=description content="正常的网络访问之前使用的是foxyproxy+gfwlist-rules的方式实现的。在firefox更新到57之后，扩展 大变革，原有的foxyproxy不能用了，而新的foxyproxy功能明显很弱。虽然采用import之前配置文件的 方式可以将之前包含有gfwlist-rules的配置导入，但是能够明显感觉到速度很慢。为了能够无感觉的对block 和非block的网络进行访问，寻找privoxy+gfwlist作为替代，将整个浏览器的代理设为privoxy，从而将 选择性代理的任务交给privoxy。
-"><meta name=keywords content="privoxy,firefox57,foxyproxy">
-<meta name=generator content="Hugo 0.88.1 with theme even">
-<link rel=canonical href=https://blog.huangyu.me/post/privoxy%E6%9B%BF%E4%BB%A3foxyproxy-firefox57%E5%90%8E%E9%81%97%E7%97%87/>
-<link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png>
-<link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
-<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png>
-<link rel=manifest href=/manifest.json>
-<link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5>
-<link href=/sass/main.min.b5a744db6de49a86cadafb3b70f555ab443f83c307a483402259e94726b045ff.css rel=stylesheet>
-<link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous>
-<meta property="og:title" content="Privoxy替代foxyproxy Firefox57后遗症">
-<meta property="og:description" content="正常的网络访问之前使用的是foxyproxy+gfwlist-rules的方式实现的。在firefox更新到57之后，扩展
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><title>Privoxy替代foxyproxy Firefox57后遗症 - ThinkerYu的博客</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=cache-control content="no-transform"><meta http-equiv=cache-control content="no-siteapp"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=author content="thinkeryu"><meta name=description content="正常的网络访问之前使用的是foxyproxy+gfwlist-rules的方式实现的。在firefox更新到57之后，扩展 大变革，原有的foxyproxy不能用了，而新的foxyproxy功能明显很弱。虽然采用import之前配置文件的 方式可以将之前包含有gfwlist-rules的配置导入，但是能够明显感觉到速度很慢。为了能够无感觉的对block 和非block的网络进行访问，寻找privoxy+gfwlist作为替代，将整个浏览器的代理设为privoxy，从而将 选择性代理的任务交给privoxy。
+"><meta name=keywords content="privoxy,firefox57,foxyproxy"><meta name=generator content="Hugo 0.96.0 with theme even"><link rel=canonical href=https://blog.huangyu.me/post/privoxy%E6%9B%BF%E4%BB%A3foxyproxy-firefox57%E5%90%8E%E9%81%97%E7%97%87/><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/manifest.json><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link href=/sass/main.min.b5a744db6de49a86cadafb3b70f555ab443f83c307a483402259e94726b045ff.css rel=stylesheet><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous><meta property="og:title" content="Privoxy替代foxyproxy Firefox57后遗症"><meta property="og:description" content="正常的网络访问之前使用的是foxyproxy+gfwlist-rules的方式实现的。在firefox更新到57之后，扩展
 大变革，原有的foxyproxy不能用了，而新的foxyproxy功能明显很弱。虽然采用import之前配置文件的
 方式可以将之前包含有gfwlist-rules的配置导入，但是能够明显感觉到速度很慢。为了能够无感觉的对block
 和非block的网络进行访问，寻找privoxy+gfwlist作为替代，将整个浏览器的代理设为privoxy，从而将
-选择性代理的任务交给privoxy。">
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://blog.huangyu.me/post/privoxy%E6%9B%BF%E4%BB%A3foxyproxy-firefox57%E5%90%8E%E9%81%97%E7%97%87/"><meta property="article:section" content="post">
-<meta property="article:published_time" content="2018-01-14T16:28:08+08:00">
-<meta property="article:modified_time" content="2018-01-14T16:28:08+08:00">
-<meta itemprop=name content="Privoxy替代foxyproxy Firefox57后遗症">
-<meta itemprop=description content="正常的网络访问之前使用的是foxyproxy+gfwlist-rules的方式实现的。在firefox更新到57之后，扩展
+选择性代理的任务交给privoxy。"><meta property="og:type" content="article"><meta property="og:url" content="https://blog.huangyu.me/post/privoxy%E6%9B%BF%E4%BB%A3foxyproxy-firefox57%E5%90%8E%E9%81%97%E7%97%87/"><meta property="article:section" content="post"><meta property="article:published_time" content="2018-01-14T16:28:08+08:00"><meta property="article:modified_time" content="2018-01-14T16:28:08+08:00"><meta itemprop=name content="Privoxy替代foxyproxy Firefox57后遗症"><meta itemprop=description content="正常的网络访问之前使用的是foxyproxy+gfwlist-rules的方式实现的。在firefox更新到57之后，扩展
 大变革，原有的foxyproxy不能用了，而新的foxyproxy功能明显很弱。虽然采用import之前配置文件的
 方式可以将之前包含有gfwlist-rules的配置导入，但是能够明显感觉到速度很慢。为了能够无感觉的对block
 和非block的网络进行访问，寻找privoxy+gfwlist作为替代，将整个浏览器的代理设为privoxy，从而将
-选择性代理的任务交给privoxy。"><meta itemprop=datePublished content="2018-01-14T16:28:08+08:00">
-<meta itemprop=dateModified content="2018-01-14T16:28:08+08:00">
-<meta itemprop=wordCount content="988">
-<meta itemprop=keywords content="网络访问,"><meta name=twitter:card content="summary">
-<meta name=twitter:title content="Privoxy替代foxyproxy Firefox57后遗症">
-<meta name=twitter:description content="正常的网络访问之前使用的是foxyproxy+gfwlist-rules的方式实现的。在firefox更新到57之后，扩展
+选择性代理的任务交给privoxy。"><meta itemprop=datePublished content="2018-01-14T16:28:08+08:00"><meta itemprop=dateModified content="2018-01-14T16:28:08+08:00"><meta itemprop=wordCount content="982"><meta itemprop=keywords content="网络访问,"><meta name=twitter:card content="summary"><meta name=twitter:title content="Privoxy替代foxyproxy Firefox57后遗症"><meta name=twitter:description content="正常的网络访问之前使用的是foxyproxy+gfwlist-rules的方式实现的。在firefox更新到57之后，扩展
 大变革，原有的foxyproxy不能用了，而新的foxyproxy功能明显很弱。虽然采用import之前配置文件的
 方式可以将之前包含有gfwlist-rules的配置导入，但是能够明显感觉到速度很慢。为了能够无感觉的对block
 和非block的网络进行访问，寻找privoxy+gfwlist作为替代，将整个浏览器的代理设为privoxy，从而将
 选择性代理的任务交给privoxy。"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
-<script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]-->
-</head>
-<body>
-<div id=mobile-navbar class=mobile-navbar>
-<div class=mobile-header-logo>
-<a href=/ class=logo>ThinkerYu的博客</a>
-</div>
-<div class=mobile-navbar-icon>
+<script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>ThinkerYu的博客</a></div><div class=mobile-navbar-icon><span></span>
 <span></span>
-<span></span>
-<span></span>
-</div>
-</div>
-<nav id=mobile-menu class="mobile-menu slideout-menu">
-<ul class=mobile-menu-list>
-<a href=/>
-<li class=mobile-menu-item>Home</li>
-</a><a href=/post/>
-<li class=mobile-menu-item>Archives</li>
-</a><a href=/tags/>
-<li class=mobile-menu-item>Tags</li>
-</a><a href=/categories/>
-<li class=mobile-menu-item>Categories</li>
-</a>
-</ul>
-</nav>
-<div class=container id=mobile-panel>
-<header id=header class=header>
-<div class=logo-wrapper>
-<a href=/ class=logo>ThinkerYu的博客</a>
-</div>
-<nav class=site-navbar>
-<ul id=menu class=menu>
-<li class=menu-item>
-<a class=menu-item-link href=/>Home</a>
-</li><li class=menu-item>
-<a class=menu-item-link href=/post/>Archives</a>
-</li><li class=menu-item>
-<a class=menu-item-link href=/tags/>Tags</a>
-</li><li class=menu-item>
-<a class=menu-item-link href=/categories/>Categories</a>
-</li>
-</ul>
-</nav>
-</header>
-<main id=main class=main>
-<div class=content-wrapper>
-<div id=content class=content>
-<article class=post>
-<header class=post-header>
-<h1 class=post-title>Privoxy替代foxyproxy Firefox57后遗症</h1>
-<div class=post-meta>
-<span class=post-time> 2018-01-14 </span>
-<div class=post-category>
-<a href=/categories/network/> network </a>
-</div>
-</div>
-</header>
-<div class=post-toc id=post-toc>
-<h2 class=post-toc-title>文章目录</h2>
-<div class="post-toc-content always-active">
-</div>
-</div>
-<div class=post-content>
-<p>正常的网络访问之前使用的是foxyproxy+gfwlist-rules的方式实现的。在firefox更新到57之后，扩展
+<span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><a href=/><li class=mobile-menu-item>Home</li></a><a href=/post/><li class=mobile-menu-item>Archives</li></a><a href=/tags/><li class=mobile-menu-item>Tags</li></a><a href=/categories/><li class=mobile-menu-item>Categories</li></a></ul></nav><div class=container id=mobile-panel><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>ThinkerYu的博客</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/categories/>Categories</a></li></ul></nav></header><main id=main class=main><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>Privoxy替代foxyproxy Firefox57后遗症</h1><div class=post-meta><span class=post-time>2018-01-14</span><div class=post-category><a href=/categories/network/>network</a></div></div></header><div class=post-toc id=post-toc><h2 class=post-toc-title>文章目录</h2><div class="post-toc-content always-active"><nav id=TableOfContents><ul><li><ul><li><a href=#1浏览器方面-直接设置或者使用foxyproxy>1.浏览器方面-直接设置或者使用foxyproxy</a></li><li><a href=#2-privoxy>2. privoxy</a><ul><li><a href=#21-生成gfwlistaction>2.1 生成gfwlist.action</a></li><li><a href=#22-修改privoxy的config>2.2 修改privoxy的config</a></li></ul></li></ul></li></ul></nav></div></div><div class=post-content><p>正常的网络访问之前使用的是foxyproxy+gfwlist-rules的方式实现的。在firefox更新到57之后，扩展
 大变革，原有的foxyproxy不能用了，而新的foxyproxy功能明显很弱。虽然采用import之前配置文件的
 方式可以将之前包含有gfwlist-rules的配置导入，但是能够明显感觉到速度很慢。为了能够无感觉的对block
 和非block的网络进行访问，寻找privoxy+gfwlist作为替代，将整个浏览器的代理设为privoxy，从而将
-选择性代理的任务交给privoxy。</p>
-<h2 id=1浏览器方面直接设置或者使用foxyproxy>1.浏览器方面-直接设置或者使用foxyproxy</h2>
-<p>如前所述，firefox57之后的foxyproxy需要重写，目前<code>2018-1-14</code>功能太弱，所以浏览器方面可以将
+选择性代理的任务交给privoxy。</p><h2 id=1浏览器方面-直接设置或者使用foxyproxy>1.浏览器方面-直接设置或者使用foxyproxy</h2><p>如前所述，firefox57之后的foxyproxy需要重写，目前<code>2018-1-14</code>功能太弱，所以浏览器方面可以将
 所有的网络访问都经过privoxy代理，或者仍然可以使用foxyproxy，在完全经由代理时选择ss，而不需要
 完全代理时使用privoxy。这里选择使用foxyproxy，因为有时候即使不使用代理就能够访问的网站也需要
-使用代理访问加快速度，总之能够更灵活。</p>
-<p>关于privoxy代理使用，通常默认的监听位置是127.0.0.1:8118，为http代理，在foxyproxy或者浏览器
-自带代理设置处设置即可。</p>
-<h2 id=2-privoxy>2. privoxy</h2>
-<h3 id=21-生成gfwlistaction>2.1 生成gfwlist.action</h3>
-<p>privoxy会根据配置文件选择相应的动作，为了实现自动选择性代理，需要生成gfwlist.action。这里有个
-<a href=1>gfwlist2privoxy</a>的工具可以使用。</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>gfwlist2privoxy -f gfwlist.action -p 127.0.0.1:1080 -t socks5</code></pre></td></tr></table>
-</div>
-</div>
-<p>上述命令自动从github上的gfwlist项目获取最新的gfwlist并生成相应的action配置文件，通过<code>-p</code>配置
-上级代理的ip和端口，通过<code>-t</code>配置代理的类型。如此，所有gfwlist中的网址都会使用设置的代理访问。</p>
-<p>需要将生成的gfwlist.action副指导privoxy的配置文件夹中。</p>
-<h3 id=22-修改privoxy的config>2.2 修改privoxy的config</h3>
-<p>将privoxy的配置文件中的config进行修改，将生成的gfwlist.action添加到actionfiles当中去。
-找到默认配置文件中的<code>actionsfile</code>段，将gfwlist.action添加。</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
-</span><span class=lnt>2
-</span><span class=lnt>3
-</span><span class=lnt>4
-</span><span class=lnt>5
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>actionsfile match-all.action
+使用代理访问加快速度，总之能够更灵活。</p><p>关于privoxy代理使用，通常默认的监听位置是127.0.0.1:8118，为http代理，在foxyproxy或者浏览器
+自带代理设置处设置即可。</p><h2 id=2-privoxy>2. privoxy</h2><h3 id=21-生成gfwlistaction>2.1 生成gfwlist.action</h3><p>privoxy会根据配置文件选择相应的动作，为了实现自动选择性代理，需要生成gfwlist.action。这里有个
+<a href=1>gfwlist2privoxy</a>的工具可以使用。</p><pre><code>gfwlist2privoxy -f gfwlist.action -p 127.0.0.1:1080 -t socks5
+</code></pre><p>上述命令自动从github上的gfwlist项目获取最新的gfwlist并生成相应的action配置文件，通过<code>-p</code>配置
+上级代理的ip和端口，通过<code>-t</code>配置代理的类型。如此，所有gfwlist中的网址都会使用设置的代理访问。</p><p>需要将生成的gfwlist.action副指导privoxy的配置文件夹中。</p><h3 id=22-修改privoxy的config>2.2 修改privoxy的config</h3><p>将privoxy的配置文件中的config进行修改，将生成的gfwlist.action添加到actionfiles当中去。
+找到默认配置文件中的<code>actionsfile</code>段，将gfwlist.action添加。</p><pre><code>actionsfile match-all.action
 actionsfile default.action
 actionsfile user.action
 # 添加 gfwlist.action
-actionsfile gfwlist.action</code></pre></td></tr></table>
-</div>
-</div>
-<p>重启privoxy，大功告成！效率很高，感觉不到规则匹配的耗时。</p>
-<p>修改：
+actionsfile gfwlist.action
+</code></pre><p>重启privoxy，大功告成！效率很高，感觉不到规则匹配的耗时。</p><p>修改：
 添加gfwlist2privoxy的repo地址
-<a href=https://github.com/snachx/gfwlist2privoxy>1</a></p>
-</div>
-<div class=post-copyright>
-<p class=copyright-item>
-<span class=item-title>文章作者</span>
-<span class=item-content>thinkeryu</span>
-</p>
-<p class=copyright-item>
-<span class=item-title>上次更新</span>
-<span class=item-content>
-2018-01-14
-</span>
-</p>
-</div>
-<footer class=post-footer>
-<div class=post-tags>
-<a href=/tags/%E7%BD%91%E7%BB%9C%E8%AE%BF%E9%97%AE/>网络访问</a>
-</div>
-<nav class=post-nav>
-<a class=prev href=/post/pyinstaller%E6%89%93%E5%8C%85/>
-<i class="iconfont icon-left"></i>
+<a href=https://github.com/snachx/gfwlist2privoxy>1</a></p></div><div class=post-copyright><p class=copyright-item><span class=item-title>文章作者</span>
+<span class=item-content>thinkeryu</span></p><p class=copyright-item><span class=item-title>上次更新</span>
+<span class=item-content>2018-01-14</span></p></div><footer class=post-footer><div class=post-tags><a href=/tags/%E7%BD%91%E7%BB%9C%E8%AE%BF%E9%97%AE/>网络访问</a></div><nav class=post-nav><a class=prev href=/post/pyinstaller%E6%89%93%E5%8C%85/><i class="iconfont icon-left"></i>
 <span class="prev-text nav-default">Python软件打包分发</span>
-<span class="prev-text nav-mobile">上一篇</span>
-</a>
-<a class=next href=/post/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98ari2c%E5%8A%A0%E9%80%9F%E4%B8%8B%E8%BD%BD/>
-<span class="next-text nav-default">百度网盘ari2c加速下载</span>
+<span class="prev-text nav-mobile">上一篇</span></a>
+<a class=next href=/post/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98ari2c%E5%8A%A0%E9%80%9F%E4%B8%8B%E8%BD%BD/><span class="next-text nav-default">百度网盘ari2c加速下载</span>
 <span class="next-text nav-mobile">下一篇</span>
-<i class="iconfont icon-right"></i>
-</a>
-</nav>
-</footer>
-</article>
-</div>
-<div id=gitalk-container></div>
-<link rel=stylesheet href=https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css crossorigin=anonymous>
-<script src=https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js crossorigin=anonymous></script>
-<script type=text/javascript>var gitalk=new Gitalk({id:'2018-01-14 16:28:08 \u002b0800 \u002b0800',title:'Privoxy替代foxyproxy Firefox57后遗症',clientID:'e6672c053ad6c6056f71',clientSecret:'c13fdda944329c62818b9bbf0b00a23658614f3e',repo:'blog',owner:'linuxhenhao',admin:['linuxhenhao'],body:decodeURI(location.href)});gitalk.render('gitalk-container')</script>
-<noscript>Please enable JavaScript to view the <a href=https://github.com/gitalk/gitalk>comments powered by gitalk.</a></noscript>
-</div>
-</main>
-<footer id=footer class=footer>
-<div class=social-links>
-<a href=https://www.linkedin.com/in/yuhuang-keepmoving class="iconfont icon-linkedin" title=linkedin></a>
+<i class="iconfont icon-right"></i></a></nav></footer></article></div><div id=gitalk-container></div><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css crossorigin=anonymous><script src=https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js crossorigin=anonymous></script>
+<script type=text/javascript>var gitalk=new Gitalk({id:"2018-01-14 16:28:08 \u002b0800 \u002b0800",title:"Privoxy替代foxyproxy Firefox57后遗症",clientID:"e6672c053ad6c6056f71",clientSecret:"c13fdda944329c62818b9bbf0b00a23658614f3e",repo:"blog",owner:"linuxhenhao",admin:["linuxhenhao"],body:decodeURI(location.href)});gitalk.render("gitalk-container")</script><noscript>Please enable JavaScript to view the <a href=https://github.com/gitalk/gitalk>comments powered by gitalk.</a></noscript></div></main><footer id=footer class=footer><div class=social-links><a href=https://www.linkedin.com/in/yuhuang-keepmoving class="iconfont icon-linkedin" title=linkedin></a>
 <a href=https://github.com/linuxhenhao class="iconfont icon-github" title=github></a>
-<a href=https://blog.huangyu.me/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a>
-</div>
-<div class=copyright>
-<span class=power-by>
-由 <a class=hexo-link href=https://gohugo.io>Hugo</a> 强力驱动
-</span>
+<a href=https://blog.huangyu.me/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a></div><div class=copyright><span class=power-by>由 <a class=hexo-link href=https://gohugo.io>Hugo</a> 强力驱动</span>
 <span class=division>|</span>
-<span class=theme-info>
-主题 -
-<a class=theme-link href=https://github.com/olOwOlo/hugo-theme-even>Even</a>
-</span>
-<span class=copyright-year>
-&copy;
+<span class=theme-info>主题 -
+<a class=theme-link href=https://github.com/olOwOlo/hugo-theme-even>Even</a></span>
+<span class=copyright-year>&copy;
 2017 -
-2021<span class=heart><i class="iconfont icon-heart"></i></span><span>thinkeryu</span>
-</span>
-</div>
-</footer>
-<div class=back-to-top id=back-to-top>
-<i class="iconfont icon-up"></i>
-</div>
-</div>
-<script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script>
+2022<span class=heart><i class="iconfont icon-heart"></i></span><span>thinkeryu</span></span></div></footer><div class=back-to-top id=back-to-top><i class="iconfont icon-up"></i></div></div><script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script>
 <script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script>
 <script src=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin=anonymous></script>
-<script type=text/javascript src=/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js></script>
-<script type=text/javascript>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}}</script>
-<script async src=https://cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js integrity="sha256-HGLuEfFcsUJGhvB8cQ8nr0gai9EucOOaIxFw7qxmd+w=" crossorigin=anonymous></script>
-</body>
-</html>
+<script type=text/javascript src=/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js></script>
+<script type=text/javascript>window.MathJax={tex:{inlineMath:[["$","$"],["\\(","\\)"]]}}</script><script async src=https://cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js integrity="sha256-HGLuEfFcsUJGhvB8cQ8nr0gai9EucOOaIxFw7qxmd+w=" crossorigin=anonymous></script></body></html>

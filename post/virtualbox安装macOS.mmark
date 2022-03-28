@@ -1,0 +1,48 @@
++++
+categories = ["operating_system"]
+date = "2017-06-12T19:58:48+08:00"
+draft = [false]
+keywords = ["Sierra", "virtualbox", "linux"]
+tags = ["virtualbox","macos"]
+title = "virtualbox安装macOS"
+
++++
+
+在kvm中安装完Sierra之后，使用起来明显不如在virtualbox中安装的OSX系统顺滑，而且不能识别共享过去的U盘，iphone之类
+的，原因可能是qemu的usb controller实现在mac os系统中没有相应的驱动，所以实际上还是virtualbox里用得舒服。
+<!--more-->
+
+找出原来写的一个virtualbox安装mac的过程，懒得翻译了，内容都来源于[这个github repo](https://github.com/geerlingguy/macos-virtualbox-vm)
+实践整理了一下过程，生成可安装的iso和第四步设置virtualbox的一些参数是关键，安装之后可以共享U盘，iphone，鼠标可以直接在host和虚拟机
+的mac os桌面间移动，不得不说比qemu使用起来还是方便得多。
+
+some tricks should be done for installing osx system in virtualbox.
+
+1. using an existing osx system to convert install xxx.app to iso
+download the build script here:
+https://github.com/geerlingguy/macos-virtualbox-vm
+
+2. set up a new vm in virtualbox
+	->1 select type "mac os x", version: newest or corresponding version
+	->2 harddisk size should set to be large enough eg: 70g
+3. set up the builded new vm
+	->1 memory,video memory 128M, num of cpus
+
+4. run these command seperately in terminal one by one(should not using script, I tried, ended in errors):
+vboxmanage modifyvm "VM Name" --cpuidset 00000001 000306a9 00020800 80000201 178bfbff
+vboxmanage setextradata "VM Name" "VBoxInternal/Devices/efi/0/Config/DmiSystemProduct" "MacBookPro11,3"
+vboxmanage setextradata "VM Name" "VBoxInternal/Devices/efi/0/Config/DmiSystemVersion" "1.0"
+vboxmanage setextradata "VM Name" "VBoxInternal/Devices/efi/0/Config/DmiBoardProduct" "Iloveapple"
+vboxmanage setextradata "VM Name" "VBoxInternal/Devices/smc/0/Config/DeviceKey" "ourhardworkbythesewordsguardedpleasedontsteal(c)AppleComputerInc"
+vboxmanage setextradata "VM Name" "VBoxInternal/Devices/smc/0/Config/GetKeyFromRealSMC" 1
+
+5. start vm and choose iso file build in step 1,run and install.
+
+	Run the following VBoxManage command:
+
+	VBoxManage setextradata "[VM_NAME]" VBoxInternal2/EfiGopMode N
+
+Replace [VM_NAME] with the name of your Virtual Machine. Replace N with one of 0,1,2,3,4,5. These numbers correspond to the screen resolutions 640x480, 800x600, 1024x768, 1280x1024, 1440x900, 1920x1200 screen resolution, respectively.
+7. enjoy!
+
+<!--more-->

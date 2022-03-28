@@ -1,151 +1,38 @@
-<!doctype html><html lang=zh-cn>
-<head>
-<meta charset=utf-8>
-<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
-<title>Ly极简display Manager以及linux桌面启动浅析 - ThinkerYu的博客</title>
-<meta name=renderer content="webkit">
-<meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1">
-<meta http-equiv=cache-control content="no-transform">
-<meta http-equiv=cache-control content="no-siteapp">
-<meta name=theme-color content="#f8f5ec">
-<meta name=msapplication-navbutton-color content="#f8f5ec">
-<meta name=apple-mobile-web-app-capable content="yes">
-<meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec">
-<meta name=author content="thinkeryu"><meta name=description content="作为多年linux老用户，当年也经历过轮着安装不同的linux发行版，轮着试不同的桌面环境的阶段。 最后停在了使用awesome作为桌面环境，很喜欢tiling window manager的简洁高效，可以用键盘 替代大部分鼠标操作的特性。但是之前一直没有找到一个非常和心意的display manager，也就是 平常看到的登陆界面程序。gdm3和lightdm之类的都太重，一段时间之前翻archlinux的wiki找到 了ly这个极简display manager。它用pam作认证，设置一些必须的环境变量，然后用execl运行 xinit命令启动相应的x-window-manager，比如awesome。没有其他多余的东西，依赖也很少。
-"><meta name=keywords content="ly,display manager,desktop startup process">
-<meta name=generator content="Hugo 0.88.1 with theme even">
-<link rel=canonical href=https://blog.huangyu.me/post/ly%E6%9E%81%E7%AE%80display-manager%E4%BB%A5%E5%8F%8Alinux%E6%A1%8C%E9%9D%A2%E5%90%AF%E5%8A%A8%E6%B5%85%E6%9E%90/>
-<link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png>
-<link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
-<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png>
-<link rel=manifest href=/manifest.json>
-<link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5>
-<link href=/sass/main.min.b5a744db6de49a86cadafb3b70f555ab443f83c307a483402259e94726b045ff.css rel=stylesheet>
-<link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous>
-<meta property="og:title" content="Ly极简display Manager以及linux桌面启动浅析">
-<meta property="og:description" content="作为多年linux老用户，当年也经历过轮着安装不同的linux发行版，轮着试不同的桌面环境的阶段。
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><title>Ly极简display Manager以及linux桌面启动浅析 - ThinkerYu的博客</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=cache-control content="no-transform"><meta http-equiv=cache-control content="no-siteapp"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=author content="thinkeryu"><meta name=description content="作为多年linux老用户，当年也经历过轮着安装不同的linux发行版，轮着试不同的桌面环境的阶段。 最后停在了使用awesome作为桌面环境，很喜欢tiling window manager的简洁高效，可以用键盘 替代大部分鼠标操作的特性。但是之前一直没有找到一个非常和心意的display manager，也就是 平常看到的登陆界面程序。gdm3和lightdm之类的都太重，一段时间之前翻archlinux的wiki找到 了ly这个极简display manager。它用pam作认证，设置一些必须的环境变量，然后用execl运行 xinit命令启动相应的x-window-manager，比如awesome。没有其他多余的东西，依赖也很少。
+"><meta name=keywords content="ly,display manager,desktop startup process"><meta name=generator content="Hugo 0.96.0 with theme even"><link rel=canonical href=https://blog.huangyu.me/post/ly%E6%9E%81%E7%AE%80display-manager%E4%BB%A5%E5%8F%8Alinux%E6%A1%8C%E9%9D%A2%E5%90%AF%E5%8A%A8%E6%B5%85%E6%9E%90/><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/manifest.json><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link href=/sass/main.min.b5a744db6de49a86cadafb3b70f555ab443f83c307a483402259e94726b045ff.css rel=stylesheet><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous><meta property="og:title" content="Ly极简display Manager以及linux桌面启动浅析"><meta property="og:description" content="作为多年linux老用户，当年也经历过轮着安装不同的linux发行版，轮着试不同的桌面环境的阶段。
 最后停在了使用awesome作为桌面环境，很喜欢tiling window manager的简洁高效，可以用键盘
 替代大部分鼠标操作的特性。但是之前一直没有找到一个非常和心意的display manager，也就是
 平常看到的登陆界面程序。gdm3和lightdm之类的都太重，一段时间之前翻archlinux的wiki找到
 了ly这个极简display manager。它用pam作认证，设置一些必须的环境变量，然后用execl运行
-xinit命令启动相应的x-window-manager，比如awesome。没有其他多余的东西，依赖也很少。">
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://blog.huangyu.me/post/ly%E6%9E%81%E7%AE%80display-manager%E4%BB%A5%E5%8F%8Alinux%E6%A1%8C%E9%9D%A2%E5%90%AF%E5%8A%A8%E6%B5%85%E6%9E%90/"><meta property="article:section" content="post">
-<meta property="article:published_time" content="2018-02-06T22:23:53+08:00">
-<meta property="article:modified_time" content="2018-02-06T22:23:53+08:00">
-<meta itemprop=name content="Ly极简display Manager以及linux桌面启动浅析">
-<meta itemprop=description content="作为多年linux老用户，当年也经历过轮着安装不同的linux发行版，轮着试不同的桌面环境的阶段。
+xinit命令启动相应的x-window-manager，比如awesome。没有其他多余的东西，依赖也很少。"><meta property="og:type" content="article"><meta property="og:url" content="https://blog.huangyu.me/post/ly%E6%9E%81%E7%AE%80display-manager%E4%BB%A5%E5%8F%8Alinux%E6%A1%8C%E9%9D%A2%E5%90%AF%E5%8A%A8%E6%B5%85%E6%9E%90/"><meta property="article:section" content="post"><meta property="article:published_time" content="2018-02-06T22:23:53+08:00"><meta property="article:modified_time" content="2018-02-06T22:23:53+08:00"><meta itemprop=name content="Ly极简display Manager以及linux桌面启动浅析"><meta itemprop=description content="作为多年linux老用户，当年也经历过轮着安装不同的linux发行版，轮着试不同的桌面环境的阶段。
 最后停在了使用awesome作为桌面环境，很喜欢tiling window manager的简洁高效，可以用键盘
 替代大部分鼠标操作的特性。但是之前一直没有找到一个非常和心意的display manager，也就是
 平常看到的登陆界面程序。gdm3和lightdm之类的都太重，一段时间之前翻archlinux的wiki找到
 了ly这个极简display manager。它用pam作认证，设置一些必须的环境变量，然后用execl运行
-xinit命令启动相应的x-window-manager，比如awesome。没有其他多余的东西，依赖也很少。"><meta itemprop=datePublished content="2018-02-06T22:23:53+08:00">
-<meta itemprop=dateModified content="2018-02-06T22:23:53+08:00">
-<meta itemprop=wordCount content="2449">
-<meta itemprop=keywords content="operating_system,"><meta name=twitter:card content="summary">
-<meta name=twitter:title content="Ly极简display Manager以及linux桌面启动浅析">
-<meta name=twitter:description content="作为多年linux老用户，当年也经历过轮着安装不同的linux发行版，轮着试不同的桌面环境的阶段。
+xinit命令启动相应的x-window-manager，比如awesome。没有其他多余的东西，依赖也很少。"><meta itemprop=datePublished content="2018-02-06T22:23:53+08:00"><meta itemprop=dateModified content="2018-02-06T22:23:53+08:00"><meta itemprop=wordCount content="2446"><meta itemprop=keywords content="operating_system,"><meta name=twitter:card content="summary"><meta name=twitter:title content="Ly极简display Manager以及linux桌面启动浅析"><meta name=twitter:description content="作为多年linux老用户，当年也经历过轮着安装不同的linux发行版，轮着试不同的桌面环境的阶段。
 最后停在了使用awesome作为桌面环境，很喜欢tiling window manager的简洁高效，可以用键盘
 替代大部分鼠标操作的特性。但是之前一直没有找到一个非常和心意的display manager，也就是
 平常看到的登陆界面程序。gdm3和lightdm之类的都太重，一段时间之前翻archlinux的wiki找到
 了ly这个极简display manager。它用pam作认证，设置一些必须的环境变量，然后用execl运行
 xinit命令启动相应的x-window-manager，比如awesome。没有其他多余的东西，依赖也很少。"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
-<script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]-->
-</head>
-<body>
-<div id=mobile-navbar class=mobile-navbar>
-<div class=mobile-header-logo>
-<a href=/ class=logo>ThinkerYu的博客</a>
-</div>
-<div class=mobile-navbar-icon>
+<script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>ThinkerYu的博客</a></div><div class=mobile-navbar-icon><span></span>
 <span></span>
-<span></span>
-<span></span>
-</div>
-</div>
-<nav id=mobile-menu class="mobile-menu slideout-menu">
-<ul class=mobile-menu-list>
-<a href=/>
-<li class=mobile-menu-item>Home</li>
-</a><a href=/post/>
-<li class=mobile-menu-item>Archives</li>
-</a><a href=/tags/>
-<li class=mobile-menu-item>Tags</li>
-</a><a href=/categories/>
-<li class=mobile-menu-item>Categories</li>
-</a>
-</ul>
-</nav>
-<div class=container id=mobile-panel>
-<header id=header class=header>
-<div class=logo-wrapper>
-<a href=/ class=logo>ThinkerYu的博客</a>
-</div>
-<nav class=site-navbar>
-<ul id=menu class=menu>
-<li class=menu-item>
-<a class=menu-item-link href=/>Home</a>
-</li><li class=menu-item>
-<a class=menu-item-link href=/post/>Archives</a>
-</li><li class=menu-item>
-<a class=menu-item-link href=/tags/>Tags</a>
-</li><li class=menu-item>
-<a class=menu-item-link href=/categories/>Categories</a>
-</li>
-</ul>
-</nav>
-</header>
-<main id=main class=main>
-<div class=content-wrapper>
-<div id=content class=content>
-<article class=post>
-<header class=post-header>
-<h1 class=post-title>Ly极简display Manager以及linux桌面启动浅析</h1>
-<div class=post-meta>
-<span class=post-time> 2018-02-06 </span>
-<div class=post-category>
-<a href=/categories/operating_system/> operating_system </a>
-<a href=/categories/linux/> linux </a>
-</div>
-</div>
-</header>
-<div class=post-toc id=post-toc>
-<h2 class=post-toc-title>文章目录</h2>
-<div class="post-toc-content always-active">
-</div>
-</div>
-<div class=post-content>
-<p>作为多年linux老用户，当年也经历过轮着安装不同的linux发行版，轮着试不同的桌面环境的阶段。
+<span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><a href=/><li class=mobile-menu-item>Home</li></a><a href=/post/><li class=mobile-menu-item>Archives</li></a><a href=/tags/><li class=mobile-menu-item>Tags</li></a><a href=/categories/><li class=mobile-menu-item>Categories</li></a></ul></nav><div class=container id=mobile-panel><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>ThinkerYu的博客</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/categories/>Categories</a></li></ul></nav></header><main id=main class=main><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>Ly极简display Manager以及linux桌面启动浅析</h1><div class=post-meta><span class=post-time>2018-02-06</span><div class=post-category><a href=/categories/operating_system/>operating_system</a>
+<a href=/categories/linux/>linux</a></div></div></header><div class=post-toc id=post-toc><h2 class=post-toc-title>文章目录</h2><div class="post-toc-content always-active"><nav id=TableOfContents><ul><li><ul><li><a href=#桌面环境启动过程>桌面环境启动过程</a><ul><li><a href=#额外小知识直接运行xclient于xserver之上>额外小知识：直接运行xclient于XServer之上</a></li></ul></li><li><a href=#ly关于xsession的修改>ly关于Xsession的修改</a></li></ul></li></ul></nav></div></div><div class=post-content><p>作为多年linux老用户，当年也经历过轮着安装不同的linux发行版，轮着试不同的桌面环境的阶段。
 最后停在了使用awesome作为桌面环境，很喜欢tiling window manager的简洁高效，可以用键盘
 替代大部分鼠标操作的特性。但是之前一直没有找到一个非常和心意的display manager，也就是
 平常看到的登陆界面程序。gdm3和lightdm之类的都太重，一段时间之前翻archlinux的wiki找到
 了ly这个极简display manager。它用pam作认证，设置一些必须的环境变量，然后用execl运行
-xinit命令启动相应的x-window-manager，比如awesome。没有其他多余的东西，依赖也很少。</p>
-<h2 id=桌面环境启动过程>桌面环境启动过程</h2>
-<ol>
-<li>通常的linux桌面环境启动，通过init系统，不论是原来的sysv的还是现在（2018）流行的systemd，
+xinit命令启动相应的x-window-manager，比如awesome。没有其他多余的东西，依赖也很少。</p><h2 id=桌面环境启动过程>桌面环境启动过程</h2><ol><li>通常的linux桌面环境启动，通过init系统，不论是原来的sysv的还是现在（2018）流行的systemd，
 启动一个display manager。一些比较漂亮的dm，比如gdm3, lightdm，运行在Xserver之上的xclient，
-而也有一些简单的dm不需要启动Xserver就可以运行，比如cdm，ly等。</li>
-<li>通过display manager作认证，通过认证之后，display manager会启动Xserver（如果display manager
+而也有一些简单的dm不需要启动Xserver就可以运行，比如cdm，ly等。</li><li>通过display manager作认证，通过认证之后，display manager会启动Xserver（如果display manager
 不是作为xclient运行于XServer上的话），然后启动相应的Window-manager，或者是大型桌面环境
-的启动器，比如KDE的startkde，启动器会额外做一些工作，当然window-manager是必须启动的。</li>
-</ol>
-<h3 id=额外小知识直接运行xclient于xserver之上>额外小知识：直接运行xclient于XServer之上</h3>
-<p>按照上述的桌面环境启动流程，wm启动之后，其他的图形软件就这么运行与window-manager管理之下，
-通过XServer显示在屏幕之上，并与用户交互。</p>
-<p>实际上就是xclient运行于XServer之上的流程。那么我们可不可以不经过display manager，window-manager，
+的启动器，比如KDE的startkde，启动器会额外做一些工作，当然window-manager是必须启动的。</li></ol><h3 id=额外小知识直接运行xclient于xserver之上>额外小知识：直接运行xclient于XServer之上</h3><p>按照上述的桌面环境启动流程，wm启动之后，其他的图形软件就这么运行与window-manager管理之下，
+通过XServer显示在屏幕之上，并与用户交互。</p><p>实际上就是xclient运行于XServer之上的流程。那么我们可不可以不经过display manager，window-manager，
 直接启动图形程序运行与XServer之上？答案是确定的，完全可以。但是一些严重依赖于桌面环境提供
 的一些服务、后台功能的程序会出现问题。如果独立性较强的话，是可以完全脱离dm和wm运行的。启动
-一个程序运行与XServer之上的命令为</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>xinit /fule/path/to/executable args -- /usr/bin/X DISPLAY vtN</code></pre></td></tr></table>
-</div>
-</div>
-<p>在<code>--</code>之前的为需要运行的xclient的可运行文件的完整路经，后面可以更上需要的参数，<code>--</code>之后
+一个程序运行与XServer之上的命令为</p><pre><code>xinit /fule/path/to/executable args -- /usr/bin/X DISPLAY vtN
+</code></pre><p>在<code>--</code>之前的为需要运行的xclient的可运行文件的完整路经，后面可以更上需要的参数，<code>--</code>之后
 为XServer的运行文件完整路径以及参数。DISPLAY用<code>:</code>+<code>数字</code>替代，比如<code>:0</code>、<code>:1</code>等，这是
 指定XServer运行的地质，前面省略了IP或者域名，因为XServer设计时是可以跨网络运行的，不一定
 需要client和server在一台电脑上，这也是ssh -X可以运行的原因。在同一台电脑上，可以运行
@@ -156,108 +43,40 @@ xclient运行时，需要指定DISPLAY参数，当然设置环境变量也可以
 认证措施。<code>vtN</code>比如<code>vt0</code>，这个参数指定XServer运行于哪个virtual terminal当中，现在的linux
 启动之后一般会初始化好几个virtual terminal，可以用<code>ctrl+alt+Fn</code>进行切换。如果以非管理员
 身份运行，想要在非当前virtual terminal上运行XServer会提示权限不足出错。以一般用户权限运行
-XServer只能指定vt为当前的vritual teriminal。</p>
-<p>举个运行firefox于XServer上的例子，当前在vt1也就是第二个vritual terminal上运行了一个
-正常的桌面环境，比如gnome，这时我们<code>ctrl+alt+F3</code>切换到vt2，登陆然后运行</p>
-<p>xinit /usr/bin/firefox -- /usr/bin/X :1 vt2</p>
-<p>这样就会在vt2上运行一个XServer，Xserver中只有一个firefox浏览器运行，基本的鼠标键盘
+XServer只能指定vt为当前的vritual teriminal。</p><p>举个运行firefox于XServer上的例子，当前在vt1也就是第二个vritual terminal上运行了一个
+正常的桌面环境，比如gnome，这时我们<code>ctrl+alt+F3</code>切换到vt2，登陆然后运行</p><p>xinit /usr/bin/firefox &ndash; /usr/bin/X :1 vt2</p><p>这样就会在vt2上运行一个XServer，Xserver中只有一个firefox浏览器运行，基本的鼠标键盘
 之类的操作响应由XServer本身提供。但是这个时候很难受，连个输入法都没有怎么办？可以切
 换回vt1的gnome环境，打开一个terminal emulator窗口，也可以<code>ctrl+alt+Fn</code>切换到某个
-vritual terminal。然后</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
-</span><span class=lnt>2
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>export DISPLAY=:1
-fcitx</code></pre></td></tr></table>
-</div>
-</div>
-<p>通过指定环境变量中的DISPLAY为<code>:1</code>也就是响应firefox的XServer的地址，让fcitx运行于那个
+vritual terminal。然后</p><pre><code>export DISPLAY=:1
+fcitx
+</code></pre><p>通过指定环境变量中的DISPLAY为<code>:1</code>也就是响应firefox的XServer的地址，让fcitx运行于那个
 XServer之中，然后就可以用fcitx输入了，虽然没有显示输入法的状态栏，但是确实可用了。在
 某些嵌入式环境中，这种方式可以用于开机启动某个或某几个图形程序，然后后台还可以加一个检测进程，
-崩溃之后重新启动图形程序。</p>
-<h2 id=ly关于xsession的修改>ly关于Xsession的修改</h2>
-<p>ly是一个极简的display manager。使用pam作用户验证，使用ncurses提供界面，只做极少量的环境
-设置。本人fork了一波，做了一些超简单的修改，让它能够在debian中编译运行。</p>
-<p>但是使用中遇到了一点问题，比如evince或者nautilus之流的程序启动时间很慢，结果看log发现
+崩溃之后重新启动图形程序。</p><h2 id=ly关于xsession的修改>ly关于Xsession的修改</h2><p>ly是一个极简的display manager。使用pam作用户验证，使用ncurses提供界面，只做极少量的环境
+设置。本人fork了一波，做了一些超简单的修改，让它能够在debian中编译运行。</p><p>但是使用中遇到了一点问题，比如evince或者nautilus之流的程序启动时间很慢，结果看log发现
 是dbus的原因，然后google之发现来源在于dbus-update-activation-environment没运行，从而一些
 dbus的环境变量没有设置好。但是实际上作为优良的发行版，debian做了相关的工作，除了这个dbus
 问题的fix之外，还有其他一些修改，都放在<code>/etc/X11/Xsession.d</code>文件夹当中，由<code>/etc/X11/Xsession</code>
 运行。问题在于ly没有运行这个脚本，所以就没有运行那些修复动作。所以，在ly的代码当中，运行
 相关的x-window-manager之前，用<code>system("/bin/sh /etc/X11/Xsession")</code>运行一下相关的修
-复脚本。fork修改后的<a href=https://github.com/linuxhenhao/ly>地址</a></p>
-</div>
-<div class=post-copyright>
-<p class=copyright-item>
-<span class=item-title>文章作者</span>
-<span class=item-content>thinkeryu</span>
-</p>
-<p class=copyright-item>
-<span class=item-title>上次更新</span>
-<span class=item-content>
-2018-02-06
-</span>
-</p>
-</div>
-<footer class=post-footer>
-<div class=post-tags>
-<a href=/tags/operating_system/>operating_system</a>
-</div>
-<nav class=post-nav>
-<a class=prev href=/post/tornado-httpclient%E7%AE%80%E5%8D%95%E5%BC%82%E6%AD%A5%E7%88%AC%E8%99%AB/>
-<i class="iconfont icon-left"></i>
+复脚本。fork修改后的<a href=https://github.com/linuxhenhao/ly>地址</a></p></div><div class=post-copyright><p class=copyright-item><span class=item-title>文章作者</span>
+<span class=item-content>thinkeryu</span></p><p class=copyright-item><span class=item-title>上次更新</span>
+<span class=item-content>2018-02-06</span></p></div><footer class=post-footer><div class=post-tags><a href=/tags/operating_system/>operating_system</a></div><nav class=post-nav><a class=prev href=/post/tornado-httpclient%E7%AE%80%E5%8D%95%E5%BC%82%E6%AD%A5%E7%88%AC%E8%99%AB/><i class="iconfont icon-left"></i>
 <span class="prev-text nav-default">Tornado Httpclient简单异步爬虫</span>
-<span class="prev-text nav-mobile">上一篇</span>
-</a>
-<a class=next href=/post/pyinstaller%E6%89%93%E5%8C%85/>
-<span class="next-text nav-default">Python软件打包分发</span>
+<span class="prev-text nav-mobile">上一篇</span></a>
+<a class=next href=/post/pyinstaller%E6%89%93%E5%8C%85/><span class="next-text nav-default">Python软件打包分发</span>
 <span class="next-text nav-mobile">下一篇</span>
-<i class="iconfont icon-right"></i>
-</a>
-</nav>
-</footer>
-</article>
-</div>
-<div id=gitalk-container></div>
-<link rel=stylesheet href=https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css crossorigin=anonymous>
-<script src=https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js crossorigin=anonymous></script>
-<script type=text/javascript>var gitalk=new Gitalk({id:'2018-02-06 22:23:53 \u002b0800 \u002b0800',title:'Ly极简display Manager以及linux桌面启动浅析',clientID:'e6672c053ad6c6056f71',clientSecret:'c13fdda944329c62818b9bbf0b00a23658614f3e',repo:'blog',owner:'linuxhenhao',admin:['linuxhenhao'],body:decodeURI(location.href)});gitalk.render('gitalk-container')</script>
-<noscript>Please enable JavaScript to view the <a href=https://github.com/gitalk/gitalk>comments powered by gitalk.</a></noscript>
-</div>
-</main>
-<footer id=footer class=footer>
-<div class=social-links>
-<a href=https://www.linkedin.com/in/yuhuang-keepmoving class="iconfont icon-linkedin" title=linkedin></a>
+<i class="iconfont icon-right"></i></a></nav></footer></article></div><div id=gitalk-container></div><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css crossorigin=anonymous><script src=https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js crossorigin=anonymous></script>
+<script type=text/javascript>var gitalk=new Gitalk({id:"2018-02-06 22:23:53 \u002b0800 \u002b0800",title:"Ly极简display Manager以及linux桌面启动浅析",clientID:"e6672c053ad6c6056f71",clientSecret:"c13fdda944329c62818b9bbf0b00a23658614f3e",repo:"blog",owner:"linuxhenhao",admin:["linuxhenhao"],body:decodeURI(location.href)});gitalk.render("gitalk-container")</script><noscript>Please enable JavaScript to view the <a href=https://github.com/gitalk/gitalk>comments powered by gitalk.</a></noscript></div></main><footer id=footer class=footer><div class=social-links><a href=https://www.linkedin.com/in/yuhuang-keepmoving class="iconfont icon-linkedin" title=linkedin></a>
 <a href=https://github.com/linuxhenhao class="iconfont icon-github" title=github></a>
-<a href=https://blog.huangyu.me/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a>
-</div>
-<div class=copyright>
-<span class=power-by>
-由 <a class=hexo-link href=https://gohugo.io>Hugo</a> 强力驱动
-</span>
+<a href=https://blog.huangyu.me/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a></div><div class=copyright><span class=power-by>由 <a class=hexo-link href=https://gohugo.io>Hugo</a> 强力驱动</span>
 <span class=division>|</span>
-<span class=theme-info>
-主题 -
-<a class=theme-link href=https://github.com/olOwOlo/hugo-theme-even>Even</a>
-</span>
-<span class=copyright-year>
-&copy;
+<span class=theme-info>主题 -
+<a class=theme-link href=https://github.com/olOwOlo/hugo-theme-even>Even</a></span>
+<span class=copyright-year>&copy;
 2017 -
-2021<span class=heart><i class="iconfont icon-heart"></i></span><span>thinkeryu</span>
-</span>
-</div>
-</footer>
-<div class=back-to-top id=back-to-top>
-<i class="iconfont icon-up"></i>
-</div>
-</div>
-<script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script>
+2022<span class=heart><i class="iconfont icon-heart"></i></span><span>thinkeryu</span></span></div></footer><div class=back-to-top id=back-to-top><i class="iconfont icon-up"></i></div></div><script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script>
 <script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script>
 <script src=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin=anonymous></script>
-<script type=text/javascript src=/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js></script>
-<script type=text/javascript>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}}</script>
-<script async src=https://cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js integrity="sha256-HGLuEfFcsUJGhvB8cQ8nr0gai9EucOOaIxFw7qxmd+w=" crossorigin=anonymous></script>
-</body>
-</html>
+<script type=text/javascript src=/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js></script>
+<script type=text/javascript>window.MathJax={tex:{inlineMath:[["$","$"],["\\(","\\)"]]}}</script><script async src=https://cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js integrity="sha256-HGLuEfFcsUJGhvB8cQ8nr0gai9EucOOaIxFw7qxmd+w=" crossorigin=anonymous></script></body></html>
