@@ -3,4 +3,4 @@
 	url = https://github.com/kakawait/hugo-tranquilpeak-theme
 [submodule "themes/even"]
 	path = themes/even
-	url = https://github.com/olOwOlo/hugo-theme-even
+	url = git@github.com:linuxhenhao/hugo-theme-even
