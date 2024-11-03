@@ -4,7 +4,7 @@ date = 2024-08-02T21:49:13+08:00
 tags = ["网络", "NAS"]
 categories = ['network']
 keywords = ['不桥接','光猫', '公网ipv6']
-markup = "mmark"
+markup = "goldmark"
 +++
 今天综合网上搜到的信息，完成了不修改光猫为桥接但让局域网内所有设备都能获得公网ipv6地址
 的成果，记录下来，也让有需要的人避免走弯路

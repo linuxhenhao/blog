@@ -4,7 +4,7 @@ date = 2017-12-14T00:32:13+08:00
 tags = ["android", "linux"]
 categories = ['others']
 keywords = ['免申请解锁','android']
-markup = "mmark"
+markup = "goldmark"
 +++
 使用kingroot可以临时root华为m2-801w，但是重启之后root消失。利用这个临时的root获取nvme，
 从而获取到解锁码.

@@ -5,7 +5,7 @@ tags = ["Django", "Docker"]
 categories = ['web']
 keywords = ['Django','mysql', 'redis']
 draft = true
-markup = "mmark"
+markup = "goldmark"
 +++
 不知道什么时候流行起来的静态博客风，用github或者gitlab的pages服务搭建静态网站，用markdown
 编写网站内容。这样的好处是不需要搭个服务器或者弄个虚拟空间，写起来也很方便。但是缺乏和读者

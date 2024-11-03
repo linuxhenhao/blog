@@ -4,7 +4,7 @@ date = 2018-03-22T22:31:30+08:00
 tags = ["pyqtgraph", "卡顿"]
 categories = ['programming']
 keywords = ['pyqtgraph','卡顿']
-markup = "mmark"
+markup = "goldmark"
 +++
 为某设备编写的数据采集及控制软件发现一个随着时间越来越卡顿的问题, 卡到通过QtTimer更新
 的LCDNumber组件跳秒, 本该从8s变为7s这样逐秒递减卡成了停留在8s, 突然跳到3s这样. 最终找到

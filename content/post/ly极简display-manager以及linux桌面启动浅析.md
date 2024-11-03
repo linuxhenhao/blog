@@ -4,7 +4,7 @@ date = 2018-02-06T22:23:53+08:00
 tags = ["operating_system"]
 categories = ['operating_system', 'linux']
 keywords = ['ly', 'display manager', 'desktop startup process']
-markup = "mmark"
+markup = "goldmark"
 +++
 作为多年linux老用户，当年也经历过轮着安装不同的linux发行版，轮着试不同的桌面环境的阶段。
 最后停在了使用awesome作为桌面环境，很喜欢tiling window manager的简洁高效，可以用键盘

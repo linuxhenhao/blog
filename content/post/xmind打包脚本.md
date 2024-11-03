@@ -4,7 +4,7 @@ date = 2018-05-21T21:52:09+08:00
 tags = ["deb", "xmind"]
 categories = ['operating_system']
 keywords = ['XMind','deb package']
-markup = "mmark"
+markup = "goldmark"
 +++
 [xmind][1]是非常好用的基于eclipse的mindmap软件，由于java天然的跨平台特性，xmind也是支持
 linux系统的。但是由于官方人员的懒，或者是官方的人力不足的原因，又或者是linux用户太少（最有可能）,

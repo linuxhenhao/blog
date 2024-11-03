@@ -4,7 +4,7 @@ date = 2018-04-15T11:33:13+08:00
 tags = ["orangepi", "btrfs"]
 categories = ['operating_system']
 keywords = ['orangepi','btrfs', 'repair']
-markup = "mmark"
+markup = "goldmark"
 +++
 可能由于经常使用智能插座直接断电关闭OrangePi，常在河边走哪有不湿鞋，用来存储数据的btrfs
 分区挂掉了，当然由于有RAID1的备份，对于数据我是毫不担心，尝试修复以下btrfs。

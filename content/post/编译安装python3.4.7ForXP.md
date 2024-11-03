@@ -3,7 +3,7 @@ title = "编译安装python3.4.7 For XP"
 date = "2017-09-20T21:47:34+08:00"
 categories = ["programming"]
 keywords = ["python"]
-markup = "mmark"
+markup = "goldmark"
 +++
 
 ## 前言

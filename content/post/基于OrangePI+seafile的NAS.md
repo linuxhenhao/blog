@@ -4,7 +4,7 @@ date = 2018-03-30T14:12:25+08:00
 tags = ["armhf", "linux"]
 categories = ['storage']
 keywords = ['orangepi','seafile', 'NAS']
-markup = "mmark"
+markup = "goldmark"
 +++
 现在网上的公有云很多，比如百度网盘，以及之前的360网盘等。但是陆续关闭的公有云，百度网盘
 的限速问题，隐私问题等，是许多人使用网盘的痛点。自己搭建自用的私有云成了很多人的一个选择，

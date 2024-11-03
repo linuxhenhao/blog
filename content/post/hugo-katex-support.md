@@ -4,7 +4,7 @@ date = 2017-12-11T21:57:08+08:00
 tags = ["hugo", "tex"]
 categories = ['web']
 keywords = ['hugo','mmark','katex']
-markup = 'mmark'
+markup = 'goldmark'
 +++
 最近需要写一篇关于tcp拥塞控制的博客，里面需要用到好些公式。结果遇到了hugo默认的markdown
 解析器`blackberry`关于解析latex格式相关的问题。最终通过搜索采用__katex+改用mmark解析器__

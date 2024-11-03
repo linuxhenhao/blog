@@ -4,7 +4,7 @@ date = 2018-03-31T10:41:16+08:00
 tags = ["blog", "git hooks"]
 categories = ['web']
 keywords = ['blog','gitlab', 'git hooks']
-markup = "mmark"
+markup = "goldmark"
 +++
 昨天晚上更新了一篇博客，想看看显示效果，结果发现 gitlab 给了个404，尴尬。过两天是不是可以看
 到“你都遇到过什么奇葩简历”的问题下面会有这样的回复“简历上特地标明了有技术博客，然后博客打不开”。

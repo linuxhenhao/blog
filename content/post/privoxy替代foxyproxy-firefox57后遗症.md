@@ -4,7 +4,7 @@ date = 2018-01-14T16:28:08+08:00
 tags = ["网络访问"]
 categories = ['network']
 keywords = ['privoxy','firefox57', 'foxyproxy']
-markup = "mmark"
+markup = "goldmark"
 +++
 正常的网络访问之前使用的是foxyproxy+gfwlist-rules的方式实现的。在firefox更新到57之后，扩展
 大变革，原有的foxyproxy不能用了，而新的foxyproxy功能明显很弱。虽然采用import之前配置文件的

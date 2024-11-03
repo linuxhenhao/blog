@@ -4,7 +4,7 @@ date = 2018-01-22T20:11:12+08:00
 tags = ["python", "打包"]
 categories = ['programming']
 keywords = ['python','打包']
-markup = "mmark"
+markup = "goldmark"
 +++
 使用PySide写的软件需要打包分发，需要满足在其他机器没有安装python，自然
 也就没有安装代码中所用到的一系列第三方包的情况下，能够将依赖完整的打包，
