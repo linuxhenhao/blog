@@ -1,0 +1,315 @@
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><title>Debian系简易内核打包脚本 - ThinkerYu的博客</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=cache-control content="no-transform"><meta http-equiv=cache-control content="no-siteapp"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=author content="thinkeryu"><meta name=description content="作为一个尝鲜党，经常会关注内核的新特性，喜欢在自己的电脑上装上最新的内核。维护了一个 较为精简的适用于自用笔记本和台式机的内核配置文件github。
+既然经常追新，那么就免不了经常更新内核，使用系统本身的包管理系统是一个非常方便的选择。 但是又不喜欢安装太多的打包的dpkg-package工具，也没有时间去了解debian打包官方模式。 简单的使用dpkg -b打包文件为deb成了我的常用打包方式。配套的，为arm|x86_64两个架构 创建了打包脚本。 误：发现内核自带了打包脚本，详情见具体文章内容
+"><meta name=keywords content="kernel deb package,debian"><meta name=baidu-site-verification content="codeva-VIZSl7AL1R"><meta name=google-site-verification content="XNHEmGcTsyzl1k_2n1OZJcuqSf4EV2wI30BMdd_P-x8"><meta name=sogou_site_verification content="ipba8WzhSj"><meta name=generator content="Hugo 0.111.3 with theme even"><link rel=canonical href=https://blog.thinkeryu.com/post/debian%E7%B3%BB%E7%AE%80%E6%98%93%E5%86%85%E6%A0%B8%E6%89%93%E5%8C%85%E8%84%9A%E6%9C%AC/><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/manifest.json><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link href=/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css rel=stylesheet><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous><meta property="og:title" content="Debian系简易内核打包脚本"><meta property="og:description" content="作为一个尝鲜党，经常会关注内核的新特性，喜欢在自己的电脑上装上最新的内核。维护了一个
+较为精简的适用于自用笔记本和台式机的内核配置文件github。
+既然经常追新，那么就免不了经常更新内核，使用系统本身的包管理系统是一个非常方便的选择。
+但是又不喜欢安装太多的打包的dpkg-package工具，也没有时间去了解debian打包官方模式。
+简单的使用dpkg -b打包文件为deb成了我的常用打包方式。配套的，为arm|x86_64两个架构
+创建了打包脚本。 误：发现内核自带了打包脚本，详情见具体文章内容"><meta property="og:type" content="article"><meta property="og:url" content="https://blog.thinkeryu.com/post/debian%E7%B3%BB%E7%AE%80%E6%98%93%E5%86%85%E6%A0%B8%E6%89%93%E5%8C%85%E8%84%9A%E6%9C%AC/"><meta property="article:section" content="post"><meta property="article:published_time" content="2017-11-27T20:29:02+08:00"><meta property="article:modified_time" content="2017-11-27T20:29:02+08:00"><meta itemprop=name content="Debian系简易内核打包脚本"><meta itemprop=description content="作为一个尝鲜党，经常会关注内核的新特性，喜欢在自己的电脑上装上最新的内核。维护了一个
+较为精简的适用于自用笔记本和台式机的内核配置文件github。
+既然经常追新，那么就免不了经常更新内核，使用系统本身的包管理系统是一个非常方便的选择。
+但是又不喜欢安装太多的打包的dpkg-package工具，也没有时间去了解debian打包官方模式。
+简单的使用dpkg -b打包文件为deb成了我的常用打包方式。配套的，为arm|x86_64两个架构
+创建了打包脚本。 误：发现内核自带了打包脚本，详情见具体文章内容"><meta itemprop=datePublished content="2017-11-27T20:29:02+08:00"><meta itemprop=dateModified content="2017-11-27T20:29:02+08:00"><meta itemprop=wordCount content="1393"><meta itemprop=keywords content="debian,linux,kernel package,"><meta name=twitter:card content="summary"><meta name=twitter:title content="Debian系简易内核打包脚本"><meta name=twitter:description content="作为一个尝鲜党，经常会关注内核的新特性，喜欢在自己的电脑上装上最新的内核。维护了一个
+较为精简的适用于自用笔记本和台式机的内核配置文件github。
+既然经常追新，那么就免不了经常更新内核，使用系统本身的包管理系统是一个非常方便的选择。
+但是又不喜欢安装太多的打包的dpkg-package工具，也没有时间去了解debian打包官方模式。
+简单的使用dpkg -b打包文件为deb成了我的常用打包方式。配套的，为arm|x86_64两个架构
+创建了打包脚本。 误：发现内核自带了打包脚本，详情见具体文章内容"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>ThinkerYu的博客</a></div><div class=mobile-navbar-icon><span></span>
+<span></span>
+<span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><a href=/><li class=mobile-menu-item>Home</li></a><a href=/post/><li class=mobile-menu-item>Archives</li></a><a href=/tags/><li class=mobile-menu-item>Tags</li></a><a href=/categories/><li class=mobile-menu-item>Categories</li></a></ul></nav><div class=container id=mobile-panel><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>ThinkerYu的博客</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/categories/>Categories</a></li></ul></nav></header><main id=main class=main><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>Debian系简易内核打包脚本</h1><div class=post-meta><span class=post-time>2017-11-27</span><div class=post-category><a href=/categories/operating_system/>operating_system</a></div></div></header><div class=post-toc id=post-toc><h2 class=post-toc-title>文章目录</h2><div class="post-toc-content always-active"><nav id=TableOfContents><ul><li><ul><li><a href=#包里面到底需要哪些文件不需要哪些文件的认识不够清晰全面>虽然如此，但是之前的脚本工作倒也不是无用工，其实内核带的打包脚本差不太多，主要是对于linux-headers
+包里面到底需要哪些文件不需要哪些文件的认识不够清晰全面。</a></li></ul></li></ul></nav></div></div><div class=post-content><p>作为一个尝鲜党，经常会关注内核的新特性，喜欢在自己的电脑上装上最新的内核。维护了一个
+较为精简的适用于自用笔记本和台式机的内核配置文件<a href=https://github.com/linuxhenhao/config-files>github</a>。</p><p>既然经常追新，那么就免不了经常更新内核，使用系统本身的包管理系统是一个非常方便的选择。
+但是又不喜欢安装太多的打包的<code>dpkg-package</code>工具，也没有时间去了解debian打包官方模式。
+简单的使用<code>dpkg -b</code>打包文件为deb成了我的常用打包方式。配套的，为<code>arm|x86_64</code>两个架构
+创建了打包脚本。 <em>误：发现内核自带了打包脚本，详情见具体文章内容</em></p><p>搞半天，发现我写的打包脚本生成的linux-header包很大，而且不够完善，在x86编译内核外模块时
+会出现缺少文件的情况，然后发现内核自带了打包脚本，包括deb和rpm系。如果只需要二进制包不打包
+源码包的话<code>make bindeb-pkg</code>即可。还有以下几个target：</p><pre><code>make deb-pkg  # 包含源码的deb包
+make rpm-pkg  # 生成包含源码包在内的rpm包
+make binrpm-pkg  # 生成不包含源码包在内的rpm包
+</code></pre><h2 id=包里面到底需要哪些文件不需要哪些文件的认识不够清晰全面>虽然如此，但是之前的脚本工作倒也不是无用工，其实内核带的打包脚本差不太多，主要是对于linux-headers
+包里面到底需要哪些文件不需要哪些文件的认识不够清晰全面。</h2><p>其中的<code>linux-headers</code>包，为了让<code>arm</code>上<code>make script</code>能够成功，从而能够
+在arm上编译对以内核的第三方模块，比通常的官方包多了很多文件。</p><p>注:script里面有很多二进制文件，没有cross_compile选项，所以只能安装到arm后编译，所以需要
+能够完整的构建编译过程的文件。当然有些精简可以作，懒得扣太细了。</p><pre><code>#!/bin/bash
+
+# export cross compile envs if arm specified as a parameter
+if [ x&quot;$1&quot; == &quot;x&quot; ]; then
+echo &quot;Usage: $0 &lt;arm|default&gt;&quot;
+echo &quot;      default means host platform&quot;
+exit 0
+else
+case $1 in
+    &quot;arm&quot;)
+        export ARCH=arm
+        export CROSS_COMPILE=arm-linux-gnueabihf-
+        ;;
+    &quot;default&quot;)
+        echo $(uname -m)
+        ARCH=$(uname -m)
+        ;;
+esac
+fi
+
+function GetPKGArch()
+{
+if [ $(uname -m) == &quot;x86_64&quot; ];then
+echo &quot;amd64&quot;
+else
+echo &quot;i386&quot;
+fi
+}
+
+function DirCheck()
+{
+if [ ! -d $1 ];then
+mkdir -p $1
+fi
+}
+
+function fileCheck()
+{
+if [ -e $1 ]; then
+    rm -rf $1
+fi
+}
+
+# copy with parents path, only can do this in kernel source dir
+function copy_fullpath()
+{
+find $1 -name &quot;*.h&quot; -exec cp --parents {} $2 \;
+find $1 -name &quot;*.conf&quot; -exec cp --parents {} $2 \;
+find $1 -name &quot;Makefile*&quot; -exec cp --parents {} $2 \;
+find $1 -name &quot;Kbuild*&quot; -exec cp --parents {} $2 \;
+find $1 -name &quot;Kconfig*&quot; -exec cp --parents {} $2 \;
+# find $1 -type f -executable -exec cp --parents {} $2 \;
+}
+# copy essensial header files to dest dir
+# eg: headers_prepare /usr/src/linux-headers-$VERSION
+function headers_prepare()
+{
+# copy to build headers deb
+# cp -r ./include ${HDR_DIR}/usr/src/linux-headers-$VERSION
+# cp ./.kernelvariables $1
+make prepare
+make scripts
+# make scripts will produce include/config/auto.conf
+# which is needed by the build process of any external module
+cp ./.config $1
+cp ./Module.symvers $1
+cp --parents ./arch/Kconfig  $1
+cp --parents ./include/config/kernel.release $1
+
+cp ./Makefile $1
+#cp ./Kbuild $1
+cp ./Kconfig $1
+
+# copy dir in include to $1
+# copy_fullpath src dst
+dirs=(block certs crypto drivers firmware fs include \
+    init ipc kernel lib mm net samples security sound \
+    tools usr virt)
+# dirs=(include)
+for dir in ${dirs[@]};
+do
+    # copy executables/makefile/kbuild/kconfig/.h
+    echo &quot;copy_full path $dir $1&quot;
+    copy_fullpath $dir $1/
+done
+
+# for arch dir, only copy targed arch dir for cross compile
+#if [ &quot;x$ARCH&quot; == &quot;xx86_64&quot; ]; then
+#    HDR_ARCH=.  # copy other architectures' headers for
+#                # cross compile
+#else
+#    HDR_ARCH=$ARCH
+#fi
+#copy_fullpath ./arch/${HDR_ARCH} $1/
+copy_fullpath ./arch/ $1/
+
+cp -r scripts $1/
+}
+
+
+RELEASE_FILE=include/config/kernel.release
+if [ -e $RELEASE_FILE ]; then
+VERSION=$(cat include/config/kernel.release)
+else
+echo &quot;make prepare and then make, this will build the release file needed &quot;
+exit 0
+fi
+INSTALL_PATH=./linux-image-$VERSION/boot/
+INSTALL_MOD_PATH=./linux-modules-$VERSION/lib/
+HDR_PATH=./linux-headers-$VERSION/usr/src/linux-headers-$VERSION
+IMG_DIR=./linux-image-$VERSION
+MOD_DIR=./linux-modules-$VERSION
+HDR_DIR=./linux-headers-$VERSION
+
+
+
+if [ &quot;x$ARCH&quot; != &quot;xarm&quot; ];then
+PKG_ARCH=$( GetPKGArch )
+ARCH_ALIA=${PKG_ARCH}
+UPDATE_GRUB=&quot;update-grub&quot;
+KERNEL_DEPS=&quot;&quot;
+MAKE_UINITRD=&quot;&quot;
+else
+ARCH_ALIA=${ARCH}hf
+UPDATE_GRUB=&quot;&quot;
+KERNEL_DEPS=&quot;u-boot-tools&quot;
+MAKE_UINITRD=&quot;genuinitrd&quot;
+fi
+
+
+echo $ARCH
+
+
+DirCheck ${IMG_DIR}/boot
+DirCheck ${IMG_DIR}/DEBIAN
+DirCheck ${HDR_DIR}/usr/src/linux-headers-$VERSION/
+DirCheck ${HDR_DIR}/DEBIAN
+
+DirCheck ${MOD_DIR}/lib
+DirCheck ${MOD_DIR}/DEBIAN
+rm -rf ${INSTALL_PATH}/*
+rm -rf ${INSTALL_MOD_PATH}/*
+
+fileCheck ./${IMG_DIR}/DEBIAN/control
+cat &gt;./${IMG_DIR}/DEBIAN/control&lt;&lt;EOF
+Package: linux-image-$VERSION
+Version: $VERSION
+Architecture: $ARCH_ALIA
+Depends: $KERNEL_DEPS
+Maintainer: huangyu&lt;diwang90@gmail.com&gt;
+Description: linux kernel
+EOF
+
+
+fileCheck ./${IMG_DIR}/DEBIAN/postinst
+cat &gt;./${IMG_DIR}/DEBIAN/postinst&lt;&lt;EOF
+#!/bin/bash
+function genuinitrd()
+{
+cp /boot/initrd.img-$VERSION /tmp
+cd /tmp
+mkimage -A arm -T ramdisk -C none -n uInitrd -d initrd.img-$VERSION uinitrd
+cp uinitrd /boot/initrd.img-$VERSION
+}
+if [ -e /boot/initrd.img-$VERSION ];then
+rm /boot/initrd.img-$VERSION
+update-initramfs -k $VERSION -c
+fi
+EOF
+
+chmod 0555 ./${IMG_DIR}/DEBIAN/postinst
+
+fileCheck ./${IMG_DIR}/DEBIAN/postrm
+cat &gt;./${IMG_DIR}/DEBIAN/postrm&lt;&lt;EOF
+#!/bin/bash
+${UPDATE_GRUB}
+EOF
+
+chmod 0555 ./${IMG_DIR}/DEBIAN/postrm
+
+
+fileCheck ./${MOD_DIR}/DEBIAN/control
+cat &gt;./${MOD_DIR}/DEBIAN/control&lt;&lt;EOF
+Package: linux-modules-$VERSION
+Version: $VERSION
+Architecture: $ARCH_ALIA
+Depends: linux-image-$VERSION
+Maintainer: huangyu&lt;diwang90@gmail.com&gt;
+Description: linux kernel modules
+EOF
+
+
+fileCheck ./${MOD_DIR}/DEBIAN/postinst
+cat &gt;./${MOD_DIR}/DEBIAN/postinst&lt;&lt;EOF
+#!/bin/bash
+function genuinitrd()
+{
+cp /boot/initrd.img-$VERSION /tmp
+cd /tmp
+mkimage -A arm -T ramdisk -C none -n uInitrd -d initrd.img-$VERSION uinitrd
+cp uinitrd /boot/initrd.img-$VERSION
+}
+if [ -e /boot/initrd.img-$VERSION ];then
+rm /boot/initrd.img-$VERSION
+fi
+update-initramfs -k $VERSION -c
+${MAKE_UINITRD}
+${UPDATE_GRUB}
+EOF
+
+fileCheck ./${HDR_DIR}/DEBIAN/control
+cat &gt;./${HDR_DIR}/DEBIAN/control&lt;&lt;EOF
+Package: linux-headers-$VERSION
+Version: $VERSION
+Architecture: $ARCH_ALIA
+Depends: linux-image-$VERSION, linux-modules-$VERSION
+Maintainer: huangyu&lt;diwang90@gmail.com&gt;
+Description: linux kernel headers
+EOF
+
+fileCheck ./${HDR_DIR}/DEBIAN/postinst
+cat &gt;./${HDR_DIR}/DEBIAN/postinst&lt;&lt;EOF
+#!/bin/bash
+if [ -e /lib/modules/$VERSION ];then
+ln -sf /usr/src/linux-headers-$VERSION /lib/modules/$VERSION/build
+ln -sf /usr/src/linux-headers-$VERSION /lib/modules/$VERSION/source
+fi
+EOF
+
+chmod 0555 ./${MOD_DIR}/DEBIAN/postinst
+chmod 0555 ./${HDR_DIR}/DEBIAN/postinst
+
+INSTALL_PATH=./${IMG_DIR}/boot/ make install
+INSTALL_MOD_PATH=./${MOD_DIR}/ make modules_install
+
+# headers file prepare
+headers_prepare ${HDR_PATH}
+
+#find ./scripts -type f -executable -exec cp --parents {} ${KBUILD_PATH} \;  
+# copy to build kbuild
+
+# delete firmware, get them from official repo
+if [ -e ${MOD_DIR}/lib/firmware ]; then
+rm -r ${MOD_DIR}/lib/firmware
+fi
+# delete symlink to this compile dir
+rm  ${MOD_DIR}/lib/modules/$VERSION/build
+rm  ${MOD_DIR}/lib/modules/$VERSION/source
+
+# for arm kernel, using zImage and uInitrd
+if [ &quot;x$ARCH&quot; == &quot;xarm&quot; ];then
+cp arch/arm/boot/zImage ${INSTALL_PATH}/vmlinuz-$VERSION
+fi
+
+
+sudo chown -R root:root ${IMG_DIR} ${MOD_DIR} ${HDR_DIR}
+dpkg -b ${IMG_DIR}
+dpkg -b ${MOD_DIR}
+dpkg -b ${HDR_DIR}
+</code></pre><p>更新：2018-06-18：添加关于内核自带打包脚本的内容</p></div><div class=post-copyright><p class=copyright-item><span class=item-title>文章作者</span>
+<span class=item-content>thinkeryu</span></p><p class=copyright-item><span class=item-title>上次更新</span>
+<span class=item-content>2017-11-27</span></p></div><footer class=post-footer><div class=post-tags><a href=/tags/debian/>debian</a>
+<a href=/tags/linux/>linux</a>
+<a href=/tags/kernel-package/>kernel package</a></div><nav class=post-nav><a class=prev href=/post/linux%E6%A1%8C%E9%9D%A2%E4%BD%93%E7%B3%BB%E6%96%87%E4%BB%B6%E9%BB%98%E8%AE%A4%E6%89%93%E5%BC%80%E6%96%B9%E5%BC%8F%E5%B7%A5%E4%BD%9C%E6%9C%BA%E7%90%86/><i class="iconfont icon-left"></i>
+<span class="prev-text nav-default">Linux桌面体系文件默认打开方式工作机理</span>
+<span class="prev-text nav-mobile">上一篇</span></a>
+<a class=next href=/post/%E5%A4%9A%E5%8A%9F%E8%83%BD%E5%90%AF%E5%8A%A8u%E7%9B%98/><span class="next-text nav-default">多功能启动U盘</span>
+<span class="next-text nav-mobile">下一篇</span>
+<i class="iconfont icon-right"></i></a></nav></footer></article></div><div id=gitalk-container></div><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css crossorigin=anonymous><script src=https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js crossorigin=anonymous></script>
+<script type=text/javascript>var gitalk=new Gitalk({id:"2017-11-27 20:29:02 \u002b0800 \u002b0800",title:"Debian系简易内核打包脚本",clientID:"e6672c053ad6c6056f71",clientSecret:"c13fdda944329c62818b9bbf0b00a23658614f3e",repo:"blog",owner:"linuxhenhao",admin:["linuxhenhao"],body:decodeURI(location.href)});gitalk.render("gitalk-container")</script><noscript>Please enable JavaScript to view the <a href=https://github.com/gitalk/gitalk>comments powered by gitalk.</a></noscript></div></main><footer id=footer class=footer><div class=social-links><a href=https://www.linkedin.com/in/yuhuang-keepmoving class="iconfont icon-linkedin" title=linkedin></a>
+<a href=https://github.com/linuxhenhao class="iconfont icon-github" title=github></a>
+<a href=https://blog.thinkeryu.com/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a></div><div class=copyright><span class=power-by>由 <a class=hexo-link href=https://gohugo.io>Hugo</a> 强力驱动</span>
+<span class=division>|</span>
+<span class=theme-info>主题 -
+<a class=theme-link href=https://github.com/olOwOlo/hugo-theme-even>Even</a></span>
+<span class=copyright-year>&copy;
+2017 -
+2024<span class=heart><i class="iconfont icon-heart"></i></span><span>thinkeryu</span></span></div></footer><div class=back-to-top id=back-to-top><i class="iconfont icon-up"></i></div></div><script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin=anonymous></script>
+<script type=text/javascript src=/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js></script>
+<script type=text/javascript>window.MathJax={tex:{inlineMath:[["$","$"],["\\(","\\)"]]}}</script><script async src=https://cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js integrity="sha256-HGLuEfFcsUJGhvB8cQ8nr0gai9EucOOaIxFw7qxmd+w=" crossorigin=anonymous></script></body></html>

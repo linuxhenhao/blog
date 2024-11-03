@@ -1,0 +1,171 @@
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><title>Tcp_congestion_control BBR KCP CDG非拥塞丢包情景对比 - ThinkerYu的博客</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=cache-control content="no-transform"><meta http-equiv=cache-control content="no-siteapp"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=author content="thinkeryu"><meta name=description content="题目很可怕，然而实际上主要是要通过论文分析cdg，然后根据BBR和kcp介绍的特性判断一下哪种 拥塞控制算法最适合有一定非拥塞导致的丢包的网络环境（连通vps常见场景）。
+"><meta name=keywords content="BBR,kcp,cdg,Delay Gradient,none congestion related loss"><meta name=baidu-site-verification content="codeva-VIZSl7AL1R"><meta name=google-site-verification content="XNHEmGcTsyzl1k_2n1OZJcuqSf4EV2wI30BMdd_P-x8"><meta name=sogou_site_verification content="ipba8WzhSj"><meta name=generator content="Hugo 0.111.3 with theme even"><link rel=canonical href=https://blog.thinkeryu.com/post/tcp_congestion_control-bbr-kcp-cdg%E9%9D%9E%E6%8B%A5%E5%A1%9E%E4%B8%A2%E5%8C%85%E6%83%85%E6%99%AF%E5%AF%B9%E6%AF%94/><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/manifest.json><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link href=/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css rel=stylesheet><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous><meta property="og:title" content="Tcp_congestion_control BBR KCP CDG非拥塞丢包情景对比"><meta property="og:description" content="题目很可怕，然而实际上主要是要通过论文分析cdg，然后根据BBR和kcp介绍的特性判断一下哪种
+拥塞控制算法最适合有一定非拥塞导致的丢包的网络环境（连通vps常见场景）。"><meta property="og:type" content="article"><meta property="og:url" content="https://blog.thinkeryu.com/post/tcp_congestion_control-bbr-kcp-cdg%E9%9D%9E%E6%8B%A5%E5%A1%9E%E4%B8%A2%E5%8C%85%E6%83%85%E6%99%AF%E5%AF%B9%E6%AF%94/"><meta property="article:section" content="post"><meta property="article:published_time" content="2017-12-09T10:04:36+08:00"><meta property="article:modified_time" content="2017-12-09T10:04:36+08:00"><meta itemprop=name content="Tcp_congestion_control BBR KCP CDG非拥塞丢包情景对比"><meta itemprop=description content="题目很可怕，然而实际上主要是要通过论文分析cdg，然后根据BBR和kcp介绍的特性判断一下哪种
+拥塞控制算法最适合有一定非拥塞导致的丢包的网络环境（连通vps常见场景）。"><meta itemprop=datePublished content="2017-12-09T10:04:36+08:00"><meta itemprop=dateModified content="2017-12-09T10:04:36+08:00"><meta itemprop=wordCount content="7633"><meta itemprop=keywords content="congestion,control,network,tcp,"><meta name=twitter:card content="summary"><meta name=twitter:title content="Tcp_congestion_control BBR KCP CDG非拥塞丢包情景对比"><meta name=twitter:description content="题目很可怕，然而实际上主要是要通过论文分析cdg，然后根据BBR和kcp介绍的特性判断一下哪种
+拥塞控制算法最适合有一定非拥塞导致的丢包的网络环境（连通vps常见场景）。"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>ThinkerYu的博客</a></div><div class=mobile-navbar-icon><span></span>
+<span></span>
+<span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><a href=/><li class=mobile-menu-item>Home</li></a><a href=/post/><li class=mobile-menu-item>Archives</li></a><a href=/tags/><li class=mobile-menu-item>Tags</li></a><a href=/categories/><li class=mobile-menu-item>Categories</li></a></ul></nav><div class=container id=mobile-panel><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>ThinkerYu的博客</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/categories/>Categories</a></li></ul></nav></header><main id=main class=main><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>Tcp_congestion_control BBR KCP CDG非拥塞丢包情景对比</h1><div class=post-meta><span class=post-time>2017-12-09</span><div class=post-category><a href=/categories/network/>network</a></div></div></header><div class=post-toc id=post-toc><h2 class=post-toc-title>文章目录</h2><div class="post-toc-content always-active"><nav id=TableOfContents><ul><li><ul><li><a href=#0tcp一般拥塞控制逻辑>0.TCP一般拥塞控制逻辑</a></li><li><a href=#1bbr>1.BBR</a><ul><li><a href=#控制核心pacing-rate>控制核心:pacing-rate</a></li></ul></li><li><a href=#2-kcp>2. KCP</a></li><li><a href=#cbgdelay-gradient-congestion-control>cbg——Delay Gradient Congestion Control</a><ul><li><a href=#rtt梯度的计算方法>RTT梯度的计算方法</a></li><li><a href=#梯度变化如何反应拥塞和缓存情况>梯度变化如何反应拥塞和缓存情况</a></li><li><a href=#cdg的具体行为>CDG的具体行为</a></li></ul></li><li><a href=#简单的测试>简单的测试</a></li><li><a href=#总结>总结</a></li></ul></li></ul></nav></div></div><div class=post-content><p>题目很可怕，然而实际上主要是要通过论文分析cdg，然后根据BBR和kcp介绍的特性判断一下哪种
+拥塞控制算法最适合有一定非拥塞导致的丢包的网络环境（连通vps常见场景）。</p><h2 id=0tcp一般拥塞控制逻辑>0.TCP一般拥塞控制逻辑</h2><p>普通的tcp有三个状态，分别是<code>slow start</code>、<code>congestion avoidence</code>和<code>fast recovery</code>。
+连接建立时通过<code>slow start</code>每个RTT指数级的增长cwnd，当$cwnd\ge{sshthresh}$时，进入
+<code>congestion avoidence</code>模式，每个RTT将cwnd增大1，进入线性增长阶段。直到遇到丢包，这是由
+于包一直在发送，实际网络中很少发生堵死的情况，因此后面的包的ack会返回，产生<code>dumpack</code>，由
+此进入<code>fast recovery</code>模式，将丢包时的cwnd减半，设置为新的ssthresh值，cwnd=ssthresh+3MSS，
+减小发送窗口，并且由于多收到了三个<code>dumpack</code>因此在发送窗口减半之后增加三个MSS大小。
+重发丢失的包，等待该包的ack，在此期间新到的ack因为重发的包未到接收端，因此都是被重发包的dumpack，为了保持
+正常的发包速率，每收到一个包的<code>ack</code>就将cwnd增加1，这样就可以保持网络速率不变。</p><p>细心的观众会发现，这不就是<code>slow start</code>的指数增长模式吗？有点像，其实不然，cwnd的值变化规律
+确实一样，但是由于拖油瓶<code>重发包</code>的存在，cwnd的一端作为滑动窗口滑不起来，如果在收到ack后不变
+cwnd，那么由于最老的未接受的包卡住，将会在一段时间内没有新的包可以发出，发生断流。</p><p>但是这样作，在收到重发包后接收端很可能由于<code>cumulative ack</code>机制发送一个隔了很远之后的ack，
+过来，造成cwnd大跃进，发送速率会突增。因此实际情况是，当<code>fast recovery</code>模式下收到非<code>dumpack</code></p><h2 id=1bbr>1.BBR</h2><p>BBR分别探测带宽和min_RTT，来实现对带宽和真实延迟的探测，从而得到正确的发送窗口。</p><p>从源码来看，我认为对于具备较高非拥塞导致的丢包环境中重要的特性是，即便在recovery
+模式下，BBR除了第一个RTT时间内保持发包速率不变，从第二个Round开始采用slow start增加cwnd，
+这使数据传输在遇到这种丢包导致频繁进入recovery模式时仍然能够保持很好的带宽利用率。</p><p>然后从论文来看：</p><p>BBR论文的名称和最开始的一段就明确表明，它不以丢包作为拥塞的判断，因为拥塞导致的丢包中间
+必然有一段达到TCP连接瓶颈速率后继续增大导致的缓存增长，延迟变大过程。BBR想要获取到一个
+TCP连接中的瓶颈速率，同时获取到非填充缓存导致的真实RTT，从而得到一个可以在不增大瓶颈路由
+缓存又完全发挥TCP连接瓶颈处速率的发送速率。然而早在 Leonard Kleinrock提出该最优点时，
+Jeffrey M就发论文证明说不可能开发出一个分布式拥塞控制算法，他的理由是网络中的不确定性，
+你无法确定一个增大的RTT是由于竞争流量导致的瓶颈路由的缓存增大导致，或者是路径增加一个节点
+导致等等。这个唱反调的一出来大伙都觉得挺有道理，所以研究人员的重心就不放在开发一个使网络
+运行在靠近理论最优点的拥塞控制算法上了。</p><p>但是，google的大兄弟们基于他们分布全球的数据中心和巨大的访问量，观察这些无数的访问，发现
+虽然上述的不确定性无法消除，但是还是可以开发出一个可用的算法的。所以问题就变成了如何探测
+到尽量准确的瓶颈带宽和min_RTT。
+两个公式</p><p>$$\hat{RTprop}=RTprop+min(\eta)=min(RTT_t)\forall t\in [T-W_R,T]$$</p><p>$$BtlBw=max(deliveryRate)\forall t\in [T-W_B, T]$$</p><p>$$RTTprop$$为路径中不包含由本连接本身的发包造成的队列的实际RTT，也就是一段时间内的
+最小RTT，这段时间通常为几十秒到几分钟。$$BtlBw$$瓶颈带宽为一段时间内的最大有发包速率，
+因为一条连接的发包速率是不可能超过该条路径的瓶颈值的， 瓶颈带宽通常为10RTT时段内的
+发送速率最大值。</p><p>其中的$$RTTprop$$很容易，因为TCP本身就需要包含tcp发包的时间戳来更新RTT值，只要记录
+一段时间内的最小RTT值即可。</p><p>而发包速率是通过添加一个发送数据总量参数来实现的，收到一个包的ACK时，除了得到一个RTT值之外，
+还知道了从这个包发出的时间到现在收到ACK时间内，发送数据总量的变化值，用这个变化值除以这个RTT
+值，就得到了这段时间的平均发包速率。需要注意的是，如果一个连接的发送速率很小，那么是无法测得
+$$BtlBw$$的，因为这个连接的所有发包速率都小于实际的$$BtlBw$$值。BBR通过在可以发送新包时
+却没有新的包要发送这一特征来判断，这些包是不被用来计算$$BtlBw$$的，否则一段时间后BBR会以为
+被程序小的发包需求限制的发包速率为带宽瓶颈了。</p><h3 id=控制核心pacing-rate>控制核心:pacing-rate</h3><p>实际的BBR运行时首先通过ProbBW快速启动，以指数形式增大发包速率，直至发生延迟的明显增大，
+从而进入Drain模式，将过大的发包速率导致的臃肿队列削减掉。整个过程都是由pacing-rate，
+可就是严格控制发包速率来控制的，快速启动阶段，每收到一个包，速率<em>1.25，Drain模式时，
+每收到一个包，速率</em>0.75，普通模式时保持发包速率不变。而这个速率的基准就是$$BtlBwFilter.CurrentMax$$。</p><p>通过每隔200ms使用一个RTT时间1.25<em>CurrentMax作为发包速率，探测$$BtlBw$$是否变大，
+如果是，则会继续变大，通过RTT的变化来判断是否是在填充缓存，如若加大发包速率导致RTT增大，
+则在下一个RTT时间内用0.75</em>CurrentMax作为发送速率缩减路由缓存。由于在这个增大减小过程
+当中，对于CurrentMax的值的更新是在继续的，因此如果$$BtlBw$$变大，那么在这个增大减小
+的过程当中$$BtlBw$$增大，感知到了带宽的变化。同时如果此试探没有导致RTT变大，那么就会
+更新$$BtlBw.CurrentMax$$再以1.25*CurrentMax速率发包，所以BBR对于带宽增大后的适应
+速度是指数级的。</p><p>从头到位，可以发现BBR根本就没有以丢包作为发包控制的参数，这是由于按照传统的以丢包为参考
+的拥塞控制算法在当前的高速网络情况下，如果要跑满带宽，需要丢包率满足每3亿个包丢一个，是
+极其低效的。下图为论文中提供的不同丢包率下cubic和BBR的带宽利用率。</p><p><img src=/images/post-images/bbrcubic.png alt=CUBIC-BBR></p><p>参考文献： [BBR: Congestion-Based Congestion Control][2]</p><h2 id=2-kcp>2. KCP</h2><p>kcp采用激进的重传策略，在浪费一定带宽的情况下能够有效减小网络延迟。在一些对延迟要求高的
+网络游戏上很好用。同时由于它的激进重传策略，对于有比较明显的丢包（1%）的情况下，throughput
+比传统的tcp拥塞控制，比如cubic效果有明显的提升。但是话说回来，用来连接vps的话，kcp目前可用
+的也就是<code>kcptun</code>，需要服务端和客户端均运行软件来实现，相比与内建的tcp拥塞控制算法来说通用
+易用性明显较差。</p><p>2.1 kcp的特性分析
+先来看看<a href=1>kcp特性介绍</a>
+1. RTO不翻倍
+2. 选择性重传
+3. 快速重传
+4. 非延迟ACK
+5. 非退让流控
+对于1，在tcp的运行过程当中，只有发生timeout的时候才会对timeout的阀值进行调整，对于一条
+正常运行的tcp连接来说，由于后续的包一直在发送当中，异常丢包后通常是会触发由于<code>duplicate ACK</code>
+而进入<code>quick restart</code>模式，timeout的值影响很小（没有实际的证据，但是应该如此）。</p><p>对于2，各位观众，tcp冤啊，普通的tcp拥塞控制都是处于一种<code>cumulative ACK+选择性重传</code>的半
+选择性重传的模式下的，并非KCP页面上所说的全部重传。<code>cumulative ACK</code>累计ACK：指到目前位置正常收到
+的包序列号的上限+1。比如现在发送除了5-20共16个包，然后5丢了。接收端第一时间收到的是6-20的
+包，由于采用累计ACK，出现乱序包时发送最近成功接受的ACK，也就是4+1=5的ACK，收到6、7、8后，
+就已经发送了3次在需要5的ACK，触发快速重传.</p><p>快速重传的重发只重发一个包，这是半选择性重传的关键。重发到达后，由于5-20的包均收到，直接发送
+需求21的ACK，这样发送端并不需要在5丢失时重发5-20所有的包。</p><p>这样的半选择性重传可以减少带宽的浪费，但是对于单条连接的响应时间和带宽利用并不友好。现象上述
+场景，如果5-20的包跳着掉，即5、7、9、11&mldr;，这样由于ACK包的累计特性，对于包5的<code>dumplicate ACK</code>
+导致5的重传，接收到5后，7的快速重传触发&mldr;。这样下去中间有多少个RTT才能到包20被接收端真正完成？
+如果ACK是包含包序号信息，那么发送端就可以明确知道哪些包收到了，哪些包没收到，快速重传时直接
+一次重传5、7、9，将明显提高窗口移动速度即发包速率，提高响应时间。</p><p>因此，kcp的选择性重传相比一般的TCP拥塞控制是有明确优势的。但是，很遗憾的是，这种ACK的支持必须
+在服务端和客户端都做，对于普通服务器场景不太方便，但是对于有客户端的场景还是很不错的！</p><p>对于3，在2里面说过了，tcp本身就有快速重传。</p><p>对于4，普通的tcp运行过程，由于采用<code>累计ACK</code>的方式，为了减少ACK的发送，在收到正常按序到达的包
+时不立即发送ACK，而是等待一段时间，比如500ms，发送当前正常到达的最大的序号的ACK。这样其实就是
+一个响应时间与带宽利用率的tradeoff。tcp带有一个选项tcp_nodelay用来关闭这个特性，因此该特性
+普通tcp本身具备。</p><p>对于5，采用接收缓存大小和发送缓存大小来控制发包。完全牺牲公平性，对丢包不做任何反应。其它的
+tcp流在遇到丢包时直接把cwnd减半，而kcp继续保持发送速率，这样确实能够抢占更多的带宽，但是如果
+更多的人都这样干，那就是把路由堵死大家都别玩了的干伙。</p><h2 id=cbgdelay-gradient-congestion-control>cbg——Delay Gradient Congestion Control</h2><p>对于普通的tcp工作模式，采用丢包作为拥塞探测的特征，周期性的流量涨落故意填满路由缓存来探
+测带宽上限，导致tcp流量的锯齿状以及路由缓存常常被填满满的问题。很多新的方法被提出，主要是
+改变拥塞探测特征，采用RTT的变化来探测拥塞情况以达到抹平tcp流量的锯齿以及使路由器buffer工作
+在不满的状态。 由于不采用丢包作为网络拥塞的特征，<strong>该类型的拥塞控制算法能在包含非拥塞导致
+的丢包的网络连接上更好的工作</strong>。以下所有内容均参考自<code>NETWORKING 2011: 10th International IFIP TC 6 Networking Conference, Valencia, Spain, May 9-13, 2011, Proceedings, Part II, 381-399</code></p><h3 id=rtt梯度的计算方法>RTT梯度的计算方法</h3><p>RTT用$$\tau$$表示，由于RTT会有一些噪音，并非全由路由缓存的变化导致，因此CDG采用了最大
+和最小RTT差以及<code>moving average</code>的方式减少噪音的影响。</p><p>具体来说，用一段时间内的RTT最小值$$\tau_{min}$$和RTT最大值$$\tau_{max}$$作为该段
+时间的特征值，然后用相邻两段时间的最大与最大、最小与最小的差作为梯度，较少噪音影响。用</p><p>$$g_{min}=\tau_{min, n}-\tau_{min, n-1}$$</p><p>$$g_{max}=\tau_{max, n}-\tau_{max, n-1}$$</p><p>两个梯度，最大延迟以及最小延迟的梯度二者的变化特征来判断拥塞以及路由缓存情况。</p><p>CDG还采用了<code>moving average</code>的方式平滑数据减小噪音，所谓的<code>moving average</code>其实就是只算
+最近的一定数量的平均值，假定只算a个数据的平均值</p><p>$$\bar{g}<em>n=\frac{\sum</em>{i=n-a}^{n}g_{i}}{a}$$</p><p>实际使用中采用递推关系式：</p><p>$$\bar{g}<em>n-\bar{g}</em>{n-1}=\frac{\sum_{i=n-a}^{n}g_{i}-\sum_{i=n-a-1}^{n-1}g_{i}}{a}
+=\frac{g_{n}-g_{n-a-1}}{a}$$</p><p>用该公式计算得到$$g_{max}\text{、}g_{min}$$的平均值，然后用来作为拥塞情况和路由缓存情况的判据。</p><h3 id=梯度变化如何反应拥塞和缓存情况>梯度变化如何反应拥塞和缓存情况</h3><p>这个就简单了，一张图解决问题<img src=/images/post-images/cdg-cc.png alt=cdg-cc></p><p>随着发送速率的增大，路由器缓存填充成都逐渐增大，延迟逐渐升高，直到缓存填满，继续增大发送速率
+延迟不再发生变化，此时探测到拥塞了，开始减小发送窗口，路由器缓存减小，因此延迟随之减小，直到
+继续减小发送速率而延迟不再变化，说明缓存清空。</p><p>对应的梯度也就是斜率变化在右图，当$$g_{max}\text{、}g_{min}$$先后从正变为0，说明填满缓存;
+$$g_{min}\text{、}g_{max}$$先后由负变为0，说明缓存清空。</p><p>只有在缓存填满情况下的丢包才被认为是真正的由于拥塞导致的丢包，才需要采取措施减小发送窗口。
+而其他情况下的丢包，在CDG算法当中，为了和普通的tcp共存增强公平性，采用概率性减小窗口。由于
+采用延迟时间来判断拥塞情况，而不是故意造成路由缓存爆炸，该算法可以使tcp的流量更为平滑。</p><h3 id=cdg的具体行为>CDG的具体行为</h3><p>cdg同样具有<code>启动</code>-<code>congestion avoidence</code>-<code>fast recovery</code>这三个模式。</p><h4 id=1-启动>1. 启动</h4><p>启动和<code>slow start</code>相似，采用hybrid模式，每收到一个包就将cwnd+1，采用两种方式同时判断
+拥塞发生。一种是丢包，这就与普通的tcp一致。另一种是每个RTT进行一次判断，如果达到backoff
+条件，那么也进入<code>congestion avoidence</code>模式。backoff条件在之后的<code>congestion avoidence</code>
+模式中详细解释。</p><h4 id=2-congestion-avoidence>2. congestion avoidence</h4><p>对于<code>congestion avoidence</code>和<code>fast recovery</code>的处理是CDG算法的主要不同。</p><p>$$
+w_{i+1}=\begin{cases}
+w_i\beta & X &lt; P_{backoff} \land \bar{g}>0 \
+w_i & otherwise
+\end{cases}
+$$</p><p>在进入<code>congestion avoidence</code>模式后，只要$\bar{g}>0$就认为发包超过了路由的处理能力，导致
+缓存增长，从而延迟增大，此时就进行概率性的减小发送速率。其中的$\beta$为缩小因子，论文中给出
+为0.7。X为[0, 1]之间的随机数，由$P_{backoff}$给出减小发送的概率。具体公式为</p><p>$$P_{backoff}=1-e^{-\frac{\bar{g}}{G}}$$</p><p>$$\bar{g}$$为平均梯度，$$G$$为参考因子</p><p>通过该函数的图像看看梯度和参考因子的作用<img src=/images/post-images/p_backoff.png alt=p_backoff></p><p>可以看到G越大，则P值对每个RTT变化的最大或最小RTT值的变化值(也就是平均梯度)敏感，真正能调节
+的范围也更大。当$$G=2$$时，对于$$\bar{g}>10$$之后的所有$$\bar{g}$$概率都是一样的，都会
+导致几乎100%的发送速率减小。</p><p>在同样的G下，$$\bar{g}$$越大，则$$P_{backoff}$$越大，即发送速率减小的可能性越大。这很符合
+逻辑，$$\bar{g}$$越大，说明路由拥塞情况越厉害，因此减小发送速率的可能性越大。</p><p>现在来看看对于不同长度的RTT情况下，$$\bar{g}$$对发送速率减小概率的影响。</p><table><thead><tr><th>编号</th><th>RTT</th><th>$$\bar{g}$$值</th></tr></thead><tbody><tr><td>1</td><td>40ms</td><td>小(中间节点可能更少)</td></tr><tr><td>2</td><td>300ms</td><td>大(中间节点可能更多)</td></tr></tbody></table><p>比如由于发送速率过大，导致路由延迟增加5ms，300ms延迟的链路中间有5个路由，每个增加5ms则
+$$g = 25ms$$， 而中间只有两个路由的低延迟路线增加$$ g = 10ms$$，在相同参考因子G的情况下，
+高延迟线路减小发送速率的可能性更大。</p><p>基于响应速度考虑，基于RTT周期的$$\bar{g}$$流量控制对于高延迟的连接响应会出现明显的迟缓，
+如果为了避免响应太慢导致的路由拥塞，将所有的连接使用同一个G因子来控制有一定的道理。但是
+作为实际使用来说，对于高延迟连接，相对来说会有明显更高的降速可能性。如果为了让长短延迟的
+连接具有一致的连接公平性，应该加上一个因子，让$$\bar{g}$$成为一个归一化的值。<strong>但是直接
+用延迟来表达可能的路由数，以及中间节点多在发生拥塞时延迟增加一定更多的假设也不一定能成立</strong>，
+但是CDG对于长延迟的连接很可能具有更高的降速可能性。</p><h4 id=丢包处理>丢包处理</h4><p>当发生丢包时CDG的处理方式</p><p>$$
+w_{i+1}=\begin{cases}\frac{max(s_i, w_i)}{2} & Q=Full \land packet loss\
+0 & otherwise\end{cases}
+$$</p><p>这里的$$s_i$$是所谓的影子窗口，在发生概率性减小发送窗口时，影子窗口初始化和变化规律为</p><p>$$
+s_{i+1} = \begin{cases}max(s_i, w_i) & backoff happed \
+0 & Q=empyt \
+s_i & otherwise
+\end{cases}
+$$</p><p>当正常线性增大发送窗口时，影子窗口按照普通的tcp拥塞控制方式继续线性增长，在真正开始丢包
+之前可能就会由于延迟梯度变化导致的backoff，这时影子窗口继续增大，当再次发生非丢包导致的
+backoff时，影子窗口更大，因此也会使实际发送窗口取它的一半控制速率，因此可以保持在更高的
+发送速率。直至发生丢包时，影子窗口存在使发包速率保持较高，且此时影子窗口应该更新，与实际
+发送值保持一致。然后继续按照普通tcp拥塞控制的方式增长，发生backoff时采用。<strong>此机制的存在
+是为了实际使用中与普通的tcp拥塞控制的连接进行竞争时保证公平性，因为cdg算法会在非丢包时
+回退，回退次数比普通控制算法更多，而此时普通算法的连接在周期性填充缓存，导致cdg算法控制
+的连接会保持在一个相对更低的发送水平。影子窗口能够使流量保持在更高速率</strong></p><p>除上述影子窗口外，cdg还采用名为<code>infectual backoff detection</code>的方式检测是否与普通拥塞
+控制算法的连接在竞争。当连续backoff几次（次数可以配置）后，如果发现仍然$$\bar{g}>0$$，
+说明我方的主动回退避免缓存继续增产的尝试失败，猜测本连接工作在与普通算法连接竞争的环境
+中，接下来的几次（同样可配置）backoff条件达到时，并不真正进行回退，以此作为和普通拥塞控制
+连接竞争。</p><p>但是看下来可以发现，cdg除了用为缓存满的情况下的丢包才算丢包，减半发送窗口之外，其余的部分
+不过是更为主动的backoff，但是过多的backoff在同只有丢包才backoff的情况下，会有更低的发送
+速率。因为你跟路由讲绅士风度，可是别的连接都不讲啊。但是在有一定非拥塞致丢包的情况下，加上
+上述的两种方式不那么绅士，表现比普通拥塞控制算法要好。<strong>但是为什么不仅仅维护一个延迟梯度
+参数用来判断连接缓存是否已满，只有已满的连接丢包才算拥塞丢包，其余方式和普通拥塞算法一致？</strong>
+至于公平性问题，在丢包较高的连接中，普通的tcp拥塞算法根本无法有效利用带宽的话，不用白不用？</p><h2 id=简单的测试>简单的测试</h2><p>主要用途在于服务端向客户端发送数据，能够真正有效的利用实际带宽而不是被非拥塞导致的丢包大大
+限制带宽利用率，因此做一个简单的测试.使用wget单线程从服务端下载一个相同大小的文件，对比cdg
+和BBR</p><table><thead><tr><th>名称</th><th>速率</th></tr></thead><tbody><tr><td>BBR</td><td>$$0.91Mps$$</td></tr><tr><td>cdg</td><td>$$60kps/890kps^*$$</td></tr></tbody></table><p>$$^*$$参数调节很重要，需要对cdg的过程理解之后进行调参，默认参数甚至比cubic算法速率更低。</p><h2 id=总结>总结</h2><p>纵观CUBIC，KCP，BBR，CDG四种传输方式，CUBIC在丢包的情况下对带宽的利用率明显降低，即使这种丢
+包不是由于拥塞导致的也会。KCP通过添加单独包的ACK，可以在重传时效率更高，这在丢包多的情况
+下很有用，但是这需要server-client端共同安装，相对来说麻烦，如果不管拥塞情况保持发包速率，
+这就有点不讲道理了：）。CDG则太绅士了，核心是通过斜率来判断拥塞情况，根据拥塞情况来决定
+是否将丢包作为拥塞信号。但是由于CDG跟一大帮子不停的让带宽拥挤到丢包的CUBIC类的流量竞争时，
+它还会在不发生丢包时概率性降低发送速率，那怎么玩？相对来说，BBR是最和谐的了，不管丢包，利用
+间歇性的流量增长探测带宽瓶颈值大小，一直更新RTT，让整个连接的发包速率保持在靠近用满带宽，
+而又填充路由缓存的理想位置附近。</p><p>修改记录：
+2018.01.30： 添加总结段
+[1]:https://github.com/skywind3000/kcp
+[2]:http://delivery.acm.org/10.1145/3010000/3009824/p58-cardwell.pdf?ip=111.18.33.37&amp;id=3009824&amp;acc=OA&amp;key=4D4702B0C3E38B35%2E4D4702B0C3E38B35%2E4D4702B0C3E38B35%2E5945DC2EABF3343C&<strong>acm</strong>=1516622566_bd137d5314d49d529400106b085f21c7</p></div><div class=post-copyright><p class=copyright-item><span class=item-title>文章作者</span>
+<span class=item-content>thinkeryu</span></p><p class=copyright-item><span class=item-title>上次更新</span>
+<span class=item-content>2017-12-09</span></p></div><footer class=post-footer><div class=post-tags><a href=/tags/congestion/>congestion</a>
+<a href=/tags/control/>control</a>
+<a href=/tags/network/>network</a>
+<a href=/tags/tcp/>tcp</a></div><nav class=post-nav><a class=prev href=/post/hugo-katex-support/><i class="iconfont icon-left"></i>
+<span class="prev-text nav-default">Hugo Katex Support</span>
+<span class="prev-text nav-mobile">上一篇</span></a>
+<a class=next href=/post/linux%E6%A1%8C%E9%9D%A2%E4%BD%93%E7%B3%BB%E6%96%87%E4%BB%B6%E9%BB%98%E8%AE%A4%E6%89%93%E5%BC%80%E6%96%B9%E5%BC%8F%E5%B7%A5%E4%BD%9C%E6%9C%BA%E7%90%86/><span class="next-text nav-default">Linux桌面体系文件默认打开方式工作机理</span>
+<span class="next-text nav-mobile">下一篇</span>
+<i class="iconfont icon-right"></i></a></nav></footer></article></div><div id=gitalk-container></div><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css crossorigin=anonymous><script src=https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js crossorigin=anonymous></script>
+<script type=text/javascript>var gitalk=new Gitalk({id:"2017-12-09 10:04:36 \u002b0800 \u002b0800",title:"Tcp_congestion_control BBR KCP CDG非拥塞丢包情景对比",clientID:"e6672c053ad6c6056f71",clientSecret:"c13fdda944329c62818b9bbf0b00a23658614f3e",repo:"blog",owner:"linuxhenhao",admin:["linuxhenhao"],body:decodeURI(location.href)});gitalk.render("gitalk-container")</script><noscript>Please enable JavaScript to view the <a href=https://github.com/gitalk/gitalk>comments powered by gitalk.</a></noscript></div></main><footer id=footer class=footer><div class=social-links><a href=https://www.linkedin.com/in/yuhuang-keepmoving class="iconfont icon-linkedin" title=linkedin></a>
+<a href=https://github.com/linuxhenhao class="iconfont icon-github" title=github></a>
+<a href=https://blog.thinkeryu.com/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a></div><div class=copyright><span class=power-by>由 <a class=hexo-link href=https://gohugo.io>Hugo</a> 强力驱动</span>
+<span class=division>|</span>
+<span class=theme-info>主题 -
+<a class=theme-link href=https://github.com/olOwOlo/hugo-theme-even>Even</a></span>
+<span class=copyright-year>&copy;
+2017 -
+2024<span class=heart><i class="iconfont icon-heart"></i></span><span>thinkeryu</span></span></div></footer><div class=back-to-top id=back-to-top><i class="iconfont icon-up"></i></div></div><script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin=anonymous></script>
+<script type=text/javascript src=/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js></script>
+<script type=text/javascript>window.MathJax={tex:{inlineMath:[["$","$"],["\\(","\\)"]]}}</script><script async src=https://cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js integrity="sha256-HGLuEfFcsUJGhvB8cQ8nr0gai9EucOOaIxFw7qxmd+w=" crossorigin=anonymous></script></body></html>

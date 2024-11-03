@@ -1,0 +1,68 @@
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><title>5700x on msi B450 - ThinkerYu的博客</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=cache-control content="no-transform"><meta http-equiv=cache-control content="no-siteapp"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=author content="thinkeryu"><meta name=description content="r5 3600使用比较常时间了，今年双十一突然想要升级一下，主板是微星的B450，到微星的官网上查看，发现 这个主板是支持5950x、5800x、"><meta name=keywords content="5700x,b450,amd_pstate"><meta name=baidu-site-verification content="codeva-VIZSl7AL1R"><meta name=google-site-verification content="XNHEmGcTsyzl1k_2n1OZJcuqSf4EV2wI30BMdd_P-x8"><meta name=sogou_site_verification content="ipba8WzhSj"><meta name=generator content="Hugo 0.111.3 with theme even"><link rel=canonical href=https://blog.thinkeryu.com/post/24.11.04_amd_5700x_msi_b450/><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/manifest.json><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link href=/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css rel=stylesheet><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous><meta property="og:title" content="5700x on msi B450"><meta property="og:description" content="r5 3600使用比较常时间了，今年双十一突然想要升级一下，主板是微星的B450，到微星的官网上查看，发现 这个主板是支持5950x、5800x、"><meta property="og:type" content="article"><meta property="og:url" content="https://blog.thinkeryu.com/post/24.11.04_amd_5700x_msi_b450/"><meta property="article:section" content="post"><meta property="article:published_time" content="2024-11-04T01:23:13+08:00"><meta property="article:modified_time" content="2024-11-04T01:23:13+08:00"><meta itemprop=name content="5700x on msi B450"><meta itemprop=description content="r5 3600使用比较常时间了，今年双十一突然想要升级一下，主板是微星的B450，到微星的官网上查看，发现 这个主板是支持5950x、5800x、"><meta itemprop=datePublished content="2024-11-04T01:23:13+08:00"><meta itemprop=dateModified content="2024-11-04T01:23:13+08:00"><meta itemprop=wordCount content="833"><meta itemprop=keywords content="ryzen,b450,"><meta name=twitter:card content="summary"><meta name=twitter:title content="5700x on msi B450"><meta name=twitter:description content="r5 3600使用比较常时间了，今年双十一突然想要升级一下，主板是微星的B450，到微星的官网上查看，发现 这个主板是支持5950x、5800x、"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>ThinkerYu的博客</a></div><div class=mobile-navbar-icon><span></span>
+<span></span>
+<span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><a href=/><li class=mobile-menu-item>Home</li></a><a href=/post/><li class=mobile-menu-item>Archives</li></a><a href=/tags/><li class=mobile-menu-item>Tags</li></a><a href=/categories/><li class=mobile-menu-item>Categories</li></a></ul></nav><div class=container id=mobile-panel><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>ThinkerYu的博客</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/categories/>Categories</a></li></ul></nav></header><main id=main class=main><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>5700x on msi B450</h1><div class=post-meta><span class=post-time>2024-11-04</span><div class=post-category><a href=/categories/computer/>computer</a></div></div></header><div class=post-toc id=post-toc><h2 class=post-toc-title>文章目录</h2><div class="post-toc-content always-active"><nav id=TableOfContents><ul><li><ul><li><a href=#问题>问题</a><ul><li><a href=#频率锁死在545mhz>频率锁死在545MHz</a></li><li><a href=#linux-启用-amd_pstate>linux 启用 amd_pstate</a></li><li><a href=#amd-cpu取风扇>amd CPU取风扇</a></li></ul></li></ul></li></ul></nav></div></div><div class=post-content><p>r5 3600使用比较常时间了，今年双十一突然想要升级一下，主板是微星的B450，到微星的官网上查看，发现
+这个主板是支持5950x、5800x、5700x之类的更新的cpu的，综合考虑性价比性能之后，选定5700x作为升级的
+目标。</p><p>根据网上的benchmark，5700x的性能比3600高54%左右，咸鱼二手价格在700多，最终咸鱼下手，顺利点亮，这里记录一下
+遇到的问题和处理的过程。</p><h2 id=问题>问题</h2><h3 id=频率锁死在545mhz>频率锁死在545MHz</h3><p>BIOS升级到最新的正式版，换上cpu之后点亮，但是点亮之后，即使在BIOS的OC配置中将频率锁死，进入系统之后还是保持在
+545MHz，怎么调整都没用，最后还是在网上抄了一段配置，才让频率正常，这里做一下记录。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>F7 -&gt; Advanced Mode
+</span></span><span class=line><span class=cl>OC -&gt;OC explore Mode -&gt;[Expert]
+</span></span><span class=line><span class=cl>Overclocking:
+</span></span><span class=line><span class=cl>  Precision Boost Overdrive-&gt;[Adanced]
+</span></span><span class=line><span class=cl>    PBO Limits -&gt;[Disabled]
+</span></span><span class=line><span class=cl>    Precision Boost Overdrive Scalar -&gt; [Manual]
+</span></span><span class=line><span class=cl>    Precision Boost Overdrive Scalar -&gt; [10x]
+</span></span><span class=line><span class=cl>    CPU Boost Clock Override -&gt; [Auto]
+</span></span><span class=line><span class=cl>    Platform Thermal Throttle Limit -&gt; [115]
+</span></span><span class=line><span class=cl>    CPPC -&gt; [Enabled]  # 单核粒度调整频率
+</span></span><span class=line><span class=cl>    CPPC Prefered xx -&gt; [Enabled]
+</span></span><span class=line><span class=cl>  Curve Optimizer
+</span></span><span class=line><span class=cl>    Curve Optimizer -&gt; [All Cores]
+</span></span><span class=line><span class=cl>    All Core Curve Optimizer Sign -&gt; [Negative] # 负压超频
+</span></span><span class=line><span class=cl>    All Core Curve Optimizer Magntitude -&gt; [15] # 根据建议，从15开始，可以更大，但是我没有再调整
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>OC -&gt;DigitAll Power
+</span></span><span class=line><span class=cl>  CPU Loadline Calibration Control -&gt; [Mode4] # 防止CPU低负载宕机
+</span></span></code></pre></td></tr></table></div></div><h3 id=linux-启用-amd_pstate>linux 启用 amd_pstate</h3><p>linux 内核已经支持了 amd 专属的频率控制模块，对应intel_pstate，但是需要启用
+在<code>/etc/default/grub</code>中，修改<code>GRUB_CMDLINE_LINUX_DEFAULT</code>的值</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>GRUB_CMDLINE_LINUX_DEFAULT=&#34;amd_pstate=guided&#34;
+</span></span></code></pre></td></tr></table></div></div><p>一共三个模式<code>active</code>,<code>passive</code>,<code>guided</code>，具体可以看kernel的文档，我选择guided模式，
+用户设置的作为指引，在允许的情况下尽量高。</p><h3 id=amd-cpu取风扇>amd CPU取风扇</h3><p>本次升级过程有几次拆装CPU的过程，遇到了两次由于导热硅脂把风扇和cpu粘在一起，导致CPU被直接拔下来的情况，
+并且让5700x的针脚弯曲，在修正的过程断掉了一个针脚，还好查AM4的针脚定义图，断的是一个RSS（接地），由于
+AMD4针脚定义上有很多RSS针脚，断了一根没有影响到功能。</p><p>两点学习：</p><ol><li>硅脂可以少放一点，不要太多</li><li>拆的时候如果发现粘的很紧，用吹风机吹一吹，用工具顶开散热和CPU，避免一起拔下来</li></ol></div><div class=post-copyright><p class=copyright-item><span class=item-title>文章作者</span>
+<span class=item-content>thinkeryu</span></p><p class=copyright-item><span class=item-title>上次更新</span>
+<span class=item-content>2024-11-04</span></p></div><footer class=post-footer><div class=post-tags><a href=/tags/ryzen/>ryzen</a>
+<a href=/tags/b450/>b450</a></div><nav class=post-nav><a class=next href=/post/how_to_get_public_ipv6_behind_optical_network_terminal_without_bridge_mode/><span class="next-text nav-default">不桥接光猫获取公网ipv6地址</span>
+<span class="next-text nav-mobile">下一篇</span>
+<i class="iconfont icon-right"></i></a></nav></footer></article></div><div id=gitalk-container></div><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css crossorigin=anonymous><script src=https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js crossorigin=anonymous></script>
+<script type=text/javascript>var gitalk=new Gitalk({id:"2024-11-04 01:23:13 \u002b0800 \u002b0800",title:"5700x on msi B450",clientID:"e6672c053ad6c6056f71",clientSecret:"c13fdda944329c62818b9bbf0b00a23658614f3e",repo:"blog",owner:"linuxhenhao",admin:["linuxhenhao"],body:decodeURI(location.href)});gitalk.render("gitalk-container")</script><noscript>Please enable JavaScript to view the <a href=https://github.com/gitalk/gitalk>comments powered by gitalk.</a></noscript></div></main><footer id=footer class=footer><div class=social-links><a href=https://www.linkedin.com/in/yuhuang-keepmoving class="iconfont icon-linkedin" title=linkedin></a>
+<a href=https://github.com/linuxhenhao class="iconfont icon-github" title=github></a>
+<a href=https://blog.thinkeryu.com/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a></div><div class=copyright><span class=power-by>由 <a class=hexo-link href=https://gohugo.io>Hugo</a> 强力驱动</span>
+<span class=division>|</span>
+<span class=theme-info>主题 -
+<a class=theme-link href=https://github.com/olOwOlo/hugo-theme-even>Even</a></span>
+<span class=copyright-year>&copy;
+2017 -
+2024<span class=heart><i class="iconfont icon-heart"></i></span><span>thinkeryu</span></span></div></footer><div class=back-to-top id=back-to-top><i class="iconfont icon-up"></i></div></div><script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin=anonymous></script>
+<script type=text/javascript src=/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js></script>
+<script type=text/javascript>window.MathJax={tex:{inlineMath:[["$","$"],["\\(","\\)"]]}}</script><script async src=https://cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js integrity="sha256-HGLuEfFcsUJGhvB8cQ8nr0gai9EucOOaIxFw7qxmd+w=" crossorigin=anonymous></script></body></html>

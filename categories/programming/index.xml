@@ -7,4 +7,10 @@
 python版本已经到了3.4.7，都是一些安全性的更新。但是官方如今不再提供直接可以安装的binary
 文件下载，需要自己编译安装，因此做个记录。参考&lt;a href="https://wiki.python.org/moin/VS2010">官方wiki&lt;/a>
 和&lt;a href="https://docs.python.org/devguide/setup.html#windows-compiling">python-doc&lt;/a>
-&lt;a href="https://wiki.openssl.org/index.php/Compilation_and_Installation">openssl wiki&lt;/a>&lt;/p></description></item></channel></rss>
+&lt;a href="https://wiki.openssl.org/index.php/Compilation_and_Installation">openssl wiki&lt;/a>&lt;/p></description></item><item><title>抽象分层-以twisted为例</title><link>https://blog.thinkeryu.com/post/%E6%8A%BD%E8%B1%A1%E5%88%86%E5%B1%82%E4%BB%A5twisted%E4%B8%BA%E4%BE%8B/</link><pubDate>Sat, 16 Sep 2017 09:17:19 +0800</pubDate><guid>https://blog.thinkeryu.com/post/%E6%8A%BD%E8%B1%A1%E5%88%86%E5%B1%82%E4%BB%A5twisted%E4%B8%BA%E4%BE%8B/</guid><description>&lt;h2 id="缘由">缘由&lt;/h2>
+&lt;p>最近在项目中有一个需求，将其进行前后端分离。其中一个重点是后端，也就是server端，需要不停
+的向前端client发送数据。考虑到将来跨平台的简便性，基于浏览器广泛支持的websocket是非常好的
+选择。&lt;br>
+但是一个额外的强制要求限制了该需求的实现，那就是对XP系统的支持，没错2017年对XP系统的支持。
+软件界面使用的是PySide+python3.4实现的。而PySide中并没有对Websocket的支持，在PyQt5或者
+PySide2中已经包含了webosocket的实现，但是无法在XP系统中运行。&lt;/p></description></item></channel></rss>

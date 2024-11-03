@@ -1,0 +1,94 @@
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><title>Linux下让某程序的所有数据包通过指定网口发出 - ThinkerYu的博客</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=cache-control content="no-transform"><meta http-equiv=cache-control content="no-siteapp"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=author content="thinkeryu"><meta name=description content="让某程序的所有数据通过指定网口发出。这是结合上一篇搭建的虚拟连接实现的特定功能，达到一些 目的——比如让没有WAN地址的服务通过vps具备的WAN地址提供交互（可以了解一下frp）。
+"><meta name=keywords content="ip-rule,iptables"><meta name=baidu-site-verification content="codeva-VIZSl7AL1R"><meta name=google-site-verification content="XNHEmGcTsyzl1k_2n1OZJcuqSf4EV2wI30BMdd_P-x8"><meta name=sogou_site_verification content="ipba8WzhSj"><meta name=generator content="Hugo 0.111.3 with theme even"><link rel=canonical href=https://blog.thinkeryu.com/post/linux%E4%B8%8B%E8%AE%A9%E6%9F%90%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%89%80%E6%9C%89%E6%95%B0%E6%8D%AE%E5%8C%85%E9%80%9A%E8%BF%87%E6%8C%87%E5%AE%9A%E7%BD%91%E5%8F%A3%E5%8F%91%E5%87%BA/><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/manifest.json><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link href=/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css rel=stylesheet><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous><meta property="og:title" content="Linux下让某程序的所有数据包通过指定网口发出"><meta property="og:description" content="让某程序的所有数据通过指定网口发出。这是结合上一篇搭建的虚拟连接实现的特定功能，达到一些
+目的——比如让没有WAN地址的服务通过vps具备的WAN地址提供交互（可以了解一下frp）。"><meta property="og:type" content="article"><meta property="og:url" content="https://blog.thinkeryu.com/post/linux%E4%B8%8B%E8%AE%A9%E6%9F%90%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%89%80%E6%9C%89%E6%95%B0%E6%8D%AE%E5%8C%85%E9%80%9A%E8%BF%87%E6%8C%87%E5%AE%9A%E7%BD%91%E5%8F%A3%E5%8F%91%E5%87%BA/"><meta property="article:section" content="post"><meta property="article:published_time" content="2017-10-29T13:27:35+08:00"><meta property="article:modified_time" content="2017-10-29T13:27:35+08:00"><meta itemprop=name content="Linux下让某程序的所有数据包通过指定网口发出"><meta itemprop=description content="让某程序的所有数据通过指定网口发出。这是结合上一篇搭建的虚拟连接实现的特定功能，达到一些
+目的——比如让没有WAN地址的服务通过vps具备的WAN地址提供交互（可以了解一下frp）。"><meta itemprop=datePublished content="2017-10-29T13:27:35+08:00"><meta itemprop=dateModified content="2017-10-29T13:27:35+08:00"><meta itemprop=wordCount content="3161"><meta itemprop=keywords content="route,linux,"><meta name=twitter:card content="summary"><meta name=twitter:title content="Linux下让某程序的所有数据包通过指定网口发出"><meta name=twitter:description content="让某程序的所有数据通过指定网口发出。这是结合上一篇搭建的虚拟连接实现的特定功能，达到一些
+目的——比如让没有WAN地址的服务通过vps具备的WAN地址提供交互（可以了解一下frp）。"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>ThinkerYu的博客</a></div><div class=mobile-navbar-icon><span></span>
+<span></span>
+<span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><a href=/><li class=mobile-menu-item>Home</li></a><a href=/post/><li class=mobile-menu-item>Archives</li></a><a href=/tags/><li class=mobile-menu-item>Tags</li></a><a href=/categories/><li class=mobile-menu-item>Categories</li></a></ul></nav><div class=container id=mobile-panel><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>ThinkerYu的博客</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/categories/>Categories</a></li></ul></nav></header><main id=main class=main><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>Linux下让某程序的所有数据包通过指定网口发出</h1><div class=post-meta><span class=post-time>2017-10-29</span><div class=post-category><a href=/categories/network/>network</a></div></div></header><div class=post-toc id=post-toc><h2 class=post-toc-title>文章目录</h2><div class="post-toc-content always-active"><nav id=TableOfContents><ul><li><ul><li><a href=#iptables机制>iptables机制</a></li><li><a href=#wireguard的fwmark>wireguard的fwmark</a></li><li><a href=#包转发场景>包转发场景</a><ul><li><a href=#client端>client端</a></li></ul></li><li><a href=#server端>server端</a></li></ul></li></ul></nav></div></div><div class=post-content><p>让某程序的所有数据通过指定网口发出。这是结合上一篇搭建的虚拟连接实现的特定功能，达到一些
+目的——比如让没有WAN地址的服务通过vps具备的WAN地址提供交互（可以了解一下<a href=https://github.com/fatedier/frp>frp</a>）。</p><h2 id=iptables机制>iptables机制</h2><p>iptables是linux常用的通讯管理工具，是内核netfilter组件的用户空间工具。使用iptables可以
+实现各种各样的发包控制。而最关键的是知道IP包是如何在系统中穿梭的。如图所示
+<img src=/images/post-images/tables_traverse.jpg alt='packet traverse path' style=width:60%>
+iptables就是在包的流通过程中流过的链中添加一定的规则，从而对包作出一些处理以实现目标。
+iptables有许多的hook点，通过netfilter提供的接口运行，比如OUTPUT、INPUT、FORWARDING、
+POSTROUTIING，就在图中所描述的各个位置。而iptables根据应用的特点，分成几个类型，nat包转发、
+mangle包修改、filter包过滤，在各个hook点包流过几类处理的顺序为mangle->nat->filter。
+称各个OUTPUT、INPUT之类的为<code>chain</code>，可以在<code>chain</code>中添加<code>rule</code>，被一条<code>chain</code>处理完之后
+才会被下一条<code>chain</code>处理。在<code>chain</code>中流过<code>rule</code>的顺序是，先流过先添加的<code>rule</code>。当然，如果
+某<code>rule</code>匹配了包，并作出了<code>DROP</code>处理，这个包就被丢弃，后面所有的过程都不进行了，如果进行
+<code>RETURN</code>，则分两种情况，如果是在OUTPUT、INPUT等顶级的<code>chain</code>中<code>RETURN</code>，则直接跳过该链
+中后续的所有<code>rule</code>，直接设为该链的默认状态，比如<code>PREROUTING</code>一般为<code>ACCEPT</code>。如果是从
+上述的顶级链中跳转到的次级甚至更低级的链中<code>RETURN</code>，则返回上级链进行跳转的位置，并继续
+流过上级链的<code>rule</code>。</p><h2 id=wireguard的fwmark>wireguard的fwmark</h2><p>iptables的mangle->nat->filter流通过程中，可以对包添加mark，用以区分包，从而对不同特征
+的包作不同的处理，mark只在内核里面有，在从要网卡发出时会将其去除。wireguard也具备添加mark
+的能力，但是它的添加方式是直接在源码里面实现，未利用iptables，直接在生成的包中添加了mark。
+也就是在图中的<code>local process</code>部分生成的包就包含了mark，可以在后续的<code>OUTPUT</code>以及<code>POSTROUTING</code>
+链中做一些其他的处理。通过以下命令可以验证：</p><pre><code>iptables -t mangle -A OUTPUT -m mark --mark $wg_mark -j DROP
+</code></pre><p>由于<code>mangle</code>是从内核空间出来后遇到的第一个chain，在此DROP掉所有包含wireguard的mark的包，
+果然就无法ping通server端了。这就说明，wireguard的fwmark是直接在构建包的时候就添加的，而
+不是利用iptables在后续过程添加的。</p><h2 id=包转发场景>包转发场景</h2><p>client，与server之间通过虚拟连接连接，IP为<code>10.0.0.3</code>，网口名<code>vlan3</code>, 本地具备路由器分配的
+地址<code>192.168.1.3</code>用以普通通信，网口名<code>eth3</code>。<br>server， 虚拟连接IP为<code>10.0.0.1</code>，网口名<code>vlan1</code>并且规定，从client发来的包只能为<code>10.0.0.0/24</code>网段，具备
+公网IP: <code>111.100.13.92</code>， 网口名<code>eth1</code><br>需求： 将client中的程序A的所有包的接收和发送通过虚拟连接进行。</p><h3 id=client端>client端</h3><p>1. 将所有从<code>vlan3</code>接收的包从<code>vlan3</code>返回</p><pre><code>ip rule add iif vlan3 table 3
+ip route add table 3 via 10.0.0.1
+</code></pre><p>2. 让所有A发出的包通过<code>vlan3</code>发出<br>2.1 由于<code>iptalbes</code>已经不支持以发出包的程序<code>PID</code>来匹配包，采用发出包的<code>UID</code>来进行匹配，
+新建一个用户专门用来运行程序A，我们称之为<code>UserA</code></p><pre><code>useradd UserA
+</code></pre><p>2.2 通过<code>iptables</code>对<code>UserA</code>发出的包添加<code>mark</code>，使用<code>ip-rule</code>根据mark指定路由表，在路由
+表中（也就是上面的<code>table 3</code>），所有的包默认通过<code>vlan3</code>发出。</p><pre><code>iptables -t mangle -A OUTPUT -m mark --mark wireguard's-mark -j RETURN
+# 这一条必须，让`vlan3`发出来的包不会被定向到table3,否则就死循环了。
+iptables -t mangle -A OUTPUT -m owner --uid-owner UserA -j MARK --set-mark 1
+# 可以直接使用用户名匹配，给所有该用户发出的包打上`1`标签
+ip rule add fwmark 1 table 3
+# 让所有的`1`标签的包通过路由表3路由
+</code></pre><p>RETURN那一条并非所有的虚拟连接软件都需要，取决于具体的实现。比如openvpn就不需要类似的设置，
+其实一般来说在实际网卡发包，经过网卡之后，owner信息还有mark的都被去掉了，因为已经出了内核
+空间。至于后面数据到虚拟网卡后，从另外一个连接把数据重新打包发出，那就是虚拟连接工具运行用
+户的事情了。但是wireguard可能读取了发包的owner信息，并且将重新打包的包继承了该owner信息。
+所以如果在OUTPUT的mangle上不加以区分wireguard的包，就会造成无限循环。当然还有另外一种解决
+方式。</p><pre><code>iptables -t mangle -A OUTPUT -m owner --uid-owner UserA -j MARK --set-mark 1
+# 可以直接使用用户名匹配，给所有该用户发出的包打上`1`标签
+ip rule add fwmark 1 table 3
+# 让所有的`1`标签的包通过路由表3路由
+ip route add table 3 server_wan_ip via 192.168.1.3 dev eth3
+</code></pre><p>这样，在经过路由之后，虽然wireguard再次发包会被<code>mark 1</code>，但是wireguard发包都是发往server
+的ip地址，在<code>OUTPUT</code>之后的<code>route decision</code>后，他会被<code>eth3 src=192.168.1.3 dst=server_ip</code>，
+而普通的包会变成<code>vlan3 src=192.168.1.3 dst=xxxx</code>，在<code>POSTROUTING</code>上作<code>SNAT</code></p><pre><code>iptables -t nat -A POSTROUTING -o vlan3 -j MASQUERADE
+</code></pre><p>这样也实现了包的正常流通。</p><p>PS：之前未作SNAT，上面几步做完发现怎么都无法连接，切换到<code>UserA</code>下
+进行网络连接都连不上，所以需要进一步的debug。用到了<code>iptables</code>中的<code>LOG</code>目标。</p><pre><code>iptables -t mangle -A OUTPUT -m owner --uid-owner UserA -j LOG --log-prefix &quot;owner-matched: &quot;
+# 在上述的mangle型的OUTPUT链中再添加一条LOG记录， log-prefix是自定义log信息的开头
+</code></pre><p>进行该项操作后，再用<code>UserA</code>进行网络请求，通过<code>dmesg</code>查看iptables记录的LOG，发现确实是
+匹配到了用户请求，但是<code>Src</code>项竟然是<code>192.168.1.3</code>出口也是网卡<code>eth3</code>。接下来看看，
+在OUTPUT之后的<code>route decision</code>之后发生了什么</p><pre><code>iptables -t mangle -A  POSTROUTING -m mark --mark 1 -j LOG  --log-prefix &quot;postrouting: &quot;
+</code></pre><p>发现由于OUTPUT中<code>mark</code>的设置，路由确实是使用了<code>table3</code>， 出口变成了<code>vlan3</code>，但是<code>Src</code>并没有发生
+改变，仍然是<code>192.168.1.3</code>，也就是说，虽然在<code>OUTPUT</code>之后再次<code>route decision</code>时根据路由表更改了
+出口网卡，但是并不会对源地址进行更改，所以我们需要人为的处理一下。</p><pre><code>iptables -t nat -A POSTROUTING -m mark --mark 1 -j SNAT --to-source 10.0.0.3
+</code></pre><p>再次以用户<code>UserA</code>进行网络请求，发现可以正常运作了。当然，这是对所有wireguard发出的包未
+进行<code>mark</code>下的规则，否则就要用<code>-o vlan3</code>作限定，并且给<code>table 3</code>添加专门到server的规则。</p><h2 id=server端>server端</h2><p>server端相比就简单许多，由于他的路由表的默认路由就是我们的公网IP，首先为了让<code>10.0.0.1/24</code>
+方面的包也会通过该IP转发，需要开启kernel的forwarding选项。编辑<code>/etc/sysctl.conf</code>，添加</p><pre><code>net.ipv4.conf.all.forwarding = 1
+</code></pre><p>然后还需要做一个源地址变换，iptables有个MASQUERADE，可以不用人为选取替换的目标IP，而会
+智能的选用系统用来连接外部网络的网址进行替换：</p><pre><code>iptables -t nat -A POSTROUTING -s 10.0.0.0/24 -j MASQUERADE
+</code></pre><p>到此，所有从client发出的包都能够从server发出到外网了，但是外网却不能主动发包到内网。
+加入client的程序A在端口1000监听，等待外网的主动请求，那么在server端作以下转发即可：</p><pre><code>iptables -t nat -A PREROUTING -p tcp --dport 1000 -j DNAT --to 10.0.0.3:1000
+iptables -t nat -A PREROUTING -p udp --dport 1000 -j DNAT --to 10.0.0.3:1000
+</code></pre><p>这样在紧跟PREROUTING后的<code>route decision</code>中，会进行<code>forwarding</code>，将其通过虚拟连接转发给
+client。完美！</p></div><div class=post-copyright><p class=copyright-item><span class=item-title>文章作者</span>
+<span class=item-content>thinkeryu</span></p><p class=copyright-item><span class=item-title>上次更新</span>
+<span class=item-content>2017-10-29</span></p></div><footer class=post-footer><div class=post-tags><a href=/tags/route/>route</a>
+<a href=/tags/linux/>linux</a></div><nav class=post-nav><a class=prev href=/post/iptables%E4%B8%ADowener%E4%BF%A1%E6%81%AF%E7%9A%84%E6%9D%A5%E6%BA%90/><i class="iconfont icon-left"></i>
+<span class="prev-text nav-default">Iptables中owener信息的来源以及wireguard发包带有owner信息的原因探索</span>
+<span class="prev-text nav-mobile">上一篇</span></a>
+<a class=next href=/post/%E8%AE%B0wireguard%E7%9A%84ip-rule%E9%85%8D%E7%BD%AE%E9%97%AE%E9%A2%98/><span class="next-text nav-default">记wireguard的ip Rule配置问题</span>
+<span class="next-text nav-mobile">下一篇</span>
+<i class="iconfont icon-right"></i></a></nav></footer></article></div><div id=gitalk-container></div><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css crossorigin=anonymous><script src=https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js crossorigin=anonymous></script>
+<script type=text/javascript>var gitalk=new Gitalk({id:"2017-10-29 13:27:35 \u002b0800 \u002b0800",title:"Linux下让某程序的所有数据包通过指定网口发出",clientID:"e6672c053ad6c6056f71",clientSecret:"c13fdda944329c62818b9bbf0b00a23658614f3e",repo:"blog",owner:"linuxhenhao",admin:["linuxhenhao"],body:decodeURI(location.href)});gitalk.render("gitalk-container")</script><noscript>Please enable JavaScript to view the <a href=https://github.com/gitalk/gitalk>comments powered by gitalk.</a></noscript></div></main><footer id=footer class=footer><div class=social-links><a href=https://www.linkedin.com/in/yuhuang-keepmoving class="iconfont icon-linkedin" title=linkedin></a>
+<a href=https://github.com/linuxhenhao class="iconfont icon-github" title=github></a>
+<a href=https://blog.thinkeryu.com/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a></div><div class=copyright><span class=power-by>由 <a class=hexo-link href=https://gohugo.io>Hugo</a> 强力驱动</span>
+<span class=division>|</span>
+<span class=theme-info>主题 -
+<a class=theme-link href=https://github.com/olOwOlo/hugo-theme-even>Even</a></span>
+<span class=copyright-year>&copy;
+2017 -
+2024<span class=heart><i class="iconfont icon-heart"></i></span><span>thinkeryu</span></span></div></footer><div class=back-to-top id=back-to-top><i class="iconfont icon-up"></i></div></div><script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin=anonymous></script>
+<script type=text/javascript src=/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js></script>
+<script type=text/javascript>window.MathJax={tex:{inlineMath:[["$","$"],["\\(","\\)"]]}}</script><script async src=https://cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js integrity="sha256-HGLuEfFcsUJGhvB8cQ8nr0gai9EucOOaIxFw7qxmd+w=" crossorigin=anonymous></script></body></html>

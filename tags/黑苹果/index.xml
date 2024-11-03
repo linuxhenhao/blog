@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>黑苹果 on ThinkerYu的博客</title><link>https://blog.thinkeryu.com/tags/%E9%BB%91%E8%8B%B9%E6%9E%9C/</link><description>Recent content in 黑苹果 on ThinkerYu的博客</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Thu, 15 Jun 2017 23:36:03 +0800</lastBuildDate><atom:link href="https://blog.thinkeryu.com/tags/%E9%BB%91%E8%8B%B9%E6%9E%9C/index.xml" rel="self" type="application/rss+xml"/><item><title>实机安装黑苹果Sierra</title><link>https://blog.thinkeryu.com/post/%E5%AE%9E%E6%9C%BA%E5%AE%89%E8%A3%85%E9%BB%91%E8%8B%B9%E6%9E%9Csierra/</link><pubDate>Thu, 15 Jun 2017 23:36:03 +0800</pubDate><guid>https://blog.thinkeryu.com/post/%E5%AE%9E%E6%9C%BA%E5%AE%89%E8%A3%85%E9%BB%91%E8%8B%B9%E6%9E%9Csierra/</guid><description>&lt;p>虚拟机里面不论是kvm还是virtualbox都安装过Sierra了，即使是在SSD上使用，其流畅性和舒适度还是无法和实机安装相比的，
+因此最终还是安装了黑苹果，用起来很舒服。&lt;/p>
+&lt;h3 id="首先是主机参数">首先是主机参数：&lt;/h3>
+&lt;p>cpu: i5 4590&lt;br>
+主板: B85M-d2v&lt;br>
+显卡: hd4600集显，AMD R9 285&lt;br>
+声卡: RealTek ACL 887&lt;br>
+网卡: rtl8111&lt;/p></description></item></channel></rss>
