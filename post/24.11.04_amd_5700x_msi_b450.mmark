@@ -44,7 +44,7 @@ OC ->DigitAll Power
 linux 内核已经支持了 amd 专属的频率控制模块，对应intel_pstate，但是需要启用
 在`/etc/default/grub`中，修改`GRUB_CMDLINE_LINUX_DEFAULT`的值
 ```text
-GRUB_CMDLINE_LINUX_DEFAULT="amd_pstate.mode=guided"
+GRUB_CMDLINE_LINUX_DEFAULT="amd_pstate=guided"
 ```
 一共三个模式`active`,`passive`,`guided`，具体可以看kernel的文档，我选择guided模式，
 用户设置的作为指引，在允许的情况下尽量高。
