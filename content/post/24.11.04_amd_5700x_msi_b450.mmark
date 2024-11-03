@@ -1,0 +1,62 @@
+---
+title = "5700x on msi B450"
+date = 2024-11-04T01:23:13+08:00
+tags = ["ryzen", "b450"]
+categories = ['computer']
+keywords = ['5700x','b450', 'amd_pstate']
+markup = "mmark"
+---
+
+r5 3600使用比较常时间了，今年双十一突然想要升级一下，主板是微星的B450，到微星的官网上查看，发现
+这个主板是支持5950x、5800x、5700x之类的更新的cpu的，综合考虑性价比性能之后，选定5700x作为升级的
+目标。
+
+根据网上的benchmark，5700x的性能比3600高54%左右，咸鱼二手价格在700多，最终咸鱼下手，顺利点亮，这里记录一下
+遇到的问题和处理的过程。
+
+## 问题
+### 频率锁死在545MHz
+BIOS升级到最新的正式版，换上cpu之后点亮，但是点亮之后，即使在BIOS的OC配置中将频率锁死，进入系统之后还是保持在
+545MHz，怎么调整都没用，最后还是在网上抄了一段配置，才让频率正常，这里做一下记录。
+```text
+F7 -> Advanced Mode
+OC ->OC explore Mode ->[Expert]
+Overclocking:
+  Precision Boost Overdrive->[Adanced]
+    PBO Limits ->[Disabled]
+    Precision Boost Overdrive Scalar -> [Manual]
+    Precision Boost Overdrive Scalar -> [10x]
+    CPU Boost Clock Override -> [Auto]
+    Platform Thermal Throttle Limit -> [115]
+    CPPC -> [Enabled]  # 单核粒度调整频率
+    CPPC Prefered xx -> [Enabled]
+  Curve Optimizer
+    Curve Optimizer -> [All Cores]
+    All Core Curve Optimizer Sign -> [Negative] # 负压超频
+    All Core Curve Optimizer Magntitude -> [15] # 根据建议，从15开始，可以更大，但是我没有再调整
+
+OC ->DigitAll Power
+  CPU Loadline Calibration Control -> [Mode4] # 防止CPU低负载宕机
+ ```
+
+### linux 启用 amd_pstate
+
+linux 内核已经支持了 amd 专属的频率控制模块，对应intel_pstate，但是需要启用
+在`/etc/default/grub`中，修改`GRUB_CMDLINE_LINUX_DEFAULT`的值
+```text
+GRUB_CMDLINE_LINUX_DEFAULT="amd_pstate=guided"
+```
+一共三个模式`active`,`passive`,`guided`，具体可以看kernel的文档，我选择guided模式，
+用户设置的作为指引，在允许的情况下尽量高。
+
+
+### amd CPU取风扇
+
+本次升级过程有几次拆装CPU的过程，遇到了两次由于导热硅脂把风扇和cpu粘在一起，导致CPU被直接拔下来的情况，
+并且让5700x的针脚弯曲，在修正的过程断掉了一个针脚，还好查AM4的针脚定义图，断的是一个RSS（接地），由于
+AMD4针脚定义上有很多RSS针脚，断了一根没有影响到功能。
+
+两点学习：
+1. 硅脂可以少放一点，不要太多
+2. 拆的时候如果发现粘的很紧，用吹风机吹一吹，用工具顶开散热和CPU，避免一起拔下来
+
