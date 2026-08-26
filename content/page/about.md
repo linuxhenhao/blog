@@ -1,13 +1,11 @@
 ---
-title: About me
-subtitle: Welcome!
+title: "关于"
 comments: false
 ---
 
-My name is The thinkeryu. Yeah, want to think more, learn more.
+I am Huang Yu. I want to think more, and learn more.
 
 - I love computer science
 - I'm very happy to learn new things
 - I love linux
 
-That rug really tied the room together.
